@@ -49,3 +49,8 @@ The Tasteful Server library and its header files can be installed in your system
 ### Windows and MacOS
 
 Windows and MacOS are not tested yet.
+
+License
+-----------
+
+Tasteful Server is licensed under the LPGL-3.
