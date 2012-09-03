@@ -38,12 +38,15 @@ class HttpMessage : public HttpEntity {
 		HttpMessage();
 		HttpMessage(HttpVersion httpVersion);
 	
-		HttpVersion getHttpVersion();
+		HttpVersion& getHttpVersion();
 	
 		Cookies& getCookies();
 		ContentType& getContentType();
 		bool isMultiPart();
 		MultiPart& getMultiPart();
+		void keepAlive();
+		bool isKeepAlive();
+		int getContentLength();
 	protected:
 		HttpVersion httpVersion;
 		Cookies cookies;

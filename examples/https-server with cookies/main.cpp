@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 	
 	HttpsServer server(getCertificate(), getPrivateKey(), [](HttpRequest& request) {
-		HttpResponse response;
+		HttpResponse response(request);
 		
 		QByteArray content = request.toByteArray();
 		if (!request.getCookies().isEmpty()) content.append("\r\n\r\nCookies\r\n");

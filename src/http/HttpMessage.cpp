@@ -33,7 +33,7 @@ HttpMessage::HttpMessage() : httpVersion(HttpVersion(1,1)) {
 HttpMessage::HttpMessage(HttpVersion httpVersion) : httpVersion(httpVersion) {
 }
 
-HttpVersion HttpMessage::getHttpVersion() {
+HttpVersion& HttpMessage::getHttpVersion() {
 	return httpVersion;
 }
 
@@ -43,6 +43,18 @@ Cookies& HttpMessage::getCookies() {
 
 ContentType& HttpMessage::getContentType() {
 	return contentType;
+}
+
+void HttpMessage::keepAlive() {
+	setHeader(http::Connection, "keep-alive");
+}
+
+bool HttpMessage::isKeepAlive() {
+	return getHeader(http::Connection).getValue().toLower()=="keep-alive";
+}
+
+int HttpMessage::getContentLength() {
+	return getHeader(http::ContentLength).getValue().toInt();
 }
 
 bool HttpMessage::isMultiPart() {

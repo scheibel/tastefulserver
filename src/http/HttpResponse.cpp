@@ -30,9 +30,21 @@
 
 
 HttpResponse::HttpResponse() {
+	initialize();
+}
+
+HttpResponse::HttpResponse(HttpVersion httpVersion) : HttpMessage(httpVersion) {
+	initialize();
+}
+
+HttpResponse::HttpResponse(HttpRequest& httpRequest) : HttpMessage(httpRequest.getHttpVersion()) {
+	initialize();
+	if (httpRequest.isKeepAlive()) keepAlive();
+}
+
+void HttpResponse::initialize() {
 	setStatusCode(http::NotFound);
 	setHeader(http::Date, http::dateString(QDateTime::currentDateTime()));
-	setHeader(http::Connection, "keep-alive");
 	setHeader(http::ContentLength, "0");
 }
 

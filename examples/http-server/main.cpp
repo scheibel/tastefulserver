@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 	
 	HttpServer server([](HttpRequest& request) {
-		HttpResponse response;
+		HttpResponse response(request);
 		
 		response.setStatusCode(http::OK);
 		response.setContent(request.toByteArray());

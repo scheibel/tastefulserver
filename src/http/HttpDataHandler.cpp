@@ -115,7 +115,7 @@ bool HttpDataHandler::readHeader() {
 }
 
 bool HttpDataHandler::readContent() {
-	int length = request.getHeader(http::ContentLength).getValue().toInt();
+	int length = request.getContentLength();
 	if (buffer.availableBytes()<length) return false;
 	QByteArray content = buffer.read(length);
 	request.parseContent(content);
@@ -129,6 +129,11 @@ bool HttpDataHandler::handleRequest() {
 	send(response.toByteArray());
 	buffer.flush();
 	state = READ_REQUEST_LINE;
+	
+	if (!response.isKeepAlive()) {
+		disconnect();
+	}
+	
 	return false;
 }
 
