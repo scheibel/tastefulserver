@@ -1,7 +1,7 @@
 /**
   * (C) LGPL-3
   *
-  * Tasteful Server
+  * Tasteful Server <https://github.com/scheibel/tasteful-server>
   *
   * Copyright: 2012 Lux, Scheibel
   * Authors:
