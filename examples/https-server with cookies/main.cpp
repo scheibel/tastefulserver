@@ -82,11 +82,7 @@ int main(int argc, char** argv) {
 		
 		response.setContent(content);
 		response.setStatusCode(http::OK);
-		
-		Cookie cookie("testcookie", "testvalue");
-		cookie.setMaxAge(30);
-		cookie.setPath("/test");
-		response.setCookie(cookie);
+		response.setCookie("testcookie", "testvalue").setPath("/test").setMaxAge(30);
 		
 		return response;
 	});

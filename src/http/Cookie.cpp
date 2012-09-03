@@ -52,44 +52,62 @@ QString Cookie::getValue() {
 	return value;
 }
 
-void Cookie::setValue(QString value) {
+Cookie& Cookie::setValue(QString value) {
 	this->value = value;
+	
+	return *this;
 }
 
-void Cookie::setMaxAge(unsigned seconds) {
+Cookie& Cookie::setMaxAge(unsigned seconds) {
 	attributes[MaxAge] = QString::number(seconds);
+	
+	return *this;
 }
 
-void Cookie::setComment(QString comment) {
+Cookie& Cookie::setComment(QString comment) {
 	attributes[Comment] = comment;
+	
+	return *this;
 }
 	
-void Cookie::setDomain(QString domain) {
+Cookie& Cookie::setDomain(QString domain) {
 	attributes[Domain] = domain;
+	
+	return *this;
 }
 	
-void Cookie::setPath(QString path) {
+Cookie& Cookie::setPath(QString path) {
 	attributes[Path] = path;
+	
+	return *this;
 }
 	
-void Cookie::setVersion(QString version) {
+Cookie& Cookie::setVersion(QString version) {
 	attributes[Version] = version;
+	
+	return *this;
 }
 	
-void Cookie::setExpires(const QDateTime& dateTime) {
-	setExpires(http::dateString(dateTime));
+Cookie& Cookie::setExpires(const QDateTime& dateTime) {
+	return setExpires(http::dateString(dateTime));
 }
 	
-void Cookie::setExpires(QString expires) {
+Cookie& Cookie::setExpires(QString expires) {
 	attributes[Expires] = expires;
+	
+	return *this;
 }
 	
-void Cookie::setSecure(bool secure) {
+Cookie& Cookie::setSecure(bool secure) {
 	this->secure = secure;
+	
+	return *this;
 }
 	
-void Cookie::setHttpOnly(bool httpOnly) {
+Cookie& Cookie::setHttpOnly(bool httpOnly) {
 	this->httpOnly = httpOnly;
+	
+	return *this;
 }
 
 QString Cookie::toString() {

@@ -64,6 +64,12 @@ void HttpResponse::setCookie(const Cookie& cookie) {
 	cookies.set(cookie);
 }
 
+Cookie& HttpResponse::setCookie(const QString& key, const QString& value) {
+	setCookie(Cookie(key, value));
+	
+	return cookies[key];
+}
+
 void HttpResponse::writeHeadersOn(QTextStream& stream) {
 	HttpMessage::writeHeadersOn(stream);
 	for (Cookie& cookie: cookies) {

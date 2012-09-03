@@ -42,6 +42,7 @@ class HttpResponse : public HttpMessage {
 		void setDate(const QDateTime& date);
 		
 		void setCookie(const Cookie& cookie);
+		Cookie& setCookie(const QString& key, const QString& value);
 	
 		virtual QByteArray toByteArray();
 	protected:

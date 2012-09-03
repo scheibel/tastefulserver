@@ -48,16 +48,16 @@ class Cookie {
 		QString getName();
 		QString getValue();
 	
-		void setValue(QString value);
-		void setMaxAge(unsigned seconds);
-		void setComment(QString comment);
-		void setDomain(QString domain);
-		void setPath(QString path);
-		void setVersion(QString version);
-		void setExpires(const QDateTime& dateTime);
-		void setExpires(QString expires);
-		void setSecure(bool secure);
-		void setHttpOnly(bool httpOnly);
+		Cookie& setValue(QString value);
+		Cookie& setMaxAge(unsigned seconds);
+		Cookie& setComment(QString comment);
+		Cookie& setDomain(QString domain);
+		Cookie& setPath(QString path);
+		Cookie& setVersion(QString version);
+		Cookie& setExpires(const QDateTime& dateTime);
+		Cookie& setExpires(QString expires);
+		Cookie& setSecure(bool secure);
+		Cookie& setHttpOnly(bool httpOnly);
 	
 		QString toString();
 	private:
