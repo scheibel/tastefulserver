@@ -19,30 +19,30 @@ QT4_WRAP_CPP(Server_moc_sources
 )
 
 set(Server_sources
-	core/ThreadPool.cpp
-	core/ByteArrayStream.cpp
-	core/QVariantTree.cpp
+	src/core/ThreadPool.cpp
+	src/core/ByteArrayStream.cpp
+	src/core/QVariantTree.cpp
 	
-	server/TcpServer.cpp
-	server/TcpDataHandler.cpp
-	server/TcpConnectionHandler.cpp
+	src/server/TcpServer.cpp
+	src/server/TcpDataHandler.cpp
+	src/server/TcpConnectionHandler.cpp
 	
-	http/httpUtil.cpp
-	http/HttpMethod.cpp
-	http/ContentType.cpp
-	http/HttpHeader.cpp
-	http/HttpEntity.cpp
-	http/HttpVersion.cpp
-	http/HttpMessage.cpp
-	http/RequestParameters.cpp
-	http/UploadedFile.cpp
-	http/HttpRequest.cpp
-	http/HttpResponse.cpp
-	http/Cookie.cpp
-	http/MultiPart.cpp
-	http/HttpDataHandler.cpp
-	http/HttpServer.cpp
-	http/HttpsServer.cpp
+	src/http/httpUtil.cpp
+	src/http/HttpMethod.cpp
+	src/http/ContentType.cpp
+	src/http/HttpHeader.cpp
+	src/http/HttpEntity.cpp
+	src/http/HttpVersion.cpp
+	src/http/HttpMessage.cpp
+	src/http/RequestParameters.cpp
+	src/http/UploadedFile.cpp
+	src/http/HttpRequest.cpp
+	src/http/HttpResponse.cpp
+	src/http/Cookie.cpp
+	src/http/MultiPart.cpp
+	src/http/HttpDataHandler.cpp
+	src/http/HttpServer.cpp
+	src/http/HttpsServer.cpp
 )
 
 set(Server_headers
