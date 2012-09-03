@@ -1,0 +1,22 @@
+#pragma once
+
+#include <QString>
+
+class HttpVersion {
+	public:
+		HttpVersion();
+		HttpVersion(unsigned _major, unsigned _minor);
+	
+		bool isInvalid();
+		unsigned getMajor();
+		unsigned getMinor();
+	
+		bool operator<(const HttpVersion& httpVersion);
+	
+		QString toString();
+		
+		static HttpVersion fromString(const QString& string);
+	private:
+		unsigned _major;
+		unsigned _minor;
+};

@@ -1,0 +1,84 @@
+#pragma once
+
+#include <QString>
+#include <QHash>
+#include <QVariant>
+
+namespace internal {
+	class QVariantTree;
+	class QVariantLeaf;
+	class QVariantNullTree;
+	
+	class QVariantAbstractTree {
+		public:
+			virtual bool isTree();
+			virtual bool isLeaf();
+			virtual bool isNull();
+			QVariantTree* asTree();
+			QVariantLeaf* asLeaf();
+			
+			QVariantAbstractTree& operator[](const QString& key);
+			QVariantAbstractTree& get(const QString& key);
+			QVariantAbstractTree& getByPath(const QString& path);
+			template <class T> T value();
+			
+			bool contains(const QString& key);
+			bool containsPath(const QString& path);
+			
+			virtual QVariant asQVariant() = 0;
+			virtual QString printString(unsigned indent = 0) = 0;
+		protected:
+			virtual QVariantAbstractTree* basicGet(const QString& key) = 0;
+			
+			static QVariantNullTree nullValue;
+	};
+	
+	class QVariantTree : public QVariantAbstractTree {
+		public:
+			~QVariantTree();
+			
+			bool isTree();
+			
+			int size();
+			void insert(const QString& key, QVariantAbstractTree* value);
+			void insert(const QString& key, QVariant value);
+			QVariantTree& createSubtree(const QString& key);
+			QVariantTree& obtainSubtree(const QString& key);
+			
+			QVariant asQVariant();
+			QString printString(unsigned indent = 0);
+		protected:
+			QVariantAbstractTree* basicGet(const QString& key);
+			
+			QHash<QString, QVariantAbstractTree*> children;
+	};
+	
+	class QVariantLeaf : public QVariantAbstractTree {
+		public:
+			QVariantLeaf(QVariant value);
+			
+			bool isLeaf();
+			
+			QVariant asQVariant();
+			QString printString(unsigned indent = 0);
+		protected:
+			QVariantAbstractTree* basicGet(const QString& key);
+			
+			QVariant element;
+	};
+	
+	class QVariantNullTree : public QVariantAbstractTree {
+		public:
+			bool isNull();
+			
+			QVariant asQVariant();
+			QString printString(unsigned indent = 0);
+		protected:
+			QVariantAbstractTree* basicGet(const QString& key);
+	};
+}
+
+template <class T>
+T internal::QVariantAbstractTree::value() {
+	return asQVariant().value<T>();
+}

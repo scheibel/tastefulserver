@@ -1,0 +1,25 @@
+#pragma once
+
+#include <QString>
+#include <QByteArray>
+#include <QMetaType>
+#include <QVariant>
+#include <ContentType>
+
+
+class UploadedFile {
+	public:
+		UploadedFile();
+		UploadedFile(ContentType contentType);
+	
+		void setFilename(const QString& filename);
+		void setContent(QByteArray content);
+	
+		QVariant toQVariant();
+	private:
+		QString filename;
+		QByteArray content;
+		ContentType contentType;
+};
+
+Q_DECLARE_METATYPE(UploadedFile);

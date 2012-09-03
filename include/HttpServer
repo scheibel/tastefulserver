@@ -1,0 +1,16 @@
+#pragma once
+
+#include <functional>
+#include <TcpServer>
+#include <HttpDataHandler>
+
+
+class HttpServer : public TcpServer {
+	public:
+		HttpServer(HttpDataHandler::RequestCallback callback);
+	protected:
+		HttpDataHandler::RequestCallback callback;
+	
+		virtual TcpDataHandler* createDataHandler();
+};
+

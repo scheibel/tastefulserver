@@ -1,0 +1,17 @@
+#pragma once
+
+#include <QObject>
+#include <QByteArray>
+
+class TcpDataHandler : public QObject {
+	Q_OBJECT;
+	signals:
+		void sendDataReady(QByteArray data);
+		void closeConnection();
+	protected:
+		void send(QByteArray data);
+		void disconnect();
+	public:
+		virtual void receive(QByteArray data) = 0;
+		virtual void disconnected();
+};

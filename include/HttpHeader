@@ -1,0 +1,170 @@
+#pragma once
+
+#include <QString>
+#include <QList>
+#include <QHash>
+
+namespace http {
+	typedef const QString HeaderName;
+	
+	// general headers
+	HeaderName CacheControl = "Cache-Control";
+	HeaderName Connection = "Connection";
+	HeaderName Date = "Date";
+	HeaderName Pragma = "Pragma";
+	HeaderName Trailer = "Trailer";
+	HeaderName TransferEncoding = "Transfer-Encoding";
+	HeaderName Upgrade = "Upgrade";
+	HeaderName Via = "Via";
+	HeaderName warning = "Warning";
+	
+	// entity headers
+	HeaderName Allow = "Allow";
+	HeaderName ContentEncoding = "Content-Encoding";
+	HeaderName ContentLanguage = "Content-Language ";
+	HeaderName ContentLength = "Content-Length";
+	HeaderName ContentLocation = "Content-Location ";
+	HeaderName ContentMD5 = "Content-MD5";
+	HeaderName ContentRange = "Content-Range";
+	HeaderName ContentType = "Content-Type";
+	HeaderName Expires = "Expires";
+	HeaderName LastModified = "Last-Modified";
+	
+	// multipart headers
+	HeaderName ContentDisposition = "Content-Disposition";
+	
+	// request headers
+	HeaderName Accept = "Accept";
+	HeaderName AcceptCharset = "Accept-Charset";
+	HeaderName AcceptEncoding = "Accept-Encoding";
+	HeaderName AcceptLanguage = "Accept-Language";
+	HeaderName Authorization = "Authorization";
+	HeaderName Expect = "Expect";
+	HeaderName From = "From";
+	HeaderName Host = "Host";
+	HeaderName IfMatch = "If-Match";
+	HeaderName IfModifiedSince = "If-Modified-Since";
+	HeaderName IfNoneMatch = "If-None-Match";
+	HeaderName IfRange = "If-Range";
+	HeaderName IfUnmodifiedSince = "If-Unmodified-Since";
+	HeaderName MaxForwards = "Max-Forwards";
+	HeaderName ProxyAuthorization = "Proxy-Authorization";
+	HeaderName Range = "Range";
+	HeaderName Referer = "Referer";
+	HeaderName TE = "TE";
+	HeaderName UserAgent = "User-Agent";
+	
+	// non-standard request headers
+	HeaderName XRequestedWith = "X-Requested-With";
+	HeaderName DNT = "DNT";
+	HeaderName XForwardedFor = "X-Forwarded-For";
+	
+	// response headers
+	HeaderName AcceptRanges = "Accept-Ranges";
+	HeaderName Age = "Age";
+	HeaderName ETag = "ETag";
+	HeaderName Location = "Location";
+	HeaderName ProxyAuthenticate = "Proxy-Authenticate";
+	HeaderName RetryAfter = "Retry-After";
+	HeaderName Server = "Server";
+	HeaderName Vary = "Vary";
+	HeaderName WWWAuthenticate = "WWW-Authenticate";
+	
+	// non-standard response headers
+	HeaderName XFrameOptions = "X-Frame-Options";
+	HeaderName XXSSProtection = "X-XSS-Protection";
+	
+	// cookies
+	HeaderName Cookie = "Cookie";
+	HeaderName SetCookie = "Set-Cookie";
+}
+
+class NameValuePair {
+	public:
+		NameValuePair();
+		NameValuePair(QString name, QString value);
+	
+		QString getName();
+		QString getValue();
+	protected:
+		QString name;
+		QString value;
+};
+
+class HttpHeaderElementParameter : public NameValuePair {
+	public:
+		HttpHeaderElementParameter();
+		HttpHeaderElementParameter(QString name, QString value);
+	
+		QString toString();
+		
+		static HttpHeaderElementParameter fromString(const QString& param);
+	protected:
+		static QString stripQuotes(const QString& string);
+		void parse(const QString& param);
+};
+
+class HttpHeaderElement : public NameValuePair {
+	public:
+		HttpHeaderElement();
+		HttpHeaderElement(QString name, QString value);
+	
+		bool isSet(const QString& paramName);
+		QString getParameter(const QString& paramName);
+	
+		QList<HttpHeaderElementParameter> getParameters();
+	
+		static HttpHeaderElement fromString(const QString& elementString);
+	
+		QString toString();
+	protected:
+		QHash<QString, HttpHeaderElementParameter> parameters;
+	
+		void parse(const QString& elementString);
+};
+
+class HttpHeaderValue {
+	public:
+		HttpHeaderValue();
+		HttpHeaderValue(QString value);
+	
+		bool isValid();
+	
+		HttpHeaderElement getElement();
+		QList<HttpHeaderElement> getElements();
+		bool merge(QList<HttpHeaderElement> newElements);
+	
+		QString toString();
+	protected:
+		void parseElementsIfNecessary();
+	
+		QString value;
+		bool modified;
+		QList<HttpHeaderElement> elements;
+};
+
+class HttpHeader {
+	public:
+		HttpHeader();
+		HttpHeader(QString name, QString value);
+	
+		QString getName();
+		QString getValue();
+		void setValue(const QString& value);
+	
+		bool isValid();
+	
+		bool merge(HttpHeader header);
+		QString toString();
+		
+		static HttpHeader forName(const QString& name);
+		static HttpHeader fromString(const QString& header);
+	
+		HttpHeaderElement getElement();
+		QList<HttpHeaderElement> getElements();
+	protected:
+		QString name;
+		HttpHeaderValue value;
+	
+		void parse(const QString& headerString);
+};

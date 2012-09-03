@@ -1,0 +1,23 @@
+#pragma once
+
+#include <TcpDataHandler>
+#include <QTcpServer>
+#include <internal/ThreadPool>
+#include <internal/TcpConnectionHandler>
+
+using namespace internal;
+
+class TcpServer : public QTcpServer {
+		Q_OBJECT
+	public:
+		TcpServer();
+	
+		static void setNumThreads(int numThreads);
+	protected:
+		void incomingConnection(int socketDescriptor);
+	
+		virtual Task* createTask(int socketDescriptor);
+		virtual TcpDataHandler* createDataHandler() = 0;
+	
+		static ThreadPool threadPool;
+};

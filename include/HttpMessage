@@ -1,0 +1,26 @@
+#pragma once
+
+#include <HttpEntity>
+#include <HttpVersion>
+#include <HttpHeader>
+#include <Cookie>
+#include <ContentType>
+#include <MultiPart>
+
+class HttpMessage : public HttpEntity {
+	public:
+		HttpMessage();
+		HttpMessage(HttpVersion httpVersion);
+	
+		HttpVersion getHttpVersion();
+	
+		Cookies& getCookies();
+		ContentType& getContentType();
+		bool isMultiPart();
+		MultiPart& getMultiPart();
+	protected:
+		HttpVersion httpVersion;
+		Cookies cookies;
+		ContentType contentType;
+		MultiPart multiPart;
+};

@@ -1,0 +1,137 @@
+#include <RequestParameters>
+#include <UploadedFile>
+#include <QUrl>
+#include <QRegExp>
+#include <internal/ByteArrayStream>
+
+using namespace internal;
+
+RequestParameters::RequestParameters() : params(new QVariantTree()) {
+}
+
+RequestParameters RequestParameters::fromUrl(QUrl url) {
+	RequestParameters params;
+	params.parseUrl(url);
+	return params;
+}
+
+RequestParameters RequestParameters::fromUrlEncoded(QByteArray urlEncodedPost) {
+	RequestParameters params;
+	params.parseUrlEncoded(urlEncodedPost);
+	return params;
+}
+
+RequestParameters RequestParameters::fromMultiPart(MultiPart multiPart) {
+	RequestParameters params;
+	params.parseMultiPart(multiPart);
+	return params;
+}
+
+QString RequestParameters::toString() {
+	return params->printString();
+}
+
+void RequestParameters::parseUrl(QUrl url) {
+	QList<QPair<QString, QVariant>> parameters;
+	for (QPair<QString, QString>& pair: url.queryItems()) {
+		parameters << QPair<QString, QVariant>(pair.first, pair.second);
+	}
+	
+	parseList(parameters);
+}
+
+void RequestParameters::parseUrlEncoded(QByteArray urlEncoded) {
+	parseUrl(QUrl::fromEncoded("/?"+urlEncoded.replace('+',' ')));
+}
+
+void RequestParameters::parseMultiPart(MultiPart multiPart) {
+	QList<QPair<QString, QVariant>> parameters;
+	
+	for (Part& part: multiPart.getParts()) {
+		HttpHeader contentDisposition = part.getHeader(http::ContentDisposition);
+		HttpHeaderElement element = contentDisposition.getElement();
+		if (element.getName()=="form-data") {
+			QString name = element.getParameter("name");
+			if (part.hasHeader(http::ContentType)) {
+				UploadedFile uploadedFile;
+				uploadedFile.setContent(part.getContent());
+				if (element.isSet("filename")) {
+					uploadedFile.setFilename(element.getParameter("filename"));
+				}
+				parameters << QPair<QString, QVariant>(name, uploadedFile.toQVariant());
+			} else {
+				parameters << QPair<QString, QVariant>(name, QString(part.getContent()));
+			}
+		}
+	}
+	
+	parseList(parameters);
+}
+
+void RequestParameters::parseList(QList<QPair<QString, QVariant>> parameters) {
+	for (QPair<QString, QVariant>& pair : parameters) {
+		if (pair.first.isEmpty()) {
+			continue;
+		}
+		
+		QList<QString> indices = extractIndices(pair.first);
+		
+		QVariantTree* currentParams = params.data();
+		QString index;
+		for (unsigned i = 0; i < indices.size() - 1; ++i) {
+			index = indices[i].isEmpty() ? QString::number(currentParams->size()) : indices[i];
+			currentParams = &currentParams->obtainSubtree(index);
+		}
+		
+		index = indices.last().isEmpty() ? QString::number(currentParams->size()) : indices.last(); 
+		currentParams->insert(index, pair.second);
+	}
+}
+
+QVariantAbstractTree& RequestParameters::operator[](const QString& key) {
+	return get(key);
+}
+
+QVariantAbstractTree& RequestParameters::getByPath(const QString& path) {
+	return params->getByPath(path);
+}
+
+QVariantAbstractTree& RequestParameters::get(const QString& key) {
+	return params->get(key);
+}
+
+bool RequestParameters::contains(const QString& key) {
+	return params->contains(key);
+}
+
+bool RequestParameters::containsPath(const QString& path) {
+	return params->containsPath(path);
+}
+
+QList<QString> RequestParameters::extractIndices(const QString& key) {
+	ByteArrayStream stream(key.toUtf8());
+	QString name = stream.readUpTo('[');
+	
+	if (name.isEmpty()) {
+		return QList<QString>() << key;
+	}
+	
+	QList<QString> indices = QList<QString>() << name;
+	
+	bool valid = true;
+	while (stream.canReadUpTo('[')) {
+		stream.skipBehind('[');
+		
+		if (stream.canReadUpTo(']')) {
+			indices << stream.readUpTo(']', true);
+		} else {
+			return QList<QString>() << key;
+		}
+	}
+	
+	if (!stream.atEnd()) {
+		return QList<QString>() << key;
+	}
+	
+	return indices;
+}

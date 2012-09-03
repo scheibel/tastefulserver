@@ -1,0 +1,18 @@
+#pragma once
+
+#include <HttpServer>
+#include <QSslCertificate>
+#include <QSslKey>
+
+using namespace internal;
+
+class HttpsServer : public HttpServer {
+	public:
+		HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpDataHandler::RequestCallback callback);
+	
+		Task* createTask(int socketDescriptor);
+		TcpDataHandler* createDataHandler();
+	private:
+		QSslCertificate certificate;
+		QSslKey privateKey;
+};

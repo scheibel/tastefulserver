@@ -1,0 +1,34 @@
+#pragma once
+
+#include <TcpDataHandler>
+#include <internal/ByteArrayStream>
+#include <http>
+
+using namespace internal;
+
+class HttpDataHandler : public TcpDataHandler {
+	public:
+		typedef std::function<HttpResponse(HttpRequest&)> RequestCallback;
+		
+		HttpDataHandler(RequestCallback callback, bool isHttps=false);
+	
+		void receive(QByteArray data);
+	private:		
+		bool readRequestLine();
+		bool readHeader();
+		bool readContent();
+		bool handleRequest();
+		bool handleError();
+		
+		RequestCallback callback;
+		ByteArrayStream buffer;
+		bool isHttps;
+		HttpRequest request;
+		enum {
+			READ_REQUEST_LINE,
+			READ_HEADER,
+			READ_CONTENT,
+			HANDLE_REQUEST,
+			HANDLE_ERROR
+		} state;
+};

@@ -1,0 +1,37 @@
+#pragma once
+
+#include <QString>
+#include <QList>
+#include <QHash>
+#include <HttpHeader>
+#include <ContentType>
+
+class Part {
+	public:
+		Part();
+		Part(QList<HttpHeader> headers, QByteArray content);
+	
+		bool hasHeader(http::HeaderName headerName);
+		HttpHeader getHeader(http::HeaderName headerName);
+	
+		QList<HttpHeader> getHeaders();
+		QByteArray getContent();
+	protected:
+		QHash<QString, HttpHeader> headers;
+		QByteArray content;
+};
+
+class MultiPart {
+	public:
+		MultiPart();
+		MultiPart(ContentType type);
+	
+		void parse(QByteArray content);
+	
+		bool isFormData();
+	
+		QList<Part> getParts();
+	protected:
+		ContentType type;
+		QList<Part> parts;
+};

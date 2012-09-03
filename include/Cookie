@@ -1,0 +1,63 @@
+#pragma once
+
+#include <QString>
+#include <QHash>
+#include <QTextStream>
+#include <httpUtil>
+
+class Cookie {
+	public:
+		static const QString MaxAge;
+		static const QString Comment;
+		static const QString Domain;
+		static const QString Path;
+		static const QString Version;
+		static const QString Expires;
+		static const QString Secure;
+		static const QString HttpOnly;
+	public:
+		Cookie();
+		Cookie(QString name, QString value);
+	
+		QString getName();
+		QString getValue();
+	
+		void setValue(QString value);
+		void setMaxAge(unsigned seconds);
+		void setComment(QString comment);
+		void setDomain(QString domain);
+		void setPath(QString path);
+		void setVersion(QString version);
+		void setExpires(const QDateTime& dateTime);
+		void setExpires(QString expires);
+		void setSecure(bool secure);
+		void setHttpOnly(bool httpOnly);
+	
+		QString toString();
+	private:
+		QString name;
+		QString value;
+		bool secure;
+		bool httpOnly;
+		QHash<QString, QString> attributes;
+};
+
+class Cookies {
+	public:	
+		bool isEmpty();
+	
+		void set(Cookie cookie);
+		bool has(const QString& name);
+		Cookie get(const QString& name);
+		Cookie& operator[](const QString& name);
+		void clear(Cookie& cookie);
+	
+		QHash<QString, Cookie>::iterator begin();
+		QHash<QString, Cookie>::iterator end();
+	
+		void parse(const QString& cookiesString);
+	
+		static Cookies fromString(const QString& cookiesString);
+	private:
+		QHash<QString, Cookie> cookies;
+};

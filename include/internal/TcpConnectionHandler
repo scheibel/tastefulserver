@@ -1,0 +1,45 @@
+#pragma once
+
+#include <QObject>
+#include <QTcpSocket>
+#include <TcpDataHandler>
+#include <internal/ThreadPool>
+#include <QSslSocket>
+#include <QSslCertificate>
+#include <QSslKey>
+
+namespace internal {
+	
+class TcpConnectionHandler : public Task {
+	Q_OBJECT;
+	public:
+		TcpConnectionHandler(unsigned socketDescriptor, TcpDataHandler* handler);
+		~TcpConnectionHandler();
+	
+		void startUp();
+	private slots:
+		void disconnected();
+		void readyRead();
+		void writeData(QByteArray data);
+		void error(QAbstractSocket::SocketError e);
+		void disconnect();
+	protected:
+		unsigned socketDescriptor;
+		QTcpSocket* socket;
+		TcpDataHandler* handler;
+	
+		virtual QTcpSocket* createSocket();
+};
+
+class SslConnectionHandler : public TcpConnectionHandler {
+	public:
+		SslConnectionHandler(unsigned socketDescriptor, QSslCertificate certificate, QSslKey privateKey, TcpDataHandler* handler);
+	protected:
+		QSslCertificate certificate;
+		QSslKey privateKey;
+	
+		QTcpSocket* createSocket();
+};
+
+}
+

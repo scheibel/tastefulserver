@@ -1,0 +1,36 @@
+#include <QString>
+#include <QByteArray>
+
+namespace internal {
+	
+class ByteArrayStream {
+	public:
+		ByteArrayStream(QByteArray bytes, QString linebreak="\n");
+	 
+		static ByteArrayStream forLinebreak(QString linebreak);
+	
+		void append(QByteArray bytes);
+		QByteArray read(unsigned length);
+		void skip(unsigned length);
+		QString readLine();
+		void skipUpTo(QString delimiter);
+		void skipUpTo(QChar delimiter);
+		void skipBehind(QString delimiter);
+		void skipBehind(QChar delimiter);
+		bool canReadUpTo(QString delimiter);
+		bool canReadUpTo(QChar delimiter);
+		QByteArray readUpTo(QString delimiter, bool skipDelimiter = false);
+		QByteArray readUpTo(QChar delimiter, bool skipDelimiter = false);
+		QByteArray readAll();
+		void skipAll();
+		bool canReadLine();
+		int availableBytes();
+		void flush();
+		bool atEnd();
+	protected:
+		QString linebreak;
+		int pos;
+		QByteArray buffer;
+};
+
+}

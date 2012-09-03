@@ -1,0 +1,38 @@
+#pragma once
+
+#include <QString>
+#include <QStringList>
+#include <QVariantMap>
+#include <QByteArray>
+#include <MultiPart>
+#include <internal/QVariantTree>
+#include <QSharedPointer>
+
+using namespace internal;
+
+class RequestParameters {
+	public:
+		RequestParameters();
+		
+		bool contains(const QString& key);
+		bool containsPath(const QString& path);
+		
+		QVariantAbstractTree& operator[](const QString& key);
+		QVariantAbstractTree& get(const QString& key);
+		QVariantAbstractTree& getByPath(const QString& path);
+		
+		void parseUrl(QUrl url);
+		void parseUrlEncoded(QByteArray urlEncodedPost);
+		void parseMultiPart(MultiPart multiPart);
+		
+		QString toString();
+		
+		static RequestParameters fromUrl(QUrl url);
+		static RequestParameters fromUrlEncoded(QByteArray urlEncoded);
+		static RequestParameters fromMultiPart(MultiPart multiPart);
+	protected:
+		void parseList(QList<QPair<QString, QVariant>> parameters);
+		QList<QString> extractIndices(const QString& key);
+		
+		QSharedPointer<QVariantTree> params;
+};

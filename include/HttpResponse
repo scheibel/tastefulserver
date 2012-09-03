@@ -1,0 +1,18 @@
+#pragma once
+
+#include <HttpMessage>
+#include <httpStatusCodes>
+
+class HttpResponse : public HttpMessage {
+	public:
+		HttpResponse();
+	
+		void setStatusCode(unsigned statusCode);
+		unsigned getStatusCode();
+	
+		virtual QByteArray toByteArray();
+	protected:
+		unsigned statusCode;
+	
+		virtual void writeHeadersOn(QTextStream& stream);
+};
