@@ -49,6 +49,26 @@ bool HttpVersion::operator<(const HttpVersion& httpVersion) {
 	return _major<httpVersion._major && _minor<httpVersion._minor;
 }
 
+bool HttpVersion::operator<=(const HttpVersion& httpVersion) {
+	return _major<=httpVersion._major && _minor<=httpVersion._minor;
+}
+
+bool HttpVersion::operator>(const HttpVersion& httpVersion) {
+	return _major>httpVersion._major && _minor>httpVersion._minor;
+}
+
+bool HttpVersion::operator>=(const HttpVersion& httpVersion) {
+	return _major>=httpVersion._major && _minor>=httpVersion._minor;
+}
+
+bool HttpVersion::operator==(const HttpVersion& httpVersion) {
+	return _major==httpVersion._major && _minor==httpVersion._minor;
+}
+
+bool HttpVersion::operator!=(const HttpVersion& httpVersion) {
+	return _major!=httpVersion._major || _minor!=httpVersion._minor;
+}
+
 QString HttpVersion::toString() {
 	return QString("HTTP/%1.%2").arg(_major).arg(_minor);
 }

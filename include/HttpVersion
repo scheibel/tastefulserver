@@ -38,6 +38,11 @@ class HttpVersion {
 		unsigned getMinor();
 	
 		bool operator<(const HttpVersion& httpVersion);
+		bool operator<=(const HttpVersion& httpVersion);
+		bool operator>(const HttpVersion& httpVersion);
+		bool operator>=(const HttpVersion& httpVersion);
+		bool operator==(const HttpVersion& httpVersion);
+		bool operator!=(const HttpVersion& httpVersion);
 	
 		QString toString();
 		

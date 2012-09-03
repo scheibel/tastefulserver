@@ -39,13 +39,17 @@ HttpResponse::HttpResponse(HttpVersion httpVersion) : HttpMessage(httpVersion) {
 
 HttpResponse::HttpResponse(HttpRequest& httpRequest) : HttpMessage(httpRequest.getHttpVersion()) {
 	initialize();
-	if (httpRequest.isKeepAlive()) keepAlive();
+	if (httpRequest.getHttpVersion()>=HttpVersion(1,1) || httpRequest.isKeepAlive()) keepAlive();
 }
 
 void HttpResponse::initialize() {
 	setStatusCode(http::NotFound);
-	setHeader(http::Date, http::dateString(QDateTime::currentDateTime()));
 	setHeader(http::ContentLength, "0");
+	setDate(QDateTime::currentDateTime());
+}
+
+void HttpResponse::setDate(const QDateTime& date) {
+	setHeader(http::Date, http::dateString(date));
 }
 
 void HttpResponse::setStatusCode(unsigned statusCode) {

@@ -46,7 +46,7 @@ ContentType& HttpMessage::getContentType() {
 }
 
 void HttpMessage::keepAlive() {
-	setHeader(http::Connection, "keep-alive");
+	setHeader(http::Connection, "Keep-Alive");
 }
 
 bool HttpMessage::isKeepAlive() {

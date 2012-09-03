@@ -39,6 +39,8 @@ class HttpResponse : public HttpMessage {
 		void setStatusCode(unsigned statusCode);
 		unsigned getStatusCode();
 	
+		void setDate(const QDateTime& date);
+	
 		virtual QByteArray toByteArray();
 	protected:
 		unsigned statusCode;
