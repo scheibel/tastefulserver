@@ -11,6 +11,9 @@ This library comes with a HTTP suite for handling incoming HTTP requests.
 You can pass your own callback to handle those completely preparsed requests with an object oriented interface.
 SSL for HTTPS is also supported.
 
+As it is now, only Linux is tested as development and deployment environment, so no build information for Windows, MacOS or any other OS is provided.
+Since all platform-dependent features of the Tasteful Server are provided through Qt, it should also run on any other OS to which Qt was ported.
+
 Content
 ------------
 
@@ -18,14 +21,15 @@ Content
  * [Building Tasteful Server](#building-tasteful-server)
  * [Running Examples](#running-examples)
  * [Installation](#installation)
+ * [Known Projects Using Tasteful Server](#known-projects-using-tasteful-server)
  * [License](#license)
 
 Requirements
 ---------------------
 
- * Qt 4.8
- * C++11
- * CMake 2.6
+ * [Qt 4.8](http://qt.nokia.com/)
+ * [gcc 4.6](http://gcc.gnu.org/)
+ * [CMake 2.6](http://www.cmake.org/)
  
 Building Tasteful Server
 -----------------------------------
@@ -39,25 +43,22 @@ Running Examples
 
     > ./examples/HttpServer
 
-And then open your favorite browser and navigate to [localhost:8080](http://localhost:8080).
-Or for an Https-Server
+And then open your favorite browser and navigate to [localhost:8080](http://localhost:8080).  
+Or for an Https-Server with the URL [https://localhost:8080](https://localhost:8080) you can start:
 
     > ./examples/HttpsServer
-
-with the URL [https://localhost:8080](https://localhost:8080)
 
 Installation
 ----------------
 
 The Tasteful Server library and its header files can be installed in your system using the following command:
 
-### Linux
-
     > sudo make install
 
-### Windows and MacOS
+Known Projects Using Tasteful Server
+--------------------------------------------------------
 
-Windows and MacOS are not tested yet.
+ * [Tasteful Framework](https://github.com/scheibel/tasteful-framework)
 
 License
 -----------
