@@ -60,6 +60,10 @@ unsigned HttpResponse::getStatusCode() {
 	return statusCode;
 }
 
+void HttpResponse::setCookie(const Cookie& cookie) {
+	cookies.set(cookie);
+}
+
 void HttpResponse::writeHeadersOn(QTextStream& stream) {
 	HttpMessage::writeHeadersOn(stream);
 	for (Cookie& cookie: cookies) {

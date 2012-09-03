@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		HttpResponse response(request);
 		
 		QByteArray content = request.toByteArray();
-		if (!request.getCookies().isEmpty()) content.append("\r\n\r\nCookies\r\n");
+		if (request.hasCookies()) content.append("\r\n\r\nCookies\r\n");
 		for (Cookie& cookie: request.getCookies()) {
 			content.append(cookie.toString() + "\r\n");
 		}
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 		Cookie cookie("testcookie", "testvalue");
 		cookie.setMaxAge(30);
 		cookie.setPath("/test");
-		response.getCookies().set(cookie);
+		response.setCookie(cookie);
 		
 		return response;
 	});

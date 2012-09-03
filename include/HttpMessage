@@ -41,6 +41,8 @@ class HttpMessage : public HttpEntity {
 		HttpVersion& getHttpVersion();
 	
 		Cookies& getCookies();
+		bool hasCookies();
+		
 		ContentType& getContentType();
 		bool isMultiPart();
 		MultiPart& getMultiPart();

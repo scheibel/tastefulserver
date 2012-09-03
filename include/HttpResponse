@@ -40,6 +40,8 @@ class HttpResponse : public HttpMessage {
 		unsigned getStatusCode();
 	
 		void setDate(const QDateTime& date);
+		
+		void setCookie(const Cookie& cookie);
 	
 		virtual QByteArray toByteArray();
 	protected:

@@ -41,6 +41,10 @@ Cookies& HttpMessage::getCookies() {
 	return cookies;
 }
 
+bool HttpMessage::hasCookies() {
+	return !cookies.isEmpty();
+}
+
 ContentType& HttpMessage::getContentType() {
 	return contentType;
 }
