@@ -14,11 +14,11 @@ SSL for HTTPS is also supported.
 Content
 ------------
 
-1. [Requirements](#requirements)
-2. [Building Tasteful Server](#building-tasteful-server)
-3. [Running Examples](#running-examples)
-4. [Installation](#installation)
-5. [License](#license)
+ * [Requirements](#requirements)
+ * [Building Tasteful Server](#building-tasteful-server)
+ * [Running Examples](#running-examples)
+ * [Installation](#installation)
+ * [License](#license)
 
 Requirements
 ---------------------
