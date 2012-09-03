@@ -11,11 +11,17 @@ This library comes with a HTTP suite for handling incoming HTTP requests.
 You can pass your own callback to handle those completely preparsed requests with an object oriented interface.
 SSL for HTTPS is also supported.
 
+Content
+------------
+
+* table of contents
+{:toc}
+
 Requirements
 ---------------------
 
  * Qt 4.8
- * C++11x
+ * C++11
  * CMake 2.6
  
 Building Tasteful Server
