@@ -17,12 +17,26 @@ Since all platform-dependent features of the Tasteful Server are provided throug
 Content
 ------------
 
+ * [Features](#features)
  * [Requirements](#requirements)
  * [Building Tasteful Server](#building-tasteful-server)
  * [Running Examples](#running-examples)
  * [Installation](#installation)
  * [Known Projects Using Tasteful Server](#known-projects-using-tasteful-server)
  * [License](#license)
+
+Features
+-------------
+
+ * Thread pool with user defined size
+ * Multiple servers share one thread pool
+ * HTTP server and HTTPS server
+ * Handling of requests through callbacks
+ * HTTP parser which translates requests to objects
+ * Convenience support for several HTTP features
+     * GET and POST parameters
+     * Multipart and uploaded files
+     * Cookies
 
 Requirements
 ---------------------
@@ -35,7 +49,7 @@ Building Tasteful Server
 -----------------------------------
  
     > mkdir build && cd build
-    > cmake ..
+    > cmake .. -DWITH_EXAMPLES=true
     > make
  
 Running Examples
