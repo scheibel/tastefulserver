@@ -56,8 +56,8 @@ set(Server_headers
 	include/ContentType
 	include/Cookie
 	include/http
-	include/HttpDataHandler
 	include/HttpEntity
+	include/HttpHandler
 	include/HttpHeader
 	include/HttpMessage
 	include/HttpMethod
@@ -70,16 +70,16 @@ set(Server_headers
 	include/HttpVersion
 	include/MultiPart
 	include/RequestParameters
-	include/TcpDataHandler
 	include/TcpServer
 	include/UploadedFile
 )
 
 set(Server_internal_headers
 	include/internal/ByteArrayStream
-	include/internal/ThreadPool
+	include/internal/ConnectionHandler
 	include/internal/QVariantTree
-	include/internal/TcpConnectionHandler
+	include/internal/SocketCreation
+	include/internal/ThreadPool
 )
 
 add_library(TastefulServer SHARED ${Server_sources} ${Server_moc_sources})
