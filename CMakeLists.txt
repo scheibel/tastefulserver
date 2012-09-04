@@ -2,7 +2,15 @@ cmake_minimum_required(VERSION 2.6)
 
 project(TastefulServer)
 
-add_subdirectory(examples)
+option(WITH_EXAMPLES "Compile with examples" OFF)
+
+if (WITH_EXAMPLES)
+	message ("-- Compile Tasteful Server WITH examples")
+	
+	add_subdirectory(examples)
+else (WITH_EXAMPLES)
+	message ("-- Compile Tasteful Server WITHOUT examples")
+endif (WITH_EXAMPLES)
 
 find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
 include(${QT_USE_FILE})
