@@ -44,3 +44,15 @@ void UploadedFile::setFilename(const QString& filename) {
 void UploadedFile::setContent(QByteArray content) {
 	this->content = content;
 }
+
+QString UploadedFile::getFilename() {
+	return filename;
+}
+
+QByteArray UploadedFile::getContent() {
+	return content;
+}
+
+ContentType UploadedFile::getContentType() {
+	return contentType;
+}

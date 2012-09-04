@@ -41,7 +41,7 @@ const QString Cookie::HttpOnly = "HttpOnly";
 Cookie::Cookie() : secure(false), httpOnly(false) {
 }
 
-Cookie::Cookie(QString name, QString value) : name(name), value(value), secure(false), httpOnly(false) {
+Cookie::Cookie(const QString& name, const QString& value) : name(name), value(value), secure(false), httpOnly(false) {
 }
 
 QString Cookie::getName() {
@@ -52,7 +52,7 @@ QString Cookie::getValue() {
 	return value;
 }
 
-Cookie& Cookie::setValue(QString value) {
+Cookie& Cookie::setValue(const QString& value) {
 	this->value = value;
 	
 	return *this;
@@ -64,25 +64,25 @@ Cookie& Cookie::setMaxAge(unsigned seconds) {
 	return *this;
 }
 
-Cookie& Cookie::setComment(QString comment) {
+Cookie& Cookie::setComment(const QString& comment) {
 	attributes[Comment] = comment;
 	
 	return *this;
 }
 	
-Cookie& Cookie::setDomain(QString domain) {
+Cookie& Cookie::setDomain(const QString& domain) {
 	attributes[Domain] = domain;
 	
 	return *this;
 }
 	
-Cookie& Cookie::setPath(QString path) {
+Cookie& Cookie::setPath(const QString& path) {
 	attributes[Path] = path;
 	
 	return *this;
 }
 	
-Cookie& Cookie::setVersion(QString version) {
+Cookie& Cookie::setVersion(const QString& version) {
 	attributes[Version] = version;
 	
 	return *this;
@@ -92,7 +92,7 @@ Cookie& Cookie::setExpires(const QDateTime& dateTime) {
 	return setExpires(http::dateString(dateTime));
 }
 	
-Cookie& Cookie::setExpires(QString expires) {
+Cookie& Cookie::setExpires(const QString& expires) {
 	attributes[Expires] = expires;
 	
 	return *this;

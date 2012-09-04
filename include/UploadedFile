@@ -41,6 +41,10 @@ class UploadedFile {
 		void setFilename(const QString& filename);
 		void setContent(QByteArray content);
 	
+		QString getFilename();
+		QByteArray getContent();
+		ContentType getContentType();
+	
 		QVariant toQVariant();
 	private:
 		QString filename;
