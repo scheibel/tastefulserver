@@ -49,16 +49,23 @@ Building Tasteful Server
 -----------------------------------
  
     > mkdir build && cd build
-    > cmake .. -DWITH_EXAMPLES=true
+    > cmake ..
     > make
  
 Running Examples
 ---------------------------------
 
+First you had to compile Tasteful Server with examples.
+
+    > cmake .. -DWITH_EXAMPLES=true
+    > make
+
+Then you can start the simple HTTP server.
+
     > ./examples/HttpServer
 
 And then open your favorite browser and navigate to [localhost:8080](http://localhost:8080).  
-Or for an Https-Server with the URL [https://localhost:8080](https://localhost:8080) you can start:
+For an Https-Server with the URL [https://localhost:8080](https://localhost:8080) you can start:
 
     > ./examples/HttpsServer
 
