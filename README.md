@@ -55,9 +55,9 @@ Building Tasteful Server
 Running Examples
 ---------------------------------
 
-First you had to compile Tasteful Server with examples.
+First you have to compile Tasteful Server with examples.
 
-    > cmake .. -DWITH_EXAMPLES=true
+    > cmake .. -DWITH_EXAMPLES=ON
     > make
 
 Then you can start the simple HTTP server.
