@@ -28,15 +28,15 @@
 
 #include <functional>
 #include <TcpServer>
-#include <HttpDataHandler>
+#include <HttpHandler>
 
 
 class HttpServer : public TcpServer {
 	public:
-		HttpServer(HttpDataHandler::RequestCallback callback);
+		HttpServer(HttpHandler::RequestCallback callback);
 	protected:
-		HttpDataHandler::RequestCallback callback;
+		HttpHandler::RequestCallback callback;
 	
-		virtual TcpDataHandler* createDataHandler();
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor);
 };
 

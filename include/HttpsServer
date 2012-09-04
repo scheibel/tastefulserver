@@ -34,10 +34,9 @@ using namespace internal;
 
 class HttpsServer : public HttpServer {
 	public:
-		HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpDataHandler::RequestCallback callback);
+		HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpHandler::RequestCallback callback);
 	
-		Task* createTask(int socketDescriptor);
-		TcpDataHandler* createDataHandler();
+		ConnectionHandler* createConnectionHandler(int socketDescriptor);
 	private:
 		QSslCertificate certificate;
 		QSslKey privateKey;

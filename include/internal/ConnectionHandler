@@ -27,17 +27,44 @@
 #pragma once
 
 #include <QObject>
-#include <QByteArray>
+#include <internal/ThreadPool>
+#include <internal/SocketCreation>
 
-class TcpDataHandler : public QObject {
+namespace internal {
+	
+class ConnectionHandler : public Task {
 	Q_OBJECT;
-	signals:
-		void sendDataReady(QByteArray data);
-		void closeConnection();
+	public:
+		ConnectionHandler();
+		ConnectionHandler(SocketCreation* socketCreation);
+		~ConnectionHandler();
+	
+		void setSocketCreator(SocketCreation* socketCreation);
+	
+		void startUp();
+	private:
+		QAbstractSocket* _socket;
+		SocketCreation* socketCreation;
+		void createSocket();
+	private slots:
+		void disconnected();
+		void readyRead();
+		void error(QAbstractSocket::SocketError e);
 	protected:
+		QAbstractSocket& socket();
+	
+		bool isUdpConnection();
+		bool isTcpConnection();
+		bool isSslConnection();
+	
 		void send(QByteArray data);
 		void disconnect();
-	public:
+	
+		virtual void onDisconnect();
+		virtual void onError(QAbstractSocket::SocketError e);
+	
 		virtual void receive(QByteArray data) = 0;
-		virtual void disconnected();
 };
+
+}
+

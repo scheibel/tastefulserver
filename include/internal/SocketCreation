@@ -26,45 +26,52 @@
 
 #pragma once
 
-#include <QObject>
+#include <QAbstractSocket>
+#include <QUdpSocket>
 #include <QTcpSocket>
-#include <TcpDataHandler>
-#include <internal/ThreadPool>
 #include <QSslSocket>
 #include <QSslCertificate>
 #include <QSslKey>
 
 namespace internal {
 	
-class TcpConnectionHandler : public Task {
-	Q_OBJECT;
+class SocketCreation {
 	public:
-		TcpConnectionHandler(unsigned socketDescriptor, TcpDataHandler* handler);
-		~TcpConnectionHandler();
+		SocketCreation(int socketDescriptor);
+		virtual QAbstractSocket* operator()() = 0;
 	
-		void startUp();
-	private slots:
-		void disconnected();
-		void readyRead();
-		void writeData(QByteArray data);
-		void error(QAbstractSocket::SocketError e);
-		void disconnect();
+		virtual bool isTcp();
+		virtual bool isSsl();
+		virtual bool isUdp();
 	protected:
-		unsigned socketDescriptor;
-		QTcpSocket* socket;
-		TcpDataHandler* handler;
-	
-		virtual QTcpSocket* createSocket();
+		int socketDescriptor;
 };
 
-class SslConnectionHandler : public TcpConnectionHandler {
+class UdpSocketCreation : public SocketCreation {
 	public:
-		SslConnectionHandler(unsigned socketDescriptor, QSslCertificate certificate, QSslKey privateKey, TcpDataHandler* handler);
+		UdpSocketCreation(int socketDescriptor);
+		virtual QAbstractSocket* operator()();
+
+		virtual bool isUdp();
+};
+
+class TcpSocketCreation : public SocketCreation {
+	public:
+		TcpSocketCreation(int socketDescriptor);
+		virtual QAbstractSocket* operator()();
+		
+		virtual bool isTcp();
+};
+
+class SslSocketCreation : public TcpSocketCreation {
+	public:
+		SslSocketCreation(int socketDescriptor, QSslCertificate certificate, QSslKey privateKey);
+		virtual QAbstractSocket* operator()();
+	
+		virtual bool isSsl();
 	protected:
 		QSslCertificate certificate;
 		QSslKey privateKey;
-	
-		QTcpSocket* createSocket();
 };
 
 }

@@ -26,10 +26,9 @@
 
 #pragma once
 
-#include <TcpDataHandler>
 #include <QTcpServer>
 #include <internal/ThreadPool>
-#include <internal/TcpConnectionHandler>
+#include <internal/ConnectionHandler>
 
 using namespace internal;
 
@@ -42,8 +41,7 @@ class TcpServer : public QTcpServer {
 	protected:
 		void incomingConnection(int socketDescriptor);
 	
-		virtual Task* createTask(int socketDescriptor);
-		virtual TcpDataHandler* createDataHandler() = 0;
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) = 0;
 	
 		static ThreadPool threadPool;
 };

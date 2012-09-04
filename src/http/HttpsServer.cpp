@@ -28,13 +28,11 @@
 
 using namespace internal;
 
-HttpsServer::HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpDataHandler::RequestCallback callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {
+HttpsServer::HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpHandler::RequestCallback callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {
 }
 
-TcpDataHandler* HttpsServer::createDataHandler() {
-	return new HttpDataHandler(callback, true);
-}
-
-Task* HttpsServer::createTask(int socketDescriptor) {
-	return new SslConnectionHandler(socketDescriptor, certificate, privateKey, createDataHandler());
+ConnectionHandler* HttpsServer::createConnectionHandler(int socketDescriptor) {
+	HttpHandler* https = new HttpHandler(callback);
+	https->setSocketCreator(new SslSocketCreation(socketDescriptor, certificate, privateKey));
+	return https;
 }

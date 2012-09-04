@@ -26,9 +26,11 @@
 
 #include <HttpServer>
 
-HttpServer::HttpServer(HttpDataHandler::RequestCallback callback) : callback(callback) {
+HttpServer::HttpServer(HttpHandler::RequestCallback callback) : callback(callback) {
 }
 
-TcpDataHandler* HttpServer::createDataHandler() {
-	return new HttpDataHandler(callback, false);
+ConnectionHandler* HttpServer::createConnectionHandler(int socketDescriptor) {
+	HttpHandler* http = new HttpHandler(callback);
+	http->setSocketCreator(new TcpSocketCreation(socketDescriptor));
+	return http;
 }

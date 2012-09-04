@@ -22,8 +22,7 @@ add_definitions(-std=c++0x)
 QT4_WRAP_CPP(Server_moc_sources
 	include/internal/ThreadPool
 	include/TcpServer
-	include/TcpDataHandler
-	include/internal/TcpConnectionHandler
+	include/internal/ConnectionHandler
 )
 
 set(Server_sources
@@ -31,9 +30,9 @@ set(Server_sources
 	src/core/ByteArrayStream.cpp
 	src/core/QVariantTree.cpp
 	
+	src/server/SocketCreation.cpp
 	src/server/TcpServer.cpp
-	src/server/TcpDataHandler.cpp
-	src/server/TcpConnectionHandler.cpp
+	src/server/ConnectionHandler.cpp
 	
 	src/http/httpUtil.cpp
 	src/http/HttpMethod.cpp
@@ -48,7 +47,7 @@ set(Server_sources
 	src/http/HttpResponse.cpp
 	src/http/Cookie.cpp
 	src/http/MultiPart.cpp
-	src/http/HttpDataHandler.cpp
+	src/http/HttpHandler.cpp
 	src/http/HttpServer.cpp
 	src/http/HttpsServer.cpp
 )

@@ -24,18 +24,18 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <HttpDataHandler>
+#include <HttpHandler>
 #include <HttpHeader>
 
 #include <QStringList>
 
 #include <QDebug>
 
-HttpDataHandler::HttpDataHandler(RequestCallback callback, bool isHttps) : callback(callback), isHttps(isHttps), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
+HttpHandler::HttpHandler(RequestCallback callback) : callback(callback), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
 	state = READ_REQUEST_LINE;
 }
 
-void HttpDataHandler::receive(QByteArray data) {
+void HttpHandler::receive(QByteArray data) {
 	buffer.append(data);
 	
 	bool continueReading = true;
@@ -61,7 +61,7 @@ void HttpDataHandler::receive(QByteArray data) {
 	}
 }
 
-bool HttpDataHandler::readRequestLine() {
+bool HttpHandler::readRequestLine() {
 	if (!buffer.canReadLine()) return false;
 	
 	QString line = buffer.readLine();
@@ -83,14 +83,14 @@ bool HttpDataHandler::readRequestLine() {
 	
 	QString requestUri = parts[1];
 	
-	request = HttpRequest(method, requestUri, httpVersion, isHttps);
+	request = HttpRequest(method, requestUri, httpVersion, isSslConnection());
 	
 	state = READ_HEADER;
 	
 	return true;
 }
 
-bool HttpDataHandler::readHeader() {
+bool HttpHandler::readHeader() {
 	if (!buffer.canReadLine()) return false;
 	
 	QString line = buffer.readLine();
@@ -114,7 +114,7 @@ bool HttpDataHandler::readHeader() {
 	return true;
 }
 
-bool HttpDataHandler::readContent() {
+bool HttpHandler::readContent() {
 	int length = request.getContentLength();
 	if (buffer.availableBytes()<length) return false;
 	QByteArray content = buffer.read(length);
@@ -123,7 +123,7 @@ bool HttpDataHandler::readContent() {
 	return true;
 }
 
-bool HttpDataHandler::handleRequest() {
+bool HttpHandler::handleRequest() {
 	HttpResponse response = callback(request);
 	
 	send(response.toByteArray());
@@ -137,7 +137,7 @@ bool HttpDataHandler::handleRequest() {
 	return false;
 }
 
-bool HttpDataHandler::handleError() {
+bool HttpHandler::handleError() {
 	request.markBad();
 	
 	HttpResponse response;
