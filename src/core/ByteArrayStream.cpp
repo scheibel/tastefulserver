@@ -28,14 +28,14 @@
 
 using namespace internal;
 
-ByteArrayStream::ByteArrayStream(QByteArray bytes, QString linebreak) : buffer(bytes), linebreak(linebreak), pos(0) {
+ByteArrayStream::ByteArrayStream(const QByteArray& bytes, const QString& linebreak) : buffer(bytes), linebreak(linebreak), pos(0) {
 }
 
-ByteArrayStream ByteArrayStream::forLinebreak(QString linebreak) {
+ByteArrayStream ByteArrayStream::forLinebreak(const QString& linebreak) {
 	return ByteArrayStream(QByteArray(), linebreak);
 }
 
-void ByteArrayStream::append(QByteArray bytes) {
+void ByteArrayStream::append(const QByteArray& bytes) {
 	buffer.append(bytes);
 }
 
@@ -78,15 +78,15 @@ QString ByteArrayStream::readLine() {
 	return line;
 }
 
-bool ByteArrayStream::canReadUpTo(QString delimiter) {
+bool ByteArrayStream::canReadUpTo(const QString& delimiter) {
 	return buffer.indexOf(delimiter, pos)>=0;
 }
 
-bool ByteArrayStream::canReadUpTo(QChar delimiter) {
+bool ByteArrayStream::canReadUpTo(const QChar& delimiter) {
 	return buffer.indexOf(delimiter, pos)>=0;
 }
 
-void ByteArrayStream::skipUpTo(QString delimiter) {
+void ByteArrayStream::skipUpTo(const QString& delimiter) {
 	int p = buffer.indexOf(delimiter, pos);
 	if (p<0) {
 		skipAll();
@@ -95,7 +95,7 @@ void ByteArrayStream::skipUpTo(QString delimiter) {
 	}
 }
 
-void ByteArrayStream::skipUpTo(QChar delimiter) {
+void ByteArrayStream::skipUpTo(const QChar& delimiter) {
 	int p = buffer.indexOf(delimiter, pos);
 	if (p<0) {
 		skipAll();
@@ -104,17 +104,17 @@ void ByteArrayStream::skipUpTo(QChar delimiter) {
 	}
 }
 
-void ByteArrayStream::skipBehind(QString delimiter) {
+void ByteArrayStream::skipBehind(const QString& delimiter) {
 	skipUpTo(delimiter);
 	skip(delimiter.size());
 }
 
-void ByteArrayStream::skipBehind(QChar delimiter) {
+void ByteArrayStream::skipBehind(const QChar& delimiter) {
 	skipUpTo(delimiter);
 	skip(1);
 }
 
-QByteArray ByteArrayStream::readUpTo(QString delimiter, bool skipDelimiter) {
+QByteArray ByteArrayStream::readUpTo(const QString& delimiter, bool skipDelimiter) {
 	int p = buffer.indexOf(delimiter, pos);
 	if (p<0) return readAll();
 	QByteArray part = buffer.mid(pos, p-pos);
@@ -123,7 +123,7 @@ QByteArray ByteArrayStream::readUpTo(QString delimiter, bool skipDelimiter) {
 	return part;	
 }
 
-QByteArray ByteArrayStream::readUpTo(QChar delimiter, bool skipDelimiter) {
+QByteArray ByteArrayStream::readUpTo(const QChar& delimiter, bool skipDelimiter) {
 	int p = buffer.indexOf(delimiter, pos);
 	if (p<0) return readAll();
 	QByteArray part = buffer.mid(pos, p-pos);

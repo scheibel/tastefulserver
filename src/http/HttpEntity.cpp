@@ -30,37 +30,37 @@
 HttpEntity::HttpEntity() {
 }
 
-bool HttpEntity::hasHeader(http::HeaderName headerName) {
+bool HttpEntity::hasHeader(const http::HeaderName& headerName) const {
 	return headers.contains(headerName);
 }
 
-HttpHeader HttpEntity::getHeader(http::HeaderName headerName) {
-	QList<HttpHeader>& list = headers[headerName];
+HttpHeader HttpEntity::getHeader(const http::HeaderName& headerName) const {
+	const QList<HttpHeader>& list = headers[headerName];
 	if (list.isEmpty()) {
 		return HttpHeader::forName(headerName);
 	}
 	return list.first();
 }
 
-QList<HttpHeader> HttpEntity::getHeaders(http::HeaderName headerName) {
+QList<HttpHeader> HttpEntity::getHeaders(const http::HeaderName& headerName) const {
 	return headers[headerName];
 }
 
-void HttpEntity::addHeaders(QList<HttpHeader> headers) {
-	for (HttpHeader& header: headers) {
+void HttpEntity::addHeaders(const QList<HttpHeader>& headers) {
+	for (const HttpHeader& header: headers) {
 		addHeader(header);
 	}
 }
 
-void HttpEntity::addHeader(HttpHeader header) {
+void HttpEntity::addHeader(const HttpHeader& header) {
 	headers[header.getName()] << header;
 }
 
-void HttpEntity::setHeader(http::HeaderName headerName, QString value, bool merge) {
+void HttpEntity::setHeader(const http::HeaderName& headerName, const QString& value, bool merge) {
 	setHeader(HttpHeader(headerName, value), merge);
 }
 
-void HttpEntity::setHeader(HttpHeader header, bool merge) {
+void HttpEntity::setHeader(const HttpHeader& header, bool merge) {
 	QList<HttpHeader>& list = headers[header.getName()];
 	if (list.isEmpty()) {
 		list << header;
@@ -73,11 +73,11 @@ void HttpEntity::setHeader(HttpHeader header, bool merge) {
 	}
 }
 
-void HttpEntity::removeHeader(http::HeaderName headerName) {
+void HttpEntity::removeHeader(const http::HeaderName& headerName) {
 	headers.remove(headerName);
 }
 
-QByteArray HttpEntity::getContent() {
+QByteArray HttpEntity::getContent() const {
 	return content;
 }
 
@@ -86,24 +86,24 @@ void HttpEntity::clearContent() {
 	removeHeader(http::ContentLength);
 }
 
-void HttpEntity::setContent(QByteArray content) {
+void HttpEntity::setContent(const QByteArray& content) {
 	this->content = content;
 	setHeader(http::ContentLength, QString::number(content.size()));
 }
 
-void HttpEntity::writeHeaderOn(HttpHeader& header, QTextStream& stream) {
+void HttpEntity::writeHeaderOn(const HttpHeader& header, QTextStream& stream) const {
 	if (header.isValid()) stream << header.toString() << http::Linebreak;
 }
 
-void HttpEntity::writeHeadersOn(QTextStream& stream) {
-	for (QList<HttpHeader>& list: headers) {
-		for (HttpHeader& header: list) {
+void HttpEntity::writeHeadersOn(QTextStream& stream) const {
+	for (const QList<HttpHeader>& list: headers) {
+		for (const HttpHeader& header: list) {
 			writeHeaderOn(header, stream);
 		}
 	}	
 }
 
-QByteArray HttpEntity::toByteArray() {
+QByteArray HttpEntity::toByteArray() const {
 	QByteArray byteArray;
 	
 	QTextStream stream(&byteArray);

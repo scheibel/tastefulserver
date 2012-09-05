@@ -33,10 +33,10 @@
 
 class HttpServer : public TcpServer {
 	public:
-		HttpServer(HttpHandler::RequestCallback callback);
+		HttpServer(const HttpHandler::RequestCallback& callback);
 	protected:
 		HttpHandler::RequestCallback callback;
 	
-		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor);
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const;
 };
 

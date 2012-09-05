@@ -38,11 +38,11 @@ namespace internal {
 class SocketCreation {
 	public:
 		SocketCreation(int socketDescriptor);
-		virtual QAbstractSocket* operator()() = 0;
+		virtual QAbstractSocket* operator()() const = 0;
 	
-		virtual bool isTcp();
-		virtual bool isSsl();
-		virtual bool isUdp();
+		virtual bool isTcp() const;
+		virtual bool isSsl() const;
+		virtual bool isUdp() const;
 	protected:
 		int socketDescriptor;
 };
@@ -50,25 +50,25 @@ class SocketCreation {
 class UdpSocketCreation : public SocketCreation {
 	public:
 		UdpSocketCreation(int socketDescriptor);
-		virtual QAbstractSocket* operator()();
+		virtual QAbstractSocket* operator()() const;
 
-		virtual bool isUdp();
+		virtual bool isUdp() const;
 };
 
 class TcpSocketCreation : public SocketCreation {
 	public:
 		TcpSocketCreation(int socketDescriptor);
-		virtual QAbstractSocket* operator()();
+		virtual QAbstractSocket* operator()() const;
 		
-		virtual bool isTcp();
+		virtual bool isTcp() const;
 };
 
 class SslSocketCreation : public TcpSocketCreation {
 	public:
-		SslSocketCreation(int socketDescriptor, QSslCertificate certificate, QSslKey privateKey);
-		virtual QAbstractSocket* operator()();
+		SslSocketCreation(int socketDescriptor, const QSslCertificate& certificate, const QSslKey& privateKey);
+		virtual QAbstractSocket* operator()() const;
 	
-		virtual bool isSsl();
+		virtual bool isSsl() const;
 	protected:
 		QSslCertificate certificate;
 		QSslKey privateKey;

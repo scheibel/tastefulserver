@@ -34,9 +34,9 @@ using namespace internal;
 
 class HttpsServer : public HttpServer {
 	public:
-		HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpHandler::RequestCallback callback);
+		HttpsServer(const QSslCertificate& certificate, const QSslKey& privateKey, const HttpHandler::RequestCallback& callback);
 	
-		ConnectionHandler* createConnectionHandler(int socketDescriptor);
+		ConnectionHandler* createConnectionHandler(int socketDescriptor) const;
 	private:
 		QSslCertificate certificate;
 		QSslKey privateKey;

@@ -38,20 +38,28 @@ const QString ContentType::XWWWFormUrlEncoded = "x-www-form-urlencoded";
 ContentType::ContentType() {
 }
 
-ContentType::ContentType(QString type, QString subtype) : type(type), subtype(subtype) {
+ContentType::ContentType(const QString& type, const QString& subtype) : type(type), subtype(subtype) {
+	updateName();
+}
+
+void ContentType::updateName() {
 	name = type+'/'+subtype;
 }
 
-bool ContentType::is(QString type, QString subtype) {
+bool ContentType::is(const QString& type, const QString& subtype) const {
 	return this->type==type && this->subtype==subtype;
 }
 
 void ContentType::setType(const QString& type) {
 	this->type = type;
+	
+	updateName();
 }
 
 void ContentType::setSubype(const QString& subtype) {
 	this->subtype = subtype;
+	
+	updateName();
 }
 
 void ContentType::setTypeAndSubtype(const QString& typeAndSubype) {
@@ -76,22 +84,22 @@ void ContentType::parse(const QString& value) {
 	setTypeAndSubtype(name);
 }
 
-QString ContentType::getType() {
+QString ContentType::getType() const {
 	return type;
 }
 
-QString ContentType::getSubtype() {
+QString ContentType::getSubtype() const {
 	return subtype;
 }
 
-QString ContentType::getCharset() {
+QString ContentType::getCharset() const {
 	return getParameter(Charset);
 }
 
-QString ContentType::getBoundary() {
+QString ContentType::getBoundary() const {
 	return getParameter(Boundary);
 }
 
-bool ContentType::isMultiPart() {
+bool ContentType::isMultiPart() const {
 	return type==Multipart;
 }

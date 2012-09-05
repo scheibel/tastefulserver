@@ -33,11 +33,11 @@ HttpResponse::HttpResponse() {
 	initialize();
 }
 
-HttpResponse::HttpResponse(HttpVersion httpVersion) : HttpMessage(httpVersion) {
+HttpResponse::HttpResponse(const HttpVersion& httpVersion) : HttpMessage(httpVersion) {
 	initialize();
 }
 
-HttpResponse::HttpResponse(HttpRequest& httpRequest) : HttpMessage(httpRequest.getHttpVersion()) {
+HttpResponse::HttpResponse(const HttpRequest& httpRequest) : HttpMessage(httpRequest.getHttpVersion()) {
 	initialize();
 	if (httpRequest.getHttpVersion()>=HttpVersion(1,1) || httpRequest.isKeepAlive()) keepAlive();
 }
@@ -56,7 +56,7 @@ void HttpResponse::setStatusCode(unsigned statusCode) {
 	this->statusCode = statusCode;
 }
 
-unsigned HttpResponse::getStatusCode() {
+unsigned HttpResponse::getStatusCode() const {
 	return statusCode;
 }
 
@@ -70,9 +70,9 @@ Cookie& HttpResponse::setCookie(const QString& key, const QString& value) {
 	return cookies[key];
 }
 
-void HttpResponse::writeHeadersOn(QTextStream& stream) {
+void HttpResponse::writeHeadersOn(QTextStream& stream) const {
 	HttpMessage::writeHeadersOn(stream);
-	for (Cookie& cookie: cookies) {
+	for (const Cookie& cookie: cookies) {
 		HttpHeader header(http::SetCookie, cookie.toString());
 		writeHeaderOn(header, stream);
 	}
@@ -80,7 +80,7 @@ void HttpResponse::writeHeadersOn(QTextStream& stream) {
 	writeHeaderOn(header, stream);
 }
 
-QByteArray HttpResponse::toByteArray() {
+QByteArray HttpResponse::toByteArray() const {
 	QByteArray byteArray;
 	QTextStream stream(&byteArray);
 	

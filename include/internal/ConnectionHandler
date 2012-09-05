@@ -53,17 +53,17 @@ class ConnectionHandler : public Task {
 	protected:
 		QAbstractSocket& socket();
 	
-		bool isUdpConnection();
-		bool isTcpConnection();
-		bool isSslConnection();
+		bool isUdpConnection() const;
+		bool isTcpConnection() const;
+		bool isSslConnection() const;
 	
-		void send(QByteArray data);
+		void send(const QByteArray& data);
 		void disconnect();
 	
 		virtual void onDisconnect();
 		virtual void onError(QAbstractSocket::SocketError e);
 	
-		virtual void receive(QByteArray data) = 0;
+		virtual void receive(const QByteArray& data) = 0;
 };
 
 }

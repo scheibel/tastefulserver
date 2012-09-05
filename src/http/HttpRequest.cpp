@@ -31,13 +31,13 @@
 HttpRequest::HttpRequest() : bad(true) {
 }
 
-HttpRequest::HttpRequest(HttpMethod method, QString requestUri, HttpVersion httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri) {
+HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri) {
 	url = QUrl::fromEncoded(requestUri.toAscii());
 	if (url.scheme().isEmpty()) url.setScheme(isHttps ? "https" : "http");
 	requestParams.parseUrl(url);
 }
 
-bool HttpRequest::isBad() {
+bool HttpRequest::isBad() const {
 	return bad;
 }
 
@@ -45,19 +45,19 @@ void HttpRequest::markBad() {
 	bad = true;
 }
 
-bool HttpRequest::isXMLHttpRequest() {
+bool HttpRequest::isXMLHttpRequest() const {
 	return getHeader(http::XRequestedWith).getValue()=="XMLHttpRequest";
 }
 
-HttpMethod HttpRequest::getMethod() {
+HttpMethod HttpRequest::getMethod() const {
 	return method;
 }
 
-QString HttpRequest::getRequestUri() {
+QString HttpRequest::getRequestUri() const {
 	return requestUri;
 }
 
-void HttpRequest::parseHeader(HttpHeader header) {
+void HttpRequest::parseHeader(const HttpHeader& header) {
 	addHeader(header);
 	QString headerName = header.getName();
 	QString value = header.getValue();
@@ -70,7 +70,7 @@ void HttpRequest::parseHeader(HttpHeader header) {
 	}
 }
 
-void HttpRequest::parseContent(QByteArray content) {
+void HttpRequest::parseContent(const QByteArray& content) {
 	setContent(content);
 	if (isMultiPart()) {
 		multiPart = MultiPart(contentType);
@@ -83,11 +83,11 @@ void HttpRequest::parseContent(QByteArray content) {
 	}
 }
 
-QUrl HttpRequest::getUrl() {
+QUrl HttpRequest::getUrl() const {
 	return url;
 }
 
-QString HttpRequest::getPath() {
+QString HttpRequest::getPath() const {
 	return url.path();
 }
 
@@ -95,7 +95,11 @@ RequestParameters& HttpRequest::getParameters() {
 	return requestParams;
 }
 
-QByteArray HttpRequest::toByteArray() {
+const RequestParameters& HttpRequest::getParameters() const {
+	return requestParams;
+}
+
+QByteArray HttpRequest::toByteArray() const {
 	QByteArray byteArray;
 	
 	QTextStream stream(&byteArray);

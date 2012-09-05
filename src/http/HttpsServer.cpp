@@ -28,10 +28,10 @@
 
 using namespace internal;
 
-HttpsServer::HttpsServer(QSslCertificate certificate, QSslKey privateKey, HttpHandler::RequestCallback callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {
+HttpsServer::HttpsServer(const QSslCertificate& certificate, const QSslKey& privateKey, const HttpHandler::RequestCallback& callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {
 }
 
-ConnectionHandler* HttpsServer::createConnectionHandler(int socketDescriptor) {
+ConnectionHandler* HttpsServer::createConnectionHandler(int socketDescriptor) const {
 	HttpHandler* https = new HttpHandler(callback);
 	https->setSocketCreator(new SslSocketCreation(socketDescriptor, certificate, privateKey));
 	return https;

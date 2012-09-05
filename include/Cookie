@@ -45,8 +45,8 @@ class Cookie {
 		Cookie();
 		Cookie(const QString& name, const QString& value);
 	
-		QString getName();
-		QString getValue();
+		QString getName() const;
+		QString getValue() const;
 	
 		Cookie& setValue(const QString& value);
 		Cookie& setMaxAge(unsigned seconds);
@@ -59,7 +59,7 @@ class Cookie {
 		Cookie& setSecure(bool secure);
 		Cookie& setHttpOnly(bool httpOnly);
 	
-		QString toString();
+		QString toString() const;
 	private:
 		QString name;
 		QString value;
@@ -70,16 +70,19 @@ class Cookie {
 
 class Cookies {
 	public:	
-		bool isEmpty();
+		bool isEmpty() const;
 	
-		void set(Cookie cookie);
-		bool has(const QString& name);
-		Cookie get(const QString& name);
+		void set(const Cookie& cookie);
+		bool has(const QString& name) const;
+		Cookie get(const QString& name) const;
 		Cookie& operator[](const QString& name);
+		const Cookie operator[](const QString& name) const;
 		void clear(Cookie& cookie);
 	
 		QHash<QString, Cookie>::iterator begin();
+		QHash<QString, Cookie>::const_iterator begin() const;
 		QHash<QString, Cookie>::iterator end();
+		QHash<QString, Cookie>::const_iterator end() const;
 	
 		void parse(const QString& cookiesString);
 	

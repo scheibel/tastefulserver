@@ -45,27 +45,27 @@ class HttpMethod {
 		} Method;
 		
 		HttpMethod();
-		HttpMethod(Method method);
+		HttpMethod(const Method& method);
 		HttpMethod(const HttpMethod& method);
 		
-		static HttpMethod fromString(QString methodString);
+		static HttpMethod fromString(const QString& methodString);
 		
-		HttpMethod& operator=(Method method);
-		HttpMethod& operator=(HttpMethod method);
+		HttpMethod& operator=(const Method& method);
+		HttpMethod& operator=(const HttpMethod& method);
 		
-		bool operator==(Method method);
-		bool operator==(const HttpMethod& method);
+		bool operator==(const Method& method) const;
+		bool operator==(const HttpMethod& method) const;
 		
-		bool operator!=(Method method);
-		bool operator!=(const HttpMethod& method);
+		bool operator!=(const Method& method) const;
+		bool operator!=(const HttpMethod& method) const;
 		
-		operator unsigned();
-		operator Method();
+		operator unsigned() const;
+		operator Method() const;
 		
-		bool isInvalid();
+		bool isInvalid() const;
 		
-		Method method();
-		QString toString();
+		Method method() const;
+		QString toString() const;
 	private:
 		Method _method;
 

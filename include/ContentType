@@ -41,26 +41,28 @@ class ContentType : public HttpHeaderElement {
 		static const QString XWWWFormUrlEncoded;
 	
 		ContentType();
-		ContentType(QString type, QString subtype);
+		ContentType(const QString& type, const QString& subtype);
 	
 		static ContentType fromString(const QString& value);
 	
-		bool is(QString type, QString subtype);
+		bool is(const QString& type, const QString& subtype) const;
 	
 		void setType(const QString& type);
 		void setSubype(const QString& subtype);
 		void setTypeAndSubtype(const QString& typeAndSubype);
 	
-		QString getType();
-		QString getSubtype();
+		QString getType() const;
+		QString getSubtype() const;
 	
-		QString getCharset();
-		QString getBoundary();
+		QString getCharset() const;
+		QString getBoundary() const;
 	
-		bool isMultiPart();
+		bool isMultiPart() const;
 		
 		void parse(const QString& value);
 	protected:
+		void updateName();
+		
 		QString type;
 		QString subtype;
 };

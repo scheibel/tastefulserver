@@ -33,43 +33,43 @@ HttpVersion::HttpVersion() : _major(0), _minor(0) {
 HttpVersion::HttpVersion(unsigned _major, unsigned _minor) : _major(_major), _minor(_minor) {
 }
 
-bool HttpVersion::isInvalid() {
+bool HttpVersion::isInvalid() const {
 	return _major==0 && _minor==0;
 }
 
-unsigned HttpVersion::getMajor() {
+unsigned HttpVersion::getMajor() const {
 	return _major;
 }
 
-unsigned HttpVersion::getMinor() {
+unsigned HttpVersion::getMinor() const {
 	return _minor;
 }
 
-bool HttpVersion::operator<(const HttpVersion& httpVersion) {
+bool HttpVersion::operator<(const HttpVersion& httpVersion) const {
 	return _major<httpVersion._major && _minor<httpVersion._minor;
 }
 
-bool HttpVersion::operator<=(const HttpVersion& httpVersion) {
+bool HttpVersion::operator<=(const HttpVersion& httpVersion) const {
 	return _major<=httpVersion._major && _minor<=httpVersion._minor;
 }
 
-bool HttpVersion::operator>(const HttpVersion& httpVersion) {
+bool HttpVersion::operator>(const HttpVersion& httpVersion) const {
 	return _major>httpVersion._major && _minor>httpVersion._minor;
 }
 
-bool HttpVersion::operator>=(const HttpVersion& httpVersion) {
+bool HttpVersion::operator>=(const HttpVersion& httpVersion) const {
 	return _major>=httpVersion._major && _minor>=httpVersion._minor;
 }
 
-bool HttpVersion::operator==(const HttpVersion& httpVersion) {
+bool HttpVersion::operator==(const HttpVersion& httpVersion) const {
 	return _major==httpVersion._major && _minor==httpVersion._minor;
 }
 
-bool HttpVersion::operator!=(const HttpVersion& httpVersion) {
+bool HttpVersion::operator!=(const HttpVersion& httpVersion) const {
 	return _major!=httpVersion._major || _minor!=httpVersion._minor;
 }
 
-QString HttpVersion::toString() {
+QString HttpVersion::toString() const {
 	return QString("HTTP/%1.%2").arg(_major).arg(_minor);
 }
 

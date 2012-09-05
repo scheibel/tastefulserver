@@ -35,7 +35,7 @@ using namespace internal;
 RequestParameters::RequestParameters() : params(new QVariantTree()) {
 }
 
-RequestParameters RequestParameters::fromUrl(QUrl url) {
+RequestParameters RequestParameters::fromUrl(const QUrl& url) {
 	RequestParameters params;
 	params.parseUrl(url);
 	return params;
@@ -47,17 +47,17 @@ RequestParameters RequestParameters::fromUrlEncoded(QByteArray urlEncodedPost) {
 	return params;
 }
 
-RequestParameters RequestParameters::fromMultiPart(MultiPart multiPart) {
+RequestParameters RequestParameters::fromMultiPart(const MultiPart& multiPart) {
 	RequestParameters params;
 	params.parseMultiPart(multiPart);
 	return params;
 }
 
-QString RequestParameters::toString() {
+QString RequestParameters::toString() const {
 	return params->printString();
 }
 
-void RequestParameters::parseUrl(QUrl url) {
+void RequestParameters::parseUrl(const QUrl& url) {
 	QList<QPair<QString, QVariant>> parameters;
 	for (QPair<QString, QString>& pair: url.queryItems()) {
 		parameters << QPair<QString, QVariant>(pair.first, pair.second);
@@ -70,7 +70,7 @@ void RequestParameters::parseUrlEncoded(QByteArray urlEncoded) {
 	parseUrl(QUrl::fromEncoded("/?"+urlEncoded.replace('+',' ')));
 }
 
-void RequestParameters::parseMultiPart(MultiPart multiPart) {
+void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
 	QList<QPair<QString, QVariant>> parameters;
 	
 	for (Part& part: multiPart.getParts()) {
@@ -114,27 +114,27 @@ void RequestParameters::parseList(QList<QPair<QString, QVariant>> parameters) {
 	}
 }
 
-QVariantAbstractTree& RequestParameters::operator[](const QString& key) {
+QVariantAbstractTree& RequestParameters::operator[](const QString& key) const {
 	return get(key);
 }
 
-QVariantAbstractTree& RequestParameters::getByPath(const QString& path) {
+QVariantAbstractTree& RequestParameters::getByPath(const QString& path) const {
 	return params->getByPath(path);
 }
 
-QVariantAbstractTree& RequestParameters::get(const QString& key) {
+QVariantAbstractTree& RequestParameters::get(const QString& key) const {
 	return params->get(key);
 }
 
-bool RequestParameters::contains(const QString& key) {
+bool RequestParameters::contains(const QString& key) const {
 	return params->contains(key);
 }
 
-bool RequestParameters::containsPath(const QString& path) {
+bool RequestParameters::containsPath(const QString& path) const {
 	return params->containsPath(path);
 }
 
-QList<QString> RequestParameters::extractIndices(const QString& key) {
+QList<QString> RequestParameters::extractIndices(const QString& key) const {
 	ByteArrayStream stream(key.toUtf8());
 	QString name = stream.readUpTo('[');
 	

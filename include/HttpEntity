@@ -41,27 +41,27 @@ class HttpEntity {
 	public:
 		HttpEntity();
 	
-		bool hasHeader(http::HeaderName headerName);
-		HttpHeader getHeader(http::HeaderName headerName);
-		QList<HttpHeader> getHeaders(http::HeaderName headerName);
+		bool hasHeader(const http::HeaderName& headerName) const;
+		HttpHeader getHeader(const http::HeaderName& headerName) const;
+		QList<HttpHeader> getHeaders(const http::HeaderName& headerName) const;
 	
-		void addHeader(HttpHeader header);
-		void addHeaders(QList<HttpHeader> headers);
+		void addHeader(const HttpHeader& header);
+		void addHeaders(const QList<HttpHeader>& headers);
 	
-		void setHeader(HttpHeader header, bool merge=false);
-		void setHeader(http::HeaderName headerName, QString value, bool merge=false);
+		void setHeader(const HttpHeader& header, bool merge=false);
+		void setHeader(const http::HeaderName& headerName, const QString& value, bool merge=false);
 	
-		void removeHeader(http::HeaderName headerName);
+		void removeHeader(const http::HeaderName& headerName);
 	
-		void setContent(QByteArray content);
-		QByteArray getContent();
+		void setContent(const QByteArray& content);
+		QByteArray getContent() const;
 		void clearContent();
 	
-		virtual QByteArray toByteArray();
+		virtual QByteArray toByteArray() const;
 	protected:
 		QHash<QString, QList<HttpHeader>> headers;
 		QByteArray content;
 	
-		void writeHeaderOn(HttpHeader& header, QTextStream& stream);
-		virtual void writeHeadersOn(QTextStream& stream);
+		void writeHeaderOn(const HttpHeader& header, QTextStream& stream) const;
+		virtual void writeHeadersOn(QTextStream& stream) const;
 };

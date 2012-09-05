@@ -36,9 +36,9 @@ class HttpHandler : public ConnectionHandler {
 	public:
 		typedef std::function<HttpResponse(HttpRequest&)> RequestCallback;
 		
-		HttpHandler(RequestCallback callback);
+		HttpHandler(const RequestCallback& callback);
 	
-		void receive(QByteArray data);
+		void receive(const QByteArray& data);
 	private:		
 		bool readRequestLine();
 		bool readHeader();

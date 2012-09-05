@@ -69,7 +69,7 @@ void ThreadPool::setNumThreads(int numThreads) {
 	threadCount = numThreads;
 }
 
-bool ThreadPool::isStarted() {
+bool ThreadPool::isStarted() const {
 	return started;
 }
 

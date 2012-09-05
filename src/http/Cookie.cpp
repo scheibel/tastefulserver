@@ -44,11 +44,11 @@ Cookie::Cookie() : secure(false), httpOnly(false) {
 Cookie::Cookie(const QString& name, const QString& value) : name(name), value(value), secure(false), httpOnly(false) {
 }
 
-QString Cookie::getName() {
+QString Cookie::getName() const {
 	return name;
 }
 
-QString Cookie::getValue() {
+QString Cookie::getValue() const {
 	return value;
 }
 
@@ -110,7 +110,7 @@ Cookie& Cookie::setHttpOnly(bool httpOnly) {
 	return *this;
 }
 
-QString Cookie::toString() {
+QString Cookie::toString() const {
 	if (name.isNull()) return QString();
 	
 	QString string;
@@ -129,23 +129,27 @@ QString Cookie::toString() {
 
 
 
-bool Cookies::isEmpty() {
+bool Cookies::isEmpty() const {
 	return cookies.isEmpty();
 }
 
-void Cookies::set(Cookie cookie) {
+void Cookies::set(const Cookie& cookie) {
 	cookies[cookie.getName()] = cookie;
 }
 
-bool Cookies::has(const QString& name) {
+bool Cookies::has(const QString& name) const {
 	return cookies.contains(name);
 }
 
-Cookie Cookies::get(const QString& name) {
+Cookie Cookies::get(const QString& name) const {
 	return has(name) ? cookies[name] : Cookie();
 }
 
 Cookie& Cookies::operator[](const QString& name) {
+	return cookies[name];
+}
+
+const Cookie Cookies::operator[](const QString& name) const {
 	return cookies[name];
 }
 
@@ -174,6 +178,14 @@ QHash<QString, Cookie>::iterator Cookies::begin() {
 	return cookies.begin();
 }
 
+QHash<QString, Cookie>::const_iterator Cookies::begin() const {
+	return cookies.begin();
+}
+
 QHash<QString, Cookie>::iterator Cookies::end() {
+	return cookies.end();
+}
+
+QHash<QString, Cookie>::const_iterator Cookies::end() const {
 	return cookies.end();
 }

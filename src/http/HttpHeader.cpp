@@ -31,24 +31,24 @@
 NameValuePair::NameValuePair() {
 }
 
-NameValuePair::NameValuePair(QString name, QString value) : name(name), value(value) {
+NameValuePair::NameValuePair(const QString& name, const QString& value) : name(name), value(value) {
 }
 
-QString NameValuePair::getName() {
+QString NameValuePair::getName() const {
 	return name;
 }
 
-QString NameValuePair::getValue() {
+QString NameValuePair::getValue() const {
 	return value;
 }
 
-HttpHeaderElementParameter::HttpHeaderElementParameter() : NameValuePair() {
+HttpHeaderElementParameter::HttpHeaderElementParameter() {
 }
 
-HttpHeaderElementParameter::HttpHeaderElementParameter(QString name, QString value) : NameValuePair(name, value) {
+HttpHeaderElementParameter::HttpHeaderElementParameter(const QString& name, const QString& value) : NameValuePair(name, value) {
 }
 
-QString HttpHeaderElementParameter::toString() {
+QString HttpHeaderElementParameter::toString() const {
 	QString string;
 	QTextStream stream(&string);
 	stream << name;
@@ -80,7 +80,7 @@ QString HttpHeaderElementParameter::stripQuotes(const QString& string) {
 HttpHeaderElement::HttpHeaderElement() : NameValuePair() {
 }
 
-HttpHeaderElement::HttpHeaderElement(QString name, QString value) : NameValuePair(name, value) {
+HttpHeaderElement::HttpHeaderElement(const QString& name, const QString& value) : NameValuePair(name, value) {
 }
 
 HttpHeaderElement HttpHeaderElement::fromString(const QString& elementString) {
@@ -100,24 +100,24 @@ void HttpHeaderElement::parse(const QString& elementString) {
 	}
 }
 
-bool HttpHeaderElement::isSet(const QString& paramName) {
+bool HttpHeaderElement::isSet(const QString& paramName) const {
 	return parameters.contains(paramName);
 }
 
-QString HttpHeaderElement::getParameter(const QString& paramName) {
+QString HttpHeaderElement::getParameter(const QString& paramName) const {
 	return parameters[paramName].getValue();
 }
 
-QList<HttpHeaderElementParameter> HttpHeaderElement::getParameters() {
+QList<HttpHeaderElementParameter> HttpHeaderElement::getParameters() const {
 	return parameters.values();
 }
 
-QString HttpHeaderElement::toString() {
+QString HttpHeaderElement::toString() const {
 	QString string;
 	QTextStream stream(&string);
 	stream << name;
 	if (!value.isEmpty()) stream << "=" << value;
-	for (HttpHeaderElementParameter& param: parameters) {
+	for (const HttpHeaderElementParameter& param: parameters) {
 		stream << "; " << param.toString();
 	}
 	return string;
@@ -126,35 +126,32 @@ QString HttpHeaderElement::toString() {
 HttpHeaderValue::HttpHeaderValue() : modified(false) {
 }
 
-HttpHeaderValue::HttpHeaderValue(QString value) : value(value), modified(false) {
+HttpHeaderValue::HttpHeaderValue(const QString& value) : value(value), modified(false) {
 }
 
-HttpHeaderElement HttpHeaderValue::getElement() {
+HttpHeaderElement HttpHeaderValue::getElement() const {
 	parseElementsIfNecessary();
 	return elements.first();	
 }
 
-QList<HttpHeaderElement> HttpHeaderValue::getElements() {
+QList<HttpHeaderElement> HttpHeaderValue::getElements() const {
 	parseElementsIfNecessary();
 	return elements;	
 }
 
-bool HttpHeaderValue::isValid() {
+bool HttpHeaderValue::isValid() const {
 	return !toString().isEmpty();
 }
 
-bool HttpHeaderValue::merge(QList<HttpHeaderElement> newElements)  {
+void HttpHeaderValue::merge(const QList<HttpHeaderElement>& newElements) {
 	parseElementsIfNecessary();
 	if (!newElements.isEmpty()) {
-		for (HttpHeaderElement& element: newElements) {
-			elements << element;
-		}
+		elements.append(newElements);
 		modified = true;
 	}
-	return true;	
 }
 
-QString HttpHeaderValue::toString() {
+QString HttpHeaderValue::toString() const {
 	if (modified) {
 		QString string;
 		QTextStream stream(&string);
@@ -168,7 +165,7 @@ QString HttpHeaderValue::toString() {
 	return value;	
 }
 
-void HttpHeaderValue::parseElementsIfNecessary() {
+void HttpHeaderValue::parseElementsIfNecessary() const {
 	if (elements.isEmpty()) {
 		QStringList parts = value.split(',');
 		for (QString& part: parts) {
@@ -180,14 +177,14 @@ void HttpHeaderValue::parseElementsIfNecessary() {
 HttpHeader::HttpHeader() {
 }
 
-HttpHeader::HttpHeader(QString name, QString value) : name(name), value(value) {
+HttpHeader::HttpHeader(const QString& name, const QString& value) : name(name), value(value) {
 }
 
-QString HttpHeader::getName() {
+QString HttpHeader::getName() const {
 	return name;
 }
 
-QString HttpHeader::getValue() {
+QString HttpHeader::getValue() const {
 	return value.toString();
 }
 
@@ -195,24 +192,25 @@ void HttpHeader::setValue(const QString& value) {
 	this->value = value;
 }
 
-bool HttpHeader::isValid() {
+bool HttpHeader::isValid() const {
 	return !name.isEmpty() && value.isValid();
 }
 
-bool HttpHeader::merge(HttpHeader header) {
+bool HttpHeader::merge(const HttpHeader& header) {
 	if (name!=header.getName()) return false;
-	return value.merge(header.getElements());
+	value.merge(header.getElements());
+	return true;
 }
 
-HttpHeaderElement HttpHeader::getElement() {
+HttpHeaderElement HttpHeader::getElement() const {
 	return value.getElement();
 }
 
-QList<HttpHeaderElement> HttpHeader::getElements() {
+QList<HttpHeaderElement> HttpHeader::getElements() const {
 	return value.getElements();
 }
 
-QString HttpHeader::toString() {
+QString HttpHeader::toString() const {
 	QString string;
 	QTextStream stream(&string);
 	stream << name << ": " << value.toString();

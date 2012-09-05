@@ -29,32 +29,30 @@
 #include <HttpHeader>
 #include <internal/ByteArrayStream>
 
-#include<QDebug>
-
 using namespace internal;
 
 Part::Part() {
 }
 
-Part::Part(QList<HttpHeader> headers, QByteArray content) : content(content) {
-	for (HttpHeader& header: headers) {
+Part::Part(const QList<HttpHeader>& headers, const QByteArray& content) : content(content) {
+	for (const HttpHeader& header: headers) {
 		this->headers.insert(header.getName(), header);
 	}
 }
 
-bool Part::hasHeader(http::HeaderName headerName) {
+bool Part::hasHeader(const http::HeaderName& headerName) const {
 	return headers.contains(headerName);
 }
 
-HttpHeader Part::getHeader(http::HeaderName headerName) {
+HttpHeader Part::getHeader(const http::HeaderName& headerName) const {
 	return headers[headerName];
 }
 
-QList<HttpHeader> Part::getHeaders() {
+QList<HttpHeader> Part::getHeaders() const {
 	return headers.values();
 }
 
-QByteArray Part::getContent() {
+QByteArray Part::getContent() const {
 	return content;
 }
 
@@ -62,18 +60,18 @@ QByteArray Part::getContent() {
 MultiPart::MultiPart() {
 }
 
-MultiPart::MultiPart(ContentType type) : type(type) {
+MultiPart::MultiPart(const ContentType& type) : type(type) {
 }
 
-bool MultiPart::isFormData() {
+bool MultiPart::isFormData() const {
 	return type.getSubtype()==ContentType::FormData;
 }
 
-QList<Part> MultiPart::getParts() {
+QList<Part> MultiPart::getParts() const {
 	return parts;
 }
 
-void MultiPart::parse(QByteArray content) {
+void MultiPart::parse(const QByteArray& content) {
 	if (!type.isMultiPart()) {
 		return;
 	}

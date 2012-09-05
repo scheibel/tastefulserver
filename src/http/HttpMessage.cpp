@@ -30,10 +30,14 @@
 HttpMessage::HttpMessage() : httpVersion(HttpVersion(1,1)) {
 }
 
-HttpMessage::HttpMessage(HttpVersion httpVersion) : httpVersion(httpVersion) {
+HttpMessage::HttpMessage(const HttpVersion& httpVersion) : httpVersion(httpVersion) {
 }
 
 HttpVersion& HttpMessage::getHttpVersion() {
+	return httpVersion;
+}
+
+const HttpVersion& HttpMessage::getHttpVersion() const {
 	return httpVersion;
 }
 
@@ -41,7 +45,11 @@ Cookies& HttpMessage::getCookies() {
 	return cookies;
 }
 
-bool HttpMessage::hasCookies() {
+const Cookies& HttpMessage::getCookies() const {
+	return cookies;
+}
+
+bool HttpMessage::hasCookies() const {
 	return !cookies.isEmpty();
 }
 
@@ -49,22 +57,30 @@ ContentType& HttpMessage::getContentType() {
 	return contentType;
 }
 
+const ContentType& HttpMessage::getContentType() const {
+	return contentType;
+}
+
 void HttpMessage::keepAlive() {
 	setHeader(http::Connection, "Keep-Alive");
 }
 
-bool HttpMessage::isKeepAlive() {
+bool HttpMessage::isKeepAlive() const {
 	return getHeader(http::Connection).getValue().toLower()=="keep-alive";
 }
 
-int HttpMessage::getContentLength() {
+int HttpMessage::getContentLength() const {
 	return getHeader(http::ContentLength).getValue().toInt();
 }
 
-bool HttpMessage::isMultiPart() {
+bool HttpMessage::isMultiPart() const {
 	return contentType.isMultiPart();
 }
 
 MultiPart& HttpMessage::getMultiPart() {
+	return multiPart;
+}
+
+const MultiPart& HttpMessage::getMultiPart() const {
 	return multiPart;
 }

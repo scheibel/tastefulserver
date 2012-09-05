@@ -35,13 +35,13 @@
 class Part {
 	public:
 		Part();
-		Part(QList<HttpHeader> headers, QByteArray content);
+		Part(const QList<HttpHeader>& headers, const QByteArray& content);
 	
-		bool hasHeader(http::HeaderName headerName);
-		HttpHeader getHeader(http::HeaderName headerName);
+		bool hasHeader(const http::HeaderName& headerName) const;
+		HttpHeader getHeader(const http::HeaderName& headerName) const;
 	
-		QList<HttpHeader> getHeaders();
-		QByteArray getContent();
+		QList<HttpHeader> getHeaders() const;
+		QByteArray getContent() const;
 	protected:
 		QHash<QString, HttpHeader> headers;
 		QByteArray content;
@@ -50,13 +50,13 @@ class Part {
 class MultiPart {
 	public:
 		MultiPart();
-		MultiPart(ContentType type);
+		MultiPart(const ContentType& type);
 	
-		void parse(QByteArray content);
+		void parse(const QByteArray& content);
 	
-		bool isFormData();
+		bool isFormData() const;
 	
-		QList<Part> getParts();
+		QList<Part> getParts() const;
 	protected:
 		ContentType type;
 		QList<Part> parts;

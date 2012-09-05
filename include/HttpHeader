@@ -108,10 +108,10 @@ namespace http {
 class NameValuePair {
 	public:
 		NameValuePair();
-		NameValuePair(QString name, QString value);
+		NameValuePair(const QString& name, const QString& value);
 	
-		QString getName();
-		QString getValue();
+		QString getName() const;
+		QString getValue() const;
 	protected:
 		QString name;
 		QString value;
@@ -120,9 +120,9 @@ class NameValuePair {
 class HttpHeaderElementParameter : public NameValuePair {
 	public:
 		HttpHeaderElementParameter();
-		HttpHeaderElementParameter(QString name, QString value);
+		HttpHeaderElementParameter(const QString& name, const QString& value);
 	
-		QString toString();
+		QString toString() const;
 		
 		static HttpHeaderElementParameter fromString(const QString& param);
 	protected:
@@ -133,16 +133,16 @@ class HttpHeaderElementParameter : public NameValuePair {
 class HttpHeaderElement : public NameValuePair {
 	public:
 		HttpHeaderElement();
-		HttpHeaderElement(QString name, QString value);
+		HttpHeaderElement(const QString& name, const QString& value);
 	
-		bool isSet(const QString& paramName);
-		QString getParameter(const QString& paramName);
+		bool isSet(const QString& paramName) const;
+		QString getParameter(const QString& paramName) const;
 	
-		QList<HttpHeaderElementParameter> getParameters();
+		QList<HttpHeaderElementParameter> getParameters() const;
 	
 		static HttpHeaderElement fromString(const QString& elementString);
 	
-		QString toString();
+		QString toString() const;
 	protected:
 		QHash<QString, HttpHeaderElementParameter> parameters;
 	
@@ -152,42 +152,42 @@ class HttpHeaderElement : public NameValuePair {
 class HttpHeaderValue {
 	public:
 		HttpHeaderValue();
-		HttpHeaderValue(QString value);
+		HttpHeaderValue(const QString& value);
 	
-		bool isValid();
+		bool isValid() const;
 	
-		HttpHeaderElement getElement();
-		QList<HttpHeaderElement> getElements();
-		bool merge(QList<HttpHeaderElement> newElements);
+		HttpHeaderElement getElement() const;
+		QList<HttpHeaderElement> getElements() const;
+		void merge(const QList<HttpHeaderElement>& newElements);
 	
-		QString toString();
+		QString toString() const;
 	protected:
-		void parseElementsIfNecessary();
+		void parseElementsIfNecessary() const;
 	
 		QString value;
 		bool modified;
-		QList<HttpHeaderElement> elements;
+		mutable QList<HttpHeaderElement> elements;
 };
 
 class HttpHeader {
 	public:
 		HttpHeader();
-		HttpHeader(QString name, QString value);
+		HttpHeader(const QString& name, const QString& value);
 	
-		QString getName();
-		QString getValue();
+		QString getName() const;
+		QString getValue() const;
 		void setValue(const QString& value);
 	
-		bool isValid();
+		bool isValid() const;
 	
-		bool merge(HttpHeader header);
-		QString toString();
+		bool merge(const HttpHeader& header);
+		QString toString() const;
 		
 		static HttpHeader forName(const QString& name);
 		static HttpHeader fromString(const QString& header);
 	
-		HttpHeaderElement getElement();
-		QList<HttpHeaderElement> getElements();
+		HttpHeaderElement getElement() const;
+		QList<HttpHeaderElement> getElements() const;
 	protected:
 		QString name;
 		HttpHeaderValue value;

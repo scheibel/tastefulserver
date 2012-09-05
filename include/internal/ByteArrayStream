@@ -31,22 +31,22 @@ namespace internal {
 	
 class ByteArrayStream {
 	public:
-		ByteArrayStream(QByteArray bytes, QString linebreak="\n");
+		ByteArrayStream(const QByteArray& bytes, const QString& linebreak="\n");
 	 
-		static ByteArrayStream forLinebreak(QString linebreak);
+		static ByteArrayStream forLinebreak(const QString& linebreak);
 	
-		void append(QByteArray bytes);
+		void append(const QByteArray& bytes);
 		QByteArray read(unsigned length);
 		void skip(unsigned length);
 		QString readLine();
-		void skipUpTo(QString delimiter);
-		void skipUpTo(QChar delimiter);
-		void skipBehind(QString delimiter);
-		void skipBehind(QChar delimiter);
-		bool canReadUpTo(QString delimiter);
-		bool canReadUpTo(QChar delimiter);
-		QByteArray readUpTo(QString delimiter, bool skipDelimiter = false);
-		QByteArray readUpTo(QChar delimiter, bool skipDelimiter = false);
+		void skipUpTo(const QString& delimiter);
+		void skipUpTo(const QChar& delimiter);
+		void skipBehind(const QString& delimiter);
+		void skipBehind(const QChar& delimiter);
+		bool canReadUpTo(const QString& delimiter);
+		bool canReadUpTo(const QChar& delimiter);
+		QByteArray readUpTo(const QString& delimiter, bool skipDelimiter = false);
+		QByteArray readUpTo(const QChar& delimiter, bool skipDelimiter = false);
 		QByteArray readAll();
 		void skipAll();
 		bool canReadLine();

@@ -26,10 +26,10 @@
 
 #include <HttpServer>
 
-HttpServer::HttpServer(HttpHandler::RequestCallback callback) : callback(callback) {
+HttpServer::HttpServer(const HttpHandler::RequestCallback& callback) : callback(callback) {
 }
 
-ConnectionHandler* HttpServer::createConnectionHandler(int socketDescriptor) {
+ConnectionHandler* HttpServer::createConnectionHandler(int socketDescriptor) const {
 	HttpHandler* http = new HttpHandler(callback);
 	http->setSocketCreator(new TcpSocketCreation(socketDescriptor));
 	return http;

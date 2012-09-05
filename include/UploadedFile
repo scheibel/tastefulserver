@@ -36,10 +36,10 @@
 class UploadedFile {
 	public:
 		UploadedFile();
-		UploadedFile(ContentType contentType);
+		UploadedFile(const ContentType& contentType);
 	
 		void setFilename(const QString& filename);
-		void setContent(QByteArray content);
+		void setContent(const QByteArray& content);
 	
 		QString getFilename();
 		QByteArray getContent();

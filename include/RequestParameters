@@ -40,25 +40,25 @@ class RequestParameters {
 	public:
 		RequestParameters();
 		
-		bool contains(const QString& key);
-		bool containsPath(const QString& path);
+		bool contains(const QString& key) const;
+		bool containsPath(const QString& path) const;
 		
-		QVariantAbstractTree& operator[](const QString& key);
-		QVariantAbstractTree& get(const QString& key);
-		QVariantAbstractTree& getByPath(const QString& path);
+		QVariantAbstractTree& operator[](const QString& key) const;
+		QVariantAbstractTree& get(const QString& key) const;
+		QVariantAbstractTree& getByPath(const QString& path) const;
 		
-		void parseUrl(QUrl url);
+		void parseUrl(const QUrl& url);
 		void parseUrlEncoded(QByteArray urlEncodedPost);
-		void parseMultiPart(MultiPart multiPart);
+		void parseMultiPart(const MultiPart& multiPart);
 		
-		QString toString();
+		QString toString() const;
 		
-		static RequestParameters fromUrl(QUrl url);
+		static RequestParameters fromUrl(const QUrl& url);
 		static RequestParameters fromUrlEncoded(QByteArray urlEncoded);
-		static RequestParameters fromMultiPart(MultiPart multiPart);
+		static RequestParameters fromMultiPart(const MultiPart& multiPart);
 	protected:
 		void parseList(QList<QPair<QString, QVariant>> parameters);
-		QList<QString> extractIndices(const QString& key);
+		QList<QString> extractIndices(const QString& key) const;
 		
 		QSharedPointer<QVariantTree> params;
 };

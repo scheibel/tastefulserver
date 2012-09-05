@@ -41,7 +41,7 @@ class TcpServer : public QTcpServer {
 	protected:
 		void incomingConnection(int socketDescriptor);
 	
-		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) = 0;
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const = 0;
 	
 		static ThreadPool threadPool;
 };

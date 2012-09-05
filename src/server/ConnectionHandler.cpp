@@ -60,15 +60,15 @@ QAbstractSocket& ConnectionHandler::socket() {
 	return *_socket;
 }
 
-bool ConnectionHandler::isUdpConnection() {
+bool ConnectionHandler::isUdpConnection() const {
 	return socketCreation->isUdp();
 }
 
-bool ConnectionHandler::isTcpConnection() {
+bool ConnectionHandler::isTcpConnection() const {
 	return socketCreation->isTcp();
 }
 
-bool ConnectionHandler::isSslConnection() {
+bool ConnectionHandler::isSslConnection() const {
 	return socketCreation->isSsl();
 }
 
@@ -81,7 +81,7 @@ void ConnectionHandler::readyRead() {
 	receive(_socket->readAll());
 }
 
-void ConnectionHandler::send(QByteArray data) {
+void ConnectionHandler::send(const QByteArray& data) {
 	_socket->write(data);
 }
 

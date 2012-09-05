@@ -34,24 +34,25 @@
 class HttpRequest : public HttpMessage {
 	public:
 		HttpRequest();
-		HttpRequest(HttpMethod method, QString requestUri, HttpVersion httpVersion, bool isHttps = false);
+		HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps = false);
 	
-		bool isBad();
+		bool isBad() const;
 		void markBad();
 	
-		bool isXMLHttpRequest();
+		bool isXMLHttpRequest() const;
 	
-		void parseHeader(HttpHeader header);
-		void parseContent(QByteArray content);
+		void parseHeader(const HttpHeader& header);
+		void parseContent(const QByteArray& content);
 		
-		HttpMethod getMethod();
-		QUrl getUrl();
-		QString getPath();
-		QString getRequestUri();
+		HttpMethod getMethod() const;
+		QUrl getUrl() const;
+		QString getPath() const;
+		QString getRequestUri() const;
 	
 		RequestParameters& getParameters();
+		const RequestParameters& getParameters() const;
 	
-		virtual QByteArray toByteArray();
+		virtual QByteArray toByteArray() const;
 	protected:
 		bool bad;
 		HttpMethod method;

@@ -33,18 +33,18 @@ class HttpVersion {
 		HttpVersion();
 		HttpVersion(unsigned _major, unsigned _minor);
 	
-		bool isInvalid();
-		unsigned getMajor();
-		unsigned getMinor();
+		bool isInvalid() const;
+		unsigned getMajor() const;
+		unsigned getMinor() const;
 	
-		bool operator<(const HttpVersion& httpVersion);
-		bool operator<=(const HttpVersion& httpVersion);
-		bool operator>(const HttpVersion& httpVersion);
-		bool operator>=(const HttpVersion& httpVersion);
-		bool operator==(const HttpVersion& httpVersion);
-		bool operator!=(const HttpVersion& httpVersion);
+		bool operator<(const HttpVersion& httpVersion) const;
+		bool operator<=(const HttpVersion& httpVersion) const;
+		bool operator>(const HttpVersion& httpVersion) const;
+		bool operator>=(const HttpVersion& httpVersion) const;
+		bool operator==(const HttpVersion& httpVersion) const;
+		bool operator!=(const HttpVersion& httpVersion) const;
 	
-		QString toString();
+		QString toString() const;
 		
 		static HttpVersion fromString(const QString& string);
 	private:

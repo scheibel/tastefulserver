@@ -31,11 +31,11 @@
 
 #include <QDebug>
 
-HttpHandler::HttpHandler(RequestCallback callback) : callback(callback), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
+HttpHandler::HttpHandler(const RequestCallback& callback) : callback(callback), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
 	state = READ_REQUEST_LINE;
 }
 
-void HttpHandler::receive(QByteArray data) {
+void HttpHandler::receive(const QByteArray& data) {
 	buffer.append(data);
 	
 	bool continueReading = true;

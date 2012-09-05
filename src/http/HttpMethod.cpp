@@ -29,13 +29,13 @@
 HttpMethod::HttpMethod() : _method(INVALID) {
 }
 
-HttpMethod::HttpMethod(Method method) : _method(method) {
+HttpMethod::HttpMethod(const Method& method) : _method(method) {
 }
 
 HttpMethod::HttpMethod(const HttpMethod& method) : _method(method._method) {
 }
 
-HttpMethod HttpMethod::fromString(QString methodString) {
+HttpMethod HttpMethod::fromString(const QString& methodString) {
 	static QHash<QString, Method> hash = makeHash();
 	return HttpMethod(hash.value(methodString.toUpper(), INVALID));
 }
@@ -56,45 +56,49 @@ QHash<QString, HttpMethod::Method> HttpMethod::makeHash() {
 	return hash;
 }
 
-HttpMethod& HttpMethod::operator=(Method method) {
+HttpMethod& HttpMethod::operator=(const Method& method) {
 	_method = method;
+	
+	return *this;
 }
 
-HttpMethod& HttpMethod::operator=(HttpMethod method) {
+HttpMethod& HttpMethod::operator=(const HttpMethod& method) {
 	_method = method._method;
+	
+	return *this;
 }
 
-bool HttpMethod::operator==(Method method) {
+bool HttpMethod::operator==(const Method& method) const {
 	return _method == method;
 }
-bool HttpMethod::operator==(const HttpMethod& method) {
+bool HttpMethod::operator==(const HttpMethod& method) const {
 	return _method == method._method;
 }
 
-bool HttpMethod::operator!=(Method method) {
+bool HttpMethod::operator!=(const Method& method) const {
 	return _method != method;
 }
-bool HttpMethod::operator!=(const HttpMethod& method) {
+bool HttpMethod::operator!=(const HttpMethod& method) const {
 	return _method != method._method;
 }
 
-HttpMethod::operator unsigned() {
+HttpMethod::operator unsigned() const {
 	return _method;
 }
 
-HttpMethod::operator Method() {
+HttpMethod::operator Method() const {
 	return _method;
 }
 
-bool HttpMethod::isInvalid() {
+bool HttpMethod::isInvalid() const {
 	return _method == INVALID;
 }
 
-HttpMethod::Method HttpMethod::method() {
+HttpMethod::Method HttpMethod::method() const {
 	return _method;
 }
 
-QString HttpMethod::toString() {
+QString HttpMethod::toString() const {
 	switch (_method) {
 		case GET:
 			return "GET";

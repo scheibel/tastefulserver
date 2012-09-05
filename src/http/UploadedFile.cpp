@@ -30,7 +30,7 @@
 UploadedFile::UploadedFile() {
 }
 
-UploadedFile::UploadedFile(ContentType contentType) : contentType(contentType) {
+UploadedFile::UploadedFile(const ContentType& contentType) : contentType(contentType) {
 }
 
 QVariant UploadedFile::toQVariant() {
@@ -41,7 +41,7 @@ void UploadedFile::setFilename(const QString& filename) {
 	this->filename = filename;
 }
 
-void UploadedFile::setContent(QByteArray content) {
+void UploadedFile::setContent(const QByteArray& content) {
 	this->content = content;
 }
 

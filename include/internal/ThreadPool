@@ -60,7 +60,7 @@ class ThreadPool {
 		~ThreadPool();
 	
 		void setNumThreads(int numThreads);
-		bool isStarted();
+		bool isStarted() const;
 		void start();
 	
 		void addTask(Task* task);
