@@ -35,6 +35,8 @@ namespace internal {
 QHash<unsigned, QString> makeReasonHash() {
 	QHash<unsigned, QString> hash;
 	
+	hash.reserve(50);
+	
 	hash.insert(Continue, "Continue");
 	hash.insert(SwitchingProtocols, "Switching Protocols");
 	hash.insert(OK, "OK");
@@ -78,6 +80,8 @@ QHash<unsigned, QString> makeReasonHash() {
 	hash.insert(ServiceUnavailable, "Service Unavailable");
 	hash.insert(InternalServerError, "Gateway Time-out");
 	hash.insert(HTTPVersionNotSupported, "HTTP Version not supported");
+	
+	hash.squeeze();
 	
 	return hash;
 }
