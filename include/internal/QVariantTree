@@ -87,6 +87,7 @@ namespace internal {
 			
 			QVariant asQVariant();
 			QString printString(unsigned indent = 0);
+			void setElement(const QVariant& newElement);
 		protected:
 			QVariantAbstractTree* basicGet(const QString& key);
 			

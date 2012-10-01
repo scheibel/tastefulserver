@@ -126,6 +126,10 @@ QVariantAbstractTree& RequestParameters::get(const QString& key) const {
 	return params->get(key);
 }
 
+void RequestParameters::insert(const QString& key, const QVariant& value) {
+	params->insert(key, value);
+}
+
 bool RequestParameters::contains(const QString& key) const {
 	return params->contains(key);
 }

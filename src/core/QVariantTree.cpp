@@ -174,6 +174,10 @@ QString QVariantLeaf::printString(unsigned indent) {
 	return element.toString();
 }
 
+void QVariantLeaf::setElement(const QVariant& newElement) {
+	element = newElement;
+}
+
 bool QVariantNullTree::isNull() {
 	return true;
 }

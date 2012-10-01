@@ -47,6 +47,8 @@ class RequestParameters {
 		QVariantAbstractTree& get(const QString& key) const;
 		QVariantAbstractTree& getByPath(const QString& path) const;
 		
+		void insert(const QString& key, const QVariant& value);
+		
 		void parseUrl(const QUrl& url);
 		void parseUrlEncoded(QByteArray urlEncodedPost);
 		void parseMultiPart(const MultiPart& multiPart);
