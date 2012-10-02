@@ -17,7 +17,7 @@ include(${QT_USE_FILE})
 
 include_directories("include/")
 
-add_definitions(-std=c++0x)
+add_definitions(-std=c++0x -Wreturn-type -Werror=return-type)
 
 QT4_WRAP_CPP(Server_moc_sources
 	include/internal/ThreadPool

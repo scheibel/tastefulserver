@@ -5,7 +5,7 @@ include(${QT_USE_FILE})
 
 include_directories("../../include/")
 
-add_definitions(-std=c++0x)
+add_definitions(-std=c++0x -Wreturn-type -Werror=return-type)
 
 add_executable(HttpServer "main.cpp")
 
