@@ -26,9 +26,10 @@
 
 #include <RequestParameters>
 #include <UploadedFile>
+#include <internal/ByteArrayStream>
+
 #include <QUrl>
 #include <QRegExp>
-#include <internal/ByteArrayStream>
 
 using namespace internal;
 

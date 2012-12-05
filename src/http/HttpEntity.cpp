@@ -25,6 +25,7 @@
   **/
 
 #include <HttpEntity>
+
 #include <QTextStream>
 
 HttpEntity::HttpEntity() {

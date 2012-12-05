@@ -26,6 +26,7 @@
 
 #include <Cookie>
 #include <HttpHeader>
+
 #include <QTextStream>
 #include <QStringList>
 
@@ -126,8 +127,6 @@ QString Cookie::toString() const {
 	
 	return string;
 }
-
-
 
 bool Cookies::isEmpty() const {
 	return cookies.isEmpty();

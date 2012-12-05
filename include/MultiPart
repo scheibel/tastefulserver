@@ -26,11 +26,12 @@
 
 #pragma once
 
+#include <HttpHeader>
+#include <ContentType>
+
 #include <QString>
 #include <QList>
 #include <QHash>
-#include <HttpHeader>
-#include <ContentType>
 
 class Part {
 	public:

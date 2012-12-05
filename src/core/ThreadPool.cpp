@@ -26,8 +26,6 @@
 
 #include <internal/ThreadPool>
 
-#include <QDebug>
-
 using namespace internal;
 
 void Task::startUp() {

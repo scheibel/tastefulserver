@@ -26,6 +26,8 @@
 
 #include <internal/ConnectionHandler>
 
+#include <QDebug>
+
 using namespace internal;
 
 ConnectionHandler::ConnectionHandler() : socketCreation(nullptr), _socket(nullptr) {	
@@ -101,5 +103,3 @@ void ConnectionHandler::disconnect() {
 
 void ConnectionHandler::onDisconnect() {
 }
-
-

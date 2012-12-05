@@ -25,6 +25,7 @@
   **/
 
 #include <HttpMessage>
+
 #include <QTextStream>
 
 HttpMessage::HttpMessage() : httpVersion(HttpVersion(1,1)) {

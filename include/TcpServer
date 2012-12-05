@@ -26,9 +26,10 @@
 
 #pragma once
 
-#include <QTcpServer>
 #include <internal/ThreadPool>
 #include <internal/ConnectionHandler>
+
+#include <QTcpServer>
 
 using namespace internal;
 

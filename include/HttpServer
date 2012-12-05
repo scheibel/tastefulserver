@@ -27,9 +27,9 @@
 #pragma once
 
 #include <functional>
+
 #include <TcpServer>
 #include <HttpHandler>
-
 
 class HttpServer : public TcpServer {
 	public:
@@ -39,4 +39,3 @@ class HttpServer : public TcpServer {
 	
 		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const;
 };
-

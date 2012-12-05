@@ -41,4 +41,3 @@ void TcpServer::setNumThreads(int numThreads) {
 void TcpServer::incomingConnection(int socketDescriptor) {
 	threadPool.addTask(createConnectionHandler(socketDescriptor));
 }
-

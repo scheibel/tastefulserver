@@ -193,4 +193,3 @@ QVariant QVariantNullTree::asQVariant() {
 QString QVariantNullTree::printString(unsigned indent) {
 	return "NULL";
 }
-

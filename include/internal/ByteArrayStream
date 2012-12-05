@@ -28,7 +28,7 @@
 #include <QByteArray>
 
 namespace internal {
-	
+
 class ByteArrayStream {
 	public:
 		ByteArrayStream(const QByteArray& bytes, const QString& linebreak="\n");

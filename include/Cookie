@@ -26,10 +26,11 @@
 
 #pragma once
 
+#include <httpUtil>
+
 #include <QString>
 #include <QHash>
 #include <QTextStream>
-#include <httpUtil>
 
 class Cookie {
 	public:

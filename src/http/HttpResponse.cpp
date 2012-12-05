@@ -26,8 +26,8 @@
 
 #include <HttpResponse>
 #include <httpUtil>
-#include <QTextStream>
 
+#include <QTextStream>
 
 HttpResponse::HttpResponse() {
 	initialize();

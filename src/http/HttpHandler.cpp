@@ -29,8 +29,6 @@
 
 #include <QStringList>
 
-#include <QDebug>
-
 HttpHandler::HttpHandler(const RequestCallback& callback) : callback(callback), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
 	state = READ_REQUEST_LINE;
 }

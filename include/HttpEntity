@@ -26,11 +26,12 @@
 
 #pragma once
 
+#include <HttpHeader>
+
 #include <QString>
 #include <QByteArray>
 #include <QList>
 #include <QHash>
-#include <HttpHeader>
 #include <QTextStream>
 
 namespace http {

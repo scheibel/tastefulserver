@@ -26,9 +26,10 @@
 
 #pragma once
 
-#include <QObject>
 #include <internal/ThreadPool>
 #include <internal/SocketCreation>
+
+#include <QObject>
 
 namespace internal {
 	
@@ -67,4 +68,3 @@ class ConnectionHandler : public Task {
 };
 
 }
-

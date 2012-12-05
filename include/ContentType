@@ -26,8 +26,9 @@
 
 #pragma once
 
-#include <QString>
 #include <HttpHeader>
+
+#include <QString>
 
 class ContentType : public HttpHeaderElement {
 	public:

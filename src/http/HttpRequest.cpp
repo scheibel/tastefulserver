@@ -25,8 +25,8 @@
   **/
 
 #include <HttpRequest>
-#include <QTextStream>
 
+#include <QTextStream>
 
 HttpRequest::HttpRequest() : bad(true) {
 }

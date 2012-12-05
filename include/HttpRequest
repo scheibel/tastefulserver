@@ -29,6 +29,7 @@
 #include <HttpMethod>
 #include <HttpMessage>
 #include <RequestParameters>
+
 #include <QUrl>
 
 class HttpRequest : public HttpMessage {
