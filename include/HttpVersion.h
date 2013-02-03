@@ -26,4 +26,28 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <QString>
+
+class HttpVersion {
+	public:
+		HttpVersion();
+		HttpVersion(unsigned _major, unsigned _minor);
+	
+		bool isInvalid() const;
+		unsigned getMajor() const;
+		unsigned getMinor() const;
+	
+		bool operator<(const HttpVersion& httpVersion) const;
+		bool operator<=(const HttpVersion& httpVersion) const;
+		bool operator>(const HttpVersion& httpVersion) const;
+		bool operator>=(const HttpVersion& httpVersion) const;
+		bool operator==(const HttpVersion& httpVersion) const;
+		bool operator!=(const HttpVersion& httpVersion) const;
+	
+		QString toString() const;
+		
+		static HttpVersion fromString(const QString& string);
+	private:
+		unsigned _major;
+		unsigned _minor;
+};

@@ -26,4 +26,45 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <internal/ThreadPool>
+#include <internal/SocketCreation>
+
+#include <QObject>
+
+namespace internal {
+	
+class ConnectionHandler : public Task {
+	Q_OBJECT;
+	public:
+		ConnectionHandler();
+		ConnectionHandler(SocketCreation* socketCreation);
+		~ConnectionHandler();
+	
+		void setSocketCreator(SocketCreation* socketCreation);
+	
+		void startUp();
+	private:
+		QAbstractSocket* _socket;
+		SocketCreation* socketCreation;
+		void createSocket();
+	private slots:
+		void disconnected();
+		void readyRead();
+		void error(QAbstractSocket::SocketError e);
+	protected:
+		QAbstractSocket& socket();
+	
+		bool isUdpConnection() const;
+		bool isTcpConnection() const;
+		bool isSslConnection() const;
+	
+		void send(const QByteArray& data);
+		void disconnect();
+	
+		virtual void onDisconnect();
+		virtual void onError(QAbstractSocket::SocketError e);
+	
+		virtual void receive(const QByteArray& data) = 0;
+};
+
+}

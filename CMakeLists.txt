@@ -20,9 +20,9 @@ include_directories("include/")
 add_definitions(-std=c++0x -Wreturn-type -Werror=return-type)
 
 QT4_WRAP_CPP(Server_moc_sources
-	include/internal/ThreadPool
-	include/TcpServer
-	include/internal/ConnectionHandler
+	include/internal/ThreadPool.h
+	include/TcpServer.h
+	include/internal/ConnectionHandler.h
 )
 
 set(Server_sources
@@ -53,32 +53,56 @@ set(Server_sources
 )
 
 set(Server_headers
+	include/ContentType.h
 	include/ContentType
+	include/Cookie.h
 	include/Cookie
+	include/http.h
 	include/http
+	include/HttpEntity.h
 	include/HttpEntity
+	include/HttpHandler.h
 	include/HttpHandler
+	include/HttpHeader.h
 	include/HttpHeader
+	include/HttpMessage.h
 	include/HttpMessage
+	include/HttpMethod.h
 	include/HttpMethod
+	include/HttpRequest.h
 	include/HttpRequest
+	include/HttpResponse.h
 	include/HttpResponse
+	include/HttpServer.h
 	include/HttpServer
+	include/HttpsServer.h
 	include/HttpsServer
+	include/httpStatusCodes.h
 	include/httpStatusCodes
+	include/httpUtil.h
 	include/httpUtil
+	include/HttpVersion.h
 	include/HttpVersion
+	include/MultiPart.h
 	include/MultiPart
+	include/RequestParameters.h
 	include/RequestParameters
+	include/TcpServer.h
 	include/TcpServer
+	include/UploadedFile.h
 	include/UploadedFile
 )
 
 set(Server_internal_headers
+	include/internal/ByteArrayStream.h
 	include/internal/ByteArrayStream
+	include/internal/ConnectionHandler.h
 	include/internal/ConnectionHandler
+	include/internal/QVariantTree.h
 	include/internal/QVariantTree
+	include/internal/SocketCreation.h
 	include/internal/SocketCreation
+	include/internal/ThreadPool.h
 	include/internal/ThreadPool
 )
 

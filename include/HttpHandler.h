@@ -26,4 +26,34 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <internal/ConnectionHandler>
+#include <internal/ByteArrayStream>
+#include <http>
+
+using namespace internal;
+
+class HttpHandler : public ConnectionHandler {
+	public:
+		typedef std::function<HttpResponse(HttpRequest&)> RequestCallback;
+		
+		HttpHandler(const RequestCallback& callback);
+	
+		void receive(const QByteArray& data);
+	private:		
+		bool readRequestLine();
+		bool readHeader();
+		bool readContent();
+		bool handleRequest();
+		bool handleError();
+		
+		RequestCallback callback;
+		ByteArrayStream buffer;
+		HttpRequest request;
+		enum {
+			READ_REQUEST_LINE,
+			READ_HEADER,
+			READ_CONTENT,
+			HANDLE_REQUEST,
+			HANDLE_ERROR
+		} state;
+};

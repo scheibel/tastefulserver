@@ -26,4 +26,36 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpEntity>
+#include <HttpVersion>
+#include <HttpHeader>
+#include <Cookie>
+#include <ContentType>
+#include <MultiPart>
+
+class HttpMessage : public HttpEntity {
+	public:
+		HttpMessage();
+		HttpMessage(const HttpVersion& httpVersion);
+	
+		const HttpVersion& getHttpVersion() const;
+		HttpVersion& getHttpVersion();
+	
+		const Cookies& getCookies() const;
+		Cookies& getCookies();
+		bool hasCookies() const;
+		
+		const ContentType& getContentType() const;
+		ContentType& getContentType();
+		bool isMultiPart() const;
+		const MultiPart& getMultiPart() const;
+		MultiPart& getMultiPart();
+		void keepAlive();
+		bool isKeepAlive() const;
+		int getContentLength() const;
+	protected:
+		HttpVersion httpVersion;
+		Cookies cookies;
+		ContentType contentType;
+		MultiPart multiPart;
+};

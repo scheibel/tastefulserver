@@ -26,4 +26,9 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <QDateTime>
+
+namespace http {
+	QString reason(const unsigned statusCode);
+	QString dateString(const QDateTime& dateTime);
+}

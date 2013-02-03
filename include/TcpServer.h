@@ -26,4 +26,23 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <internal/ThreadPool>
+#include <internal/ConnectionHandler>
+
+#include <QTcpServer>
+
+using namespace internal;
+
+class TcpServer : public QTcpServer {
+		Q_OBJECT
+	public:
+		TcpServer();
+	
+		static void setNumThreads(int numThreads);
+	protected:
+		void incomingConnection(int socketDescriptor);
+	
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const = 0;
+	
+		static ThreadPool threadPool;
+};

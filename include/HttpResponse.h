@@ -26,4 +26,29 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpMessage>
+#include <httpStatusCodes>
+#include <HttpRequest>
+
+class HttpResponse : public HttpMessage {
+	public:
+		HttpResponse();
+		HttpResponse(const HttpVersion& httpVersion);
+		HttpResponse(const HttpRequest& httpRequest);
+	
+		void setStatusCode(unsigned statusCode);
+		unsigned getStatusCode() const;
+	
+		void setDate(const QDateTime& date);
+		
+		void setCookie(const Cookie& cookie);
+		Cookie& setCookie(const QString& key, const QString& value);
+	
+		virtual QByteArray toByteArray() const;
+	protected:
+		unsigned statusCode;
+	
+		void initialize();
+	
+		virtual void writeHeadersOn(QTextStream& stream) const;
+};

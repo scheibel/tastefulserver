@@ -26,4 +26,39 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpHeader>
+#include <ContentType>
+
+#include <QString>
+#include <QList>
+#include <QHash>
+
+class Part {
+	public:
+		Part();
+		Part(const QList<HttpHeader>& headers, const QByteArray& content);
+	
+		bool hasHeader(const http::HeaderName& headerName) const;
+		HttpHeader getHeader(const http::HeaderName& headerName) const;
+	
+		QList<HttpHeader> getHeaders() const;
+		QByteArray getContent() const;
+	protected:
+		QHash<QString, HttpHeader> headers;
+		QByteArray content;
+};
+
+class MultiPart {
+	public:
+		MultiPart();
+		MultiPart(const ContentType& type);
+	
+		void parse(const QByteArray& content);
+	
+		bool isFormData() const;
+	
+		QList<Part> getParts() const;
+	protected:
+		ContentType type;
+		QList<Part> parts;
+};

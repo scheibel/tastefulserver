@@ -26,4 +26,48 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <QString>
+#include <QHash>
+
+class HttpMethod {
+	public:
+		typedef enum {
+			INVALID,
+			GET,
+			POST,
+			PUT,
+			DELETE,
+			UPDATE,
+			TRACE,
+			HEAD,
+			OPTIONS,
+			CONNECT
+		} Method;
+		
+		HttpMethod();
+		HttpMethod(const Method& method);
+		HttpMethod(const HttpMethod& method);
+		
+		static HttpMethod fromString(const QString& methodString);
+		
+		HttpMethod& operator=(const Method& method);
+		HttpMethod& operator=(const HttpMethod& method);
+		
+		bool operator==(const Method& method) const;
+		bool operator==(const HttpMethod& method) const;
+		
+		bool operator!=(const Method& method) const;
+		bool operator!=(const HttpMethod& method) const;
+		
+		operator unsigned() const;
+		operator Method() const;
+		
+		bool isInvalid() const;
+		
+		Method method() const;
+		QString toString() const;
+	private:
+		Method _method;
+
+		static QHash<QString, Method> makeHash();
+};

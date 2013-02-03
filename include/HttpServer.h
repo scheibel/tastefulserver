@@ -26,4 +26,16 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <functional>
+
+#include <TcpServer>
+#include <HttpHandler>
+
+class HttpServer : public TcpServer {
+	public:
+		HttpServer(const HttpHandler::RequestCallback& callback);
+	protected:
+		HttpHandler::RequestCallback callback;
+	
+		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const;
+};

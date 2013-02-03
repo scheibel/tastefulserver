@@ -26,4 +26,49 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <QObject>
+#include <QThread>
+#include <QSet>
+
+namespace internal {
+
+class Task : public QObject {
+	Q_OBJECT;
+	public slots:
+		virtual void startUp();
+	signals:
+		void finished(Task* task);
+	protected:
+		void finish();
+};
+
+class TaskThread : public QThread {
+	Q_OBJECT;
+	public:
+		void addTask(Task* task);
+	private slots:
+		void endTask(Task* task);
+	private:
+		void startTask(Task* task);
+	protected:
+		QSet<Task*> tasks;
+};
+
+class ThreadPool {
+	public:
+		ThreadPool(int numThreads=-1);
+		~ThreadPool();
+	
+		void setNumThreads(int numThreads);
+		bool isStarted() const;
+		void start();
+	
+		void addTask(Task* task);
+	protected:
+		bool started;
+		int threadCount;
+		unsigned next;
+		QList<TaskThread*> threads;
+};
+
+}

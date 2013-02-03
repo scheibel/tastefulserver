@@ -26,4 +26,38 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpMethod>
+#include <HttpMessage>
+#include <RequestParameters>
+
+#include <QUrl>
+
+class HttpRequest : public HttpMessage {
+	public:
+		HttpRequest();
+		HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps = false);
+	
+		bool isBad() const;
+		void markBad();
+	
+		bool isXMLHttpRequest() const;
+	
+		void parseHeader(const HttpHeader& header);
+		void parseContent(const QByteArray& content);
+		
+		HttpMethod getMethod() const;
+		QUrl getUrl() const;
+		QString getPath() const;
+		QString getRequestUri() const;
+	
+		RequestParameters& getParameters();
+		const RequestParameters& getParameters() const;
+	
+		virtual QByteArray toByteArray() const;
+	protected:
+		bool bad;
+		HttpMethod method;
+		QString requestUri;
+		QUrl url;
+		RequestParameters requestParams;
+};

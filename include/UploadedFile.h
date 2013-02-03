@@ -26,4 +26,29 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <QString>
+#include <QByteArray>
+#include <QMetaType>
+#include <QVariant>
+#include <ContentType>
+
+class UploadedFile {
+	public:
+		UploadedFile();
+		UploadedFile(const ContentType& contentType);
+	
+		void setFilename(const QString& filename);
+		void setContent(const QByteArray& content);
+	
+		QString getFilename();
+		QByteArray getContent();
+		ContentType getContentType();
+	
+		QVariant toQVariant();
+	private:
+		QString filename;
+		QByteArray content;
+		ContentType contentType;
+};
+
+Q_DECLARE_METATYPE(UploadedFile);

@@ -26,4 +26,19 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpServer>
+
+#include <QSslCertificate>
+#include <QSslKey>
+
+using namespace internal;
+
+class HttpsServer : public HttpServer {
+	public:
+		HttpsServer(const QSslCertificate& certificate, const QSslKey& privateKey, const HttpHandler::RequestCallback& callback);
+	
+		ConnectionHandler* createConnectionHandler(int socketDescriptor) const;
+	private:
+		QSslCertificate certificate;
+		QSslKey privateKey;
+};

@@ -26,4 +26,44 @@
 
 #pragma once
 
-#include "HttpRequest.h"
+#include <HttpHeader>
+
+#include <QString>
+
+class ContentType : public HttpHeaderElement {
+	public:
+		static const QString Charset;
+		static const QString Boundary;
+	
+		static const QString Multipart;
+		static const QString Application;
+	
+		static const QString FormData;
+		static const QString XWWWFormUrlEncoded;
+	
+		ContentType();
+		ContentType(const QString& type, const QString& subtype);
+	
+		static ContentType fromString(const QString& value);
+	
+		bool is(const QString& type, const QString& subtype) const;
+	
+		void setType(const QString& type);
+		void setSubype(const QString& subtype);
+		void setTypeAndSubtype(const QString& typeAndSubype);
+	
+		QString getType() const;
+		QString getSubtype() const;
+	
+		QString getCharset() const;
+		QString getBoundary() const;
+	
+		bool isMultiPart() const;
+		
+		void parse(const QString& value);
+	protected:
+		void updateName();
+		
+		QString type;
+		QString subtype;
+};

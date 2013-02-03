@@ -24,6 +24,7 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#pragma once
-
-#include "HttpRequest.h"
+#include <HttpRequest>
+#include <HttpResponse>
+#include <HttpHeader>
+#include <httpStatusCodes>
