@@ -106,7 +106,7 @@ set(Server_internal_headers
 	include/internal/ThreadPool
 )
 
-add_library(TastefulServer SHARED ${Server_sources} ${Server_moc_sources})
+add_library(TastefulServer SHARED ${Server_sources} ${Server_moc_sources} ${Server_headers} ${Server_internal_headers})
 
 target_link_libraries(TastefulServer ${QT_LIBRARIES})
 
