@@ -71,12 +71,12 @@ hBGw7TiSG6vp
 int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 	
-	HttpsServer server(getCertificate(), getPrivateKey(), [](HttpRequest& request) {
+	HttpsServer server(getCertificate(), getPrivateKey(), [](const HttpRequest& request) {
 		HttpResponse response(request);
 		
 		QByteArray content = request.toByteArray();
 		if (request.hasCookies()) content.append("\r\n\r\nCookies\r\n");
-		for (Cookie& cookie: request.getCookies()) {
+		for (const Cookie& cookie: request.getCookies()) {
 			content.append(cookie.toString() + "\r\n");
 		}
 		

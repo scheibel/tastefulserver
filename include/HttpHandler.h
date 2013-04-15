@@ -34,7 +34,7 @@ using namespace internal;
 
 class HttpHandler : public ConnectionHandler {
 	public:
-		typedef std::function<HttpResponse(HttpRequest&)> RequestCallback;
+		typedef std::function<HttpResponse(const HttpRequest&)> RequestCallback;
 		
 		HttpHandler(const RequestCallback& callback);
 	

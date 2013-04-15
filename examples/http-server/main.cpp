@@ -30,7 +30,7 @@
 int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 	
-	HttpServer server([](HttpRequest& request) {
+	HttpServer server([](const HttpRequest& request) {
 		HttpResponse response(request);
 		
 		response.setStatusCode(http::OK);
