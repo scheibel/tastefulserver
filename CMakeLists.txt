@@ -12,18 +12,12 @@ else (WITH_EXAMPLES)
 	message ("-- Compile Tasteful Server WITHOUT examples")
 endif (WITH_EXAMPLES)
 
-find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
-include(${QT_USE_FILE})
+set(CMAKE_AUTOMOC ON)
+find_package(Qt5Core REQUIRED)
 
 include_directories("include/")
 
 add_definitions(-std=c++0x -Wreturn-type -Werror=return-type)
-
-QT4_WRAP_CPP(Server_moc_sources
-	include/internal/ThreadPool.h
-	include/TcpServer.h
-	include/internal/ConnectionHandler.h
-)
 
 set(Server_sources
 	src/core/ThreadPool.cpp
@@ -106,9 +100,11 @@ set(Server_internal_headers
 	include/internal/ThreadPool
 )
 
-add_library(TastefulServer SHARED ${Server_sources} ${Server_moc_sources} ${Server_headers} ${Server_internal_headers})
+add_library(TastefulServer SHARED ${Server_sources} ${Server_headers} ${Server_internal_headers})
 
-target_link_libraries(TastefulServer ${QT_LIBRARIES})
+qt5_use_modules(TastefulServer Network Xml)
+
+#target_link_libraries(TastefulServer ${QT_LIBRARIES})
 
 install(FILES ${Server_headers} DESTINATION include/tastefulserver/)
 install(FILES ${Server_internal_headers} DESTINATION include/tastefulserver/internal)
