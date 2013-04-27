@@ -7,19 +7,19 @@
   * Authors:
   *     Roland Lux <rollux2000@googlemail.com>
   *     Willy Scheibel <willyscheibel@gmx.de>
-  * 
+  *
   * This file is part of Tasteful Server.
   *
   * Tasteful Server is free software: you can redistribute it and/or modify
   * it under the terms of the GNU Lesser General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
   * (at your option) any later version.
-  * 
+  *
   * Tasteful Server is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU Lesser General Public License for more details.
-  * 
+  *
   * You should have received a copy of the GNU Lesser General Public License
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
@@ -59,11 +59,20 @@ QString RequestParameters::toString() const {
 }
 
 void RequestParameters::parseUrl(const QUrl& url) {
+	if (!url.hasQuery()) return;
+
 	QList<QPair<QString, QVariant>> parameters;
-	for (QPair<QString, QString>& pair: url.queryItems()) {
-		parameters << QPair<QString, QVariant>(pair.first, pair.second);
+
+	for (const QString& parameter: url.query().split('&')) {
+		int splitIndex = parameter.indexOf('=');
+		if (splitIndex<=0) continue;
+
+		QString key = parameter.left(splitIndex);
+		QString value = parameter.mid(splitIndex+1);
+
+		parameters << QPair<QString, QVariant>(key, value);
 	}
-	
+
 	parseList(parameters);
 }
 
@@ -73,7 +82,7 @@ void RequestParameters::parseUrlEncoded(QByteArray urlEncoded) {
 
 void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
 	QList<QPair<QString, QVariant>> parameters;
-	
+
 	for (Part& part: multiPart.getParts()) {
 		HttpHeader contentDisposition = part.getHeader(http::ContentDisposition);
 		HttpHeaderElement element = contentDisposition.getElement();
@@ -91,7 +100,7 @@ void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
 			}
 		}
 	}
-	
+
 	parseList(parameters);
 }
 
@@ -100,17 +109,17 @@ void RequestParameters::parseList(QList<QPair<QString, QVariant>> parameters) {
 		if (pair.first.isEmpty()) {
 			continue;
 		}
-		
+
 		QList<QString> indices = extractIndices(pair.first);
-		
+
 		QVariantTree* currentParams = params.data();
 		QString index;
 		for (unsigned i = 0; i < indices.size() - 1; ++i) {
 			index = indices[i].isEmpty() ? QString::number(currentParams->size()) : indices[i];
 			currentParams = &currentParams->obtainSubtree(index);
 		}
-		
-		index = indices.last().isEmpty() ? QString::number(currentParams->size()) : indices.last(); 
+
+		index = indices.last().isEmpty() ? QString::number(currentParams->size()) : indices.last();
 		currentParams->insert(index, pair.second);
 	}
 }
@@ -142,27 +151,27 @@ bool RequestParameters::containsPath(const QString& path) const {
 QList<QString> RequestParameters::extractIndices(const QString& key) const {
 	ByteArrayStream stream(key.toUtf8());
 	QString name = stream.readUpTo('[');
-	
+
 	if (name.isEmpty()) {
 		return QList<QString>() << key;
 	}
-	
+
 	QList<QString> indices = QList<QString>() << name;
-	
+
 	bool valid = true;
 	while (stream.canReadUpTo('[')) {
 		stream.skipBehind('[');
-		
+
 		if (stream.canReadUpTo(']')) {
 			indices << stream.readUpTo(']', true);
 		} else {
 			return QList<QString>() << key;
 		}
 	}
-	
+
 	if (!stream.atEnd()) {
 		return QList<QString>() << key;
 	}
-	
+
 	return indices;
 }

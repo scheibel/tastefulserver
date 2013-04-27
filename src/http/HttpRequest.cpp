@@ -7,19 +7,19 @@
   * Authors:
   *     Roland Lux <rollux2000@googlemail.com>
   *     Willy Scheibel <willyscheibel@gmx.de>
-  * 
+  *
   * This file is part of Tasteful Server.
   *
   * Tasteful Server is free software: you can redistribute it and/or modify
   * it under the terms of the GNU Lesser General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
   * (at your option) any later version.
-  * 
+  *
   * Tasteful Server is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU Lesser General Public License for more details.
-  * 
+  *
   * You should have received a copy of the GNU Lesser General Public License
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
@@ -32,7 +32,7 @@ HttpRequest::HttpRequest() : bad(true) {
 }
 
 HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri) {
-	url = QUrl::fromEncoded(requestUri.toAscii());
+	url = QUrl::fromEncoded(requestUri.toLatin1());
 	if (url.scheme().isEmpty()) url.setScheme(isHttps ? "https" : "http");
 	requestParams.parseUrl(url);
 }
@@ -101,12 +101,12 @@ const RequestParameters& HttpRequest::getParameters() const {
 
 QByteArray HttpRequest::toByteArray() const {
 	QByteArray byteArray;
-	
+
 	QTextStream stream(&byteArray);
-	
+
 	stream << method.toString() << " " << requestUri << " " << httpVersion.toString() << http::Linebreak;
-	
+
 	stream << HttpMessage::toByteArray();
-	
+
 	return byteArray;
 }
