@@ -41,7 +41,7 @@ Features
 Requirements
 ---------------------
 
- * [Qt 4.8](http://qt.nokia.com/)
+ * [Qt 5.0](http://qt.nokia.com/)
  * [gcc 4.6](http://gcc.gnu.org/)
  * [CMake 2.6](http://www.cmake.org/)
  
