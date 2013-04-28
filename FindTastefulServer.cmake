@@ -5,7 +5,9 @@
 # ${TastefulServer_INCLUDE_DIR}
 # ${TastefulServer_LIBRARY}
 
-find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
+include(FindPackageHandleStandardArgs)
+
+find_package(Qt5Core REQUIRED)
 
 if(WIN_32)
 	message(WARNING "Windows not yet supported")
