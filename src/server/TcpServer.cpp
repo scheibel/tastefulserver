@@ -46,6 +46,6 @@ void TcpServer::setNumThreads(int numThreads) {
 	threadPool.setNumThreads(numThreads);
 }
 
-void TcpServer::incomingConnection(int socketDescriptor) {
+void TcpServer::incomingConnection(qintptr socketDescriptor) {
 	threadPool.addTask(createConnectionHandler(socketDescriptor));
 }

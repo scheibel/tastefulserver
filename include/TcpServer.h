@@ -41,9 +41,9 @@ class TcpServer : public QTcpServer {
 
 		static void setNumThreads(int numThreads);
 	protected:
-		void incomingConnection(int socketDescriptor);
+		virtual void incomingConnection(qintptr socketDescriptor);
 
-		virtual ConnectionHandler* createConnectionHandler(int socketDescriptor) const = 0;
+		virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
 
 		static ThreadPool threadPool;
 		static int serverCount;
