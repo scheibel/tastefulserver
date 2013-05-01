@@ -26,6 +26,8 @@
 
 #include <ContentType>
 
+#include <QDebug>
+
 const QString ContentType::Charset = "charset";
 const QString ContentType::Boundary = "boundary";
 
@@ -50,27 +52,33 @@ bool ContentType::is(const QString& type, const QString& subtype) const {
 	return this->type==type && this->subtype==subtype;
 }
 
+bool ContentType::operator==(const ContentType& contentType) const {
+	return type == contentType.type && subtype == contentType.subtype;
+}
+
 void ContentType::setType(const QString& type) {
 	this->type = type;
 	
 	updateName();
 }
 
-void ContentType::setSubype(const QString& subtype) {
+void ContentType::setSubtype(const QString& subtype) {
 	this->subtype = subtype;
 	
 	updateName();
 }
 
-void ContentType::setTypeAndSubtype(const QString& typeAndSubype) {
-	int pos = typeAndSubype.indexOf('/');
+void ContentType::setTypeAndSubtype(const QString& typeAndSubtype) {
+	int pos = typeAndSubtype.indexOf('/');
 	if (pos<0) {
-		type = name;
+		type = typeAndSubtype;
 		subtype = QString();
 	} else {
-		type = name.left(pos);
-		subtype = name.mid(pos+1);
+		type = typeAndSubtype.left(pos);
+		subtype = typeAndSubtype.mid(pos+1);
 	}
+	
+	updateName();
 }
 
 ContentType ContentType::fromString(const QString& value) {
@@ -84,11 +92,11 @@ void ContentType::parse(const QString& value) {
 	setTypeAndSubtype(name);
 }
 
-QString ContentType::getType() const {
+const QString& ContentType::getType() const {
 	return type;
 }
 
-QString ContentType::getSubtype() const {
+const QString& ContentType::getSubtype() const {
 	return subtype;
 }
 

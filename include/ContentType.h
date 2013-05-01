@@ -47,13 +47,14 @@ class ContentType : public HttpHeaderElement {
 		static ContentType fromString(const QString& value);
 	
 		bool is(const QString& type, const QString& subtype) const;
+		bool operator==(const ContentType& contentType) const;
 	
 		void setType(const QString& type);
-		void setSubype(const QString& subtype);
+		void setSubtype(const QString& subtype);
 		void setTypeAndSubtype(const QString& typeAndSubype);
 	
-		QString getType() const;
-		QString getSubtype() const;
+		const QString& getType() const;
+		const QString& getSubtype() const;
 	
 		QString getCharset() const;
 		QString getBoundary() const;
