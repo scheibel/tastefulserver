@@ -82,6 +82,8 @@ bool HttpHandler::readRequestLine() {
 	QString requestUri = parts[1];
 	
 	request = HttpRequest(method, requestUri, httpVersion, isSslConnection());
+	request.setAddress(_socket->peerAddress());
+	request.setPort(_socket->peerPort());
 	
 	state = READ_HEADER;
 	

@@ -43,8 +43,9 @@ class ConnectionHandler : public Task {
 		void setSocketCreator(SocketCreation* socketCreation);
 	
 		void startUp();
-	private:
+	protected:
 		QAbstractSocket* _socket;
+	private:
 		SocketCreation* socketCreation;
 		void createSocket();
 	private slots:

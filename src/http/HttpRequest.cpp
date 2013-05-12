@@ -28,10 +28,10 @@
 
 #include <QTextStream>
 
-HttpRequest::HttpRequest() : bad(true) {
+HttpRequest::HttpRequest() : bad(true), _port(0) {
 }
 
-HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri) {
+HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri), _port(0) {
 	url = QUrl::fromEncoded(requestUri.toLatin1());
 	if (url.scheme().isEmpty()) url.setScheme(isHttps ? "https" : "http");
 	requestParams.parseUrl(url);
@@ -43,6 +43,22 @@ bool HttpRequest::isBad() const {
 
 void HttpRequest::markBad() {
 	bad = true;
+}
+
+const QHostAddress& HttpRequest::address() const {
+	return _address;
+}
+
+void HttpRequest::setAddress(const QHostAddress& address) {
+	_address = address;
+}
+
+unsigned HttpRequest::port() const {
+	return _port;
+}
+
+void HttpRequest::setPort(unsigned port) {
+	_port = port;
 }
 
 bool HttpRequest::isXMLHttpRequest() const {

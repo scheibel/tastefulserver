@@ -31,6 +31,7 @@
 #include <RequestParameters>
 
 #include <QUrl>
+#include <QHostAddress>
 
 class HttpRequest : public HttpMessage {
 	public:
@@ -45,6 +46,12 @@ class HttpRequest : public HttpMessage {
 		void parseHeader(const HttpHeader& header);
 		void parseContent(const QByteArray& content);
 		
+		const QHostAddress& address() const;
+		void setAddress(const QHostAddress& address);
+		
+		unsigned port() const;
+		void setPort(unsigned port);
+		
 		HttpMethod getMethod() const;
 		QUrl getUrl() const;
 		QString getPath() const;
@@ -55,6 +62,8 @@ class HttpRequest : public HttpMessage {
 	
 		virtual QByteArray toByteArray() const;
 	protected:
+		QHostAddress _address;
+		unsigned _port;
 		bool bad;
 		HttpMethod method;
 		QString requestUri;
