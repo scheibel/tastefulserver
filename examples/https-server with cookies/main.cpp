@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		HttpResponse response(request);
 		
 		QByteArray content = request.toByteArray();
-		content.append("Client IP:" + request.address().toString() + " (Port " + request.port() + ")");
+		content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
 		if (request.hasCookies()) content.append("\r\n\r\nCookies\r\n");
 		for (const Cookie& cookie: request.getCookies()) {
 			content.append(cookie.toString() + "\r\n");

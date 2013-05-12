@@ -34,7 +34,11 @@ int main(int argc, char** argv) {
 		HttpResponse response(request);
 
 		response.setStatusCode(http::OK);
-		response.setContent(request.toByteArray());
+		
+		QByteArray content = request.toByteArray();
+		content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
+		
+		response.setContent(content);
 
 		return response;
 	});
