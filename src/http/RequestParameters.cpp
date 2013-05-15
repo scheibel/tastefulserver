@@ -69,7 +69,7 @@ void RequestParameters::parseUrl(const QUrl& url) {
 
 		QString key = parameter.left(splitIndex);
 		QString value = parameter.mid(splitIndex+1);
-
+		
 		parameters << QPair<QString, QVariant>(key, value);
 	}
 
@@ -77,7 +77,7 @@ void RequestParameters::parseUrl(const QUrl& url) {
 }
 
 void RequestParameters::parseUrlEncoded(QByteArray urlEncoded) {
-	parseUrl(QUrl::fromEncoded("/?"+urlEncoded.replace('+',' ')));
+	parseUrl(QUrl::fromPercentEncoding("/?"+urlEncoded.replace('+',' ')));
 }
 
 void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
