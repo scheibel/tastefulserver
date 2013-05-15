@@ -51,16 +51,16 @@ class RequestParameters {
 		void insert(const QString& key, const QVariant& value);
 
 		void parseUrl(const QUrl& url);
-		void parseUrlEncoded(QByteArray urlEncodedPost);
+		void parseUrlEncoded(const QByteArray& urlEncodedPost);
 		void parseMultiPart(const MultiPart& multiPart);
 
 		QString toString() const;
 
 		static RequestParameters fromUrl(const QUrl& url);
-		static RequestParameters fromUrlEncoded(QByteArray urlEncoded);
+		static RequestParameters fromUrlEncoded(const QByteArray& urlEncoded);
 		static RequestParameters fromMultiPart(const MultiPart& multiPart);
 	protected:
-		void parseList(QList<QPair<QString, QVariant>> parameters);
+		void parseList(const QList<QPair<QString, QVariant>>& parameters);
 		QList<QString> extractIndices(const QString& key) const;
 
 		QSharedPointer<QVariantTree> params;

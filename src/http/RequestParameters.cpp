@@ -42,7 +42,7 @@ RequestParameters RequestParameters::fromUrl(const QUrl& url) {
 	return params;
 }
 
-RequestParameters RequestParameters::fromUrlEncoded(QByteArray urlEncodedPost) {
+RequestParameters RequestParameters::fromUrlEncoded(const QByteArray& urlEncodedPost) {
 	RequestParameters params;
 	params.parseUrlEncoded(urlEncodedPost);
 	return params;
@@ -76,14 +76,16 @@ void RequestParameters::parseUrl(const QUrl& url) {
 	parseList(parameters);
 }
 
-void RequestParameters::parseUrlEncoded(QByteArray urlEncoded) {
-	parseUrl(QUrl::fromPercentEncoding("/?"+urlEncoded.replace('+',' ')));
+void RequestParameters::parseUrlEncoded(const QByteArray& urlEncoded) {
+	QByteArray copy(urlEncoded);
+	
+	parseUrl(QUrl::fromPercentEncoding("/?"+copy.replace('+',' ')));
 }
 
 void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
 	QList<QPair<QString, QVariant>> parameters;
-
-	for (Part& part: multiPart.getParts()) {
+	
+	for (const Part& part: multiPart.getParts()) {
 		HttpHeader contentDisposition = part.getHeader(http::ContentDisposition);
 		HttpHeaderElement element = contentDisposition.getElement();
 		if (element.getName()=="form-data") {
@@ -104,8 +106,8 @@ void RequestParameters::parseMultiPart(const MultiPart& multiPart) {
 	parseList(parameters);
 }
 
-void RequestParameters::parseList(QList<QPair<QString, QVariant>> parameters) {
-	for (QPair<QString, QVariant>& pair : parameters) {
+void RequestParameters::parseList(const QList<QPair<QString, QVariant>>& parameters) {
+	for (const QPair<QString, QVariant>& pair : parameters) {
 		if (pair.first.isEmpty()) {
 			continue;
 		}
