@@ -29,7 +29,27 @@
 
 #include <QStringList>
 
-HttpHandler::HttpHandler(const RequestCallback& callback) : callback(callback), buffer(ByteArrayStream::forLinebreak(http::Linebreak)) {
+HttpHandler::HttpHandler(const RequestCallback& callback)
+: callback(callback)
+, buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+{
+	badRequestCallback = [](const HttpRequest& request) {
+		HttpResponse response(request);
+		
+		response.setStatusCode(http::BadRequest);
+		
+		return response;
+	};
+	
+	state = READ_REQUEST_LINE;
+}
+
+HttpHandler::HttpHandler(const RequestCallback& callback, const RequestCallback& badRequestCallback)
+: callback(callback)
+, badRequestCallback(badRequestCallback)
+, hasBadRequestCallback(true)
+, buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+{
 	state = READ_REQUEST_LINE;
 }
 
@@ -57,6 +77,25 @@ void HttpHandler::receive(const QByteArray& data) {
 				break;
 		}
 	}
+}
+
+void HttpHandler::setBadRequestCallback(const RequestCallback& badRequestCallback)
+{
+	this->badRequestCallback = badRequestCallback;
+	hasBadRequestCallback = true;
+}
+
+void HttpHandler::uninstallBadRequestCallback()
+{
+	badRequestCallback = [](const HttpRequest& request) {
+		HttpResponse response(request);
+		
+		response.setStatusCode(http::BadRequest);
+		
+		return response;
+	};
+	
+	hasBadRequestCallback = false;
 }
 
 bool HttpHandler::readRequestLine() {
@@ -124,7 +163,7 @@ bool HttpHandler::readContent() {
 }
 
 bool HttpHandler::handleRequest() {
-	HttpResponse response = callback(request);
+	HttpResponse response = hasBadRequestCallback && request.isBad() ? badRequestCallback(request) : callback(request);
 	
 	send(response.toByteArray());
 	buffer.flush();

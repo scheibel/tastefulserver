@@ -37,8 +37,12 @@ class HttpHandler : public ConnectionHandler {
 		typedef std::function<HttpResponse(const HttpRequest&)> RequestCallback;
 		
 		HttpHandler(const RequestCallback& callback);
+		HttpHandler(const RequestCallback& callback, const RequestCallback& badRequestCallback);
 	
 		void receive(const QByteArray& data);
+		
+		void setBadRequestCallback(const RequestCallback& badRequestCallback);
+		void uninstallBadRequestCallback();
 	private:		
 		bool readRequestLine();
 		bool readHeader();
@@ -47,6 +51,8 @@ class HttpHandler : public ConnectionHandler {
 		bool handleError();
 		
 		RequestCallback callback;
+		RequestCallback badRequestCallback;
+		bool hasBadRequestCallback;
 		ByteArrayStream buffer;
 		HttpRequest request;
 		enum {
