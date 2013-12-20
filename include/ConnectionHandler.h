@@ -28,27 +28,26 @@
 
 #include <Task>
 
-#include <QObject>
 #include <QAbstractSocket>
 
 namespace internal {
-
-class SocketCreation;
+    class SocketCreation;
+}
 	
 class ConnectionHandler : public Task {
     Q_OBJECT
 	public:
 		ConnectionHandler();
-		ConnectionHandler(SocketCreation* socketCreation);
+        ConnectionHandler(internal::SocketCreation* socketCreation);
 		~ConnectionHandler();
 	
-		void setSocketCreator(SocketCreation* socketCreation);
+        void setSocketCreator(internal::SocketCreation* socketCreation);
 	
 		void startUp();
 	protected:
 		QAbstractSocket* _socket;
 	private:
-		SocketCreation* socketCreation;
+        internal::SocketCreation* socketCreation;
 		void createSocket();
 	private slots:
 		void disconnected();
@@ -69,5 +68,3 @@ class ConnectionHandler : public Task {
 	
 		virtual void receive(const QByteArray& data) = 0;
 };
-
-}

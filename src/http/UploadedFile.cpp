@@ -32,7 +32,7 @@ UploadedFile::UploadedFile() {
 UploadedFile::UploadedFile(const ContentType& contentType) : contentType(contentType) {
 }
 
-QVariant UploadedFile::toQVariant() {
+QVariant UploadedFile::toQVariant() const {
 	return QVariant::fromValue(*this);
 }
 
@@ -44,14 +44,14 @@ void UploadedFile::setContent(const QByteArray& content) {
 	this->content = content;
 }
 
-QString UploadedFile::getFilename() {
+const QString& UploadedFile::getFilename() const {
 	return filename;
 }
 
-QByteArray UploadedFile::getContent() {
+const QByteArray& UploadedFile::getContent() const {
 	return content;
 }
 
-ContentType UploadedFile::getContentType() {
+const ContentType& UploadedFile::getContentType() const {
 	return contentType;
 }

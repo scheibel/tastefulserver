@@ -40,15 +40,15 @@ class UploadedFile {
 		void setFilename(const QString& filename);
 		void setContent(const QByteArray& content);
 	
-		QString getFilename();
-		QByteArray getContent();
-		ContentType getContentType();
+        const QString& getFilename() const;
+        const QByteArray& getContent() const;
+        const ContentType& getContentType() const;
 	
-		QVariant toQVariant();
+        QVariant toQVariant() const;
 	private:
 		QString filename;
 		QByteArray content;
 		ContentType contentType;
 };
 
-Q_DECLARE_METATYPE(UploadedFile);
+Q_DECLARE_METATYPE(UploadedFile)

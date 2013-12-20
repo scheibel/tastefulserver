@@ -30,12 +30,10 @@
 
 #include <QDebug>
 
-using namespace internal;
-
 ConnectionHandler::ConnectionHandler() : socketCreation(nullptr), _socket(nullptr) {
 }
 
-ConnectionHandler::ConnectionHandler(SocketCreation* socketCreation) : socketCreation(socketCreation), _socket(nullptr) {
+ConnectionHandler::ConnectionHandler(internal::SocketCreation* socketCreation) : socketCreation(socketCreation), _socket(nullptr) {
 }
 
 ConnectionHandler::~ConnectionHandler() {
@@ -43,7 +41,7 @@ ConnectionHandler::~ConnectionHandler() {
 	delete socketCreation;
 }
 
-void ConnectionHandler::setSocketCreator(SocketCreation* socketCreation) {
+void ConnectionHandler::setSocketCreator(internal::SocketCreation* socketCreation) {
 	delete this->socketCreation;
 	this->socketCreation = socketCreation;
 }

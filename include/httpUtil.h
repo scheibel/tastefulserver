@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <QString>
 #include <QDateTime>
 
 namespace http {

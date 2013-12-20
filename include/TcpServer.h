@@ -30,10 +30,9 @@
 
 namespace internal {
     class ThreadPool;
-    class ConnectionHandler;
 }
 
-using namespace internal;
+class ConnectionHandler;
 
 class TcpServer : public QTcpServer {
 		Q_OBJECT
@@ -45,8 +44,8 @@ class TcpServer : public QTcpServer {
 	protected:
 		virtual void incomingConnection(qintptr socketDescriptor);
 
-		virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
+        virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
 
-        static ThreadPool* threadPool;
+        static internal::ThreadPool* threadPool;
 		static int serverCount;
 };

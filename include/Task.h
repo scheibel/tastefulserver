@@ -31,7 +31,7 @@
 #include <QSet>
 
 class Task : public QObject {
-	Q_OBJECT;
+    Q_OBJECT
 	public slots:
 		virtual void startUp();
 	signals:
@@ -41,7 +41,7 @@ class Task : public QObject {
 };
 
 class TaskThread : public QThread {
-	Q_OBJECT;
+    Q_OBJECT
 	public:
 		void addTask(Task* task);
 	private slots:

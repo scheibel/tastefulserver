@@ -26,8 +26,6 @@
 
 #pragma once
 
-#include <QString>
-
 namespace http {
 	const unsigned Continue = 100;
 	const unsigned SwitchingProtocols = 101;
