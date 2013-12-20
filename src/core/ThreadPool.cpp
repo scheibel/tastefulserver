@@ -24,34 +24,11 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <internal/ThreadPool>
+#include <core/ThreadPool.h>
+
+#include <Task>
 
 using namespace internal;
-
-void Task::startUp() {
-}
-
-void Task::finish() {
-	emit(finished(this));
-}
-
-
-void TaskThread::addTask(Task* task) {
-	task->moveToThread(this);
-	tasks.insert(task);
-	startTask(task);
-}
-
-void TaskThread::endTask(Task* task) {
-	tasks.remove(task);
-	task->deleteLater();
-}
-
-void TaskThread::startTask(Task* task) {
-	connect(task, SIGNAL(finished(Task*)), this, SLOT(endTask(Task*)));
-	QMetaObject::invokeMethod(task, "startUp", Qt::QueuedConnection);
-}
-
 
 ThreadPool::ThreadPool(int numThreads) : next(0), started(false) {
 	setNumThreads(numThreads);

@@ -26,6 +26,8 @@
 
 #include <HttpServer>
 
+#include <server/SocketCreation.h>
+
 HttpServer::HttpServer(const HttpHandler::RequestCallback& callback) : callback(callback) {
 }
 

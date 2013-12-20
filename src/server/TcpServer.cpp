@@ -25,27 +25,29 @@
   **/
 
 #include <TcpServer>
+#include <core/ThreadPool.h>
+#include <ConnectionHandler>
 
-ThreadPool TcpServer::threadPool;
+internal::ThreadPool* TcpServer::threadPool = new internal::ThreadPool();
 int TcpServer::serverCount = 0;
 
 TcpServer::TcpServer() {
 	serverCount++;
-	if (!threadPool.isStarted()) {
-		threadPool.start();
+    if (!threadPool->isStarted()) {
+        threadPool->start();
 	}
 }
 
 TcpServer::~TcpServer()
 {
 	serverCount--;
-	if (serverCount<=0) threadPool.stop();
+    if (serverCount<=0) threadPool->stop();
 }
 
 void TcpServer::setNumThreads(int numThreads) {
-	threadPool.setNumThreads(numThreads);
+    threadPool->setNumThreads(numThreads);
 }
 
 void TcpServer::incomingConnection(qintptr socketDescriptor) {
-	threadPool.addTask(createConnectionHandler(socketDescriptor));
+    threadPool->addTask(createConnectionHandler(socketDescriptor));
 }

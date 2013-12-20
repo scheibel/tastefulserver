@@ -24,9 +24,7 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <internal/ByteArrayStream>
-
-using namespace internal;
+#include <ByteArrayStream>
 
 ByteArrayStream::ByteArrayStream(const QByteArray& bytes, const QString& linebreak) : buffer(bytes), linebreak(linebreak), pos(0) {
 }

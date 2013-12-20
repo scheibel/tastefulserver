@@ -26,8 +26,8 @@
 
 #pragma once
 
-#include <internal/ConnectionHandler>
-#include <internal/ByteArrayStream>
+#include <ConnectionHandler>
+#include <ByteArrayStream>
 #include <http>
 
 using namespace internal;

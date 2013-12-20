@@ -26,10 +26,12 @@
 
 #pragma once
 
-#include <internal/ThreadPool>
-#include <internal/ConnectionHandler>
-
 #include <QTcpServer>
+
+namespace internal {
+    class ThreadPool;
+    class ConnectionHandler;
+}
 
 using namespace internal;
 
@@ -45,6 +47,6 @@ class TcpServer : public QTcpServer {
 
 		virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
 
-		static ThreadPool threadPool;
+        static ThreadPool* threadPool;
 		static int serverCount;
 };

@@ -27,13 +27,17 @@
 #pragma once
 
 #include <MultiPart>
-#include <internal/QVariantTree>
 
 #include <QString>
 #include <QStringList>
 #include <QVariantMap>
 #include <QByteArray>
 #include <QSharedPointer>
+
+namespace internal {
+    class QVariantAbstractTree;
+    class QVariantTree;
+}
 
 using namespace internal;
 

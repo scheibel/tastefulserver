@@ -27,9 +27,7 @@
 #include <MultiPart>
 #include <HttpEntity>
 #include <HttpHeader>
-#include <internal/ByteArrayStream>
-
-using namespace internal;
+#include <ByteArrayStream>
 
 Part::Part() {
 }

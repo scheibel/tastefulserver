@@ -26,4 +26,35 @@
 
 #pragma once
 
-#include "ThreadPool.h"
+#include <QString>
+#include <QByteArray>
+
+class ByteArrayStream {
+	public:
+		ByteArrayStream(const QByteArray& bytes, const QString& linebreak="\n");
+	 
+		static ByteArrayStream forLinebreak(const QString& linebreak);
+	
+		void append(const QByteArray& bytes);
+		QByteArray read(unsigned length);
+		void skip(unsigned length);
+		QString readLine();
+		void skipUpTo(const QString& delimiter);
+		void skipUpTo(const QChar& delimiter);
+		void skipBehind(const QString& delimiter);
+		void skipBehind(const QChar& delimiter);
+		bool canReadUpTo(const QString& delimiter);
+		bool canReadUpTo(const QChar& delimiter);
+		QByteArray readUpTo(const QString& delimiter, bool skipDelimiter = false);
+		QByteArray readUpTo(const QChar& delimiter, bool skipDelimiter = false);
+		QByteArray readAll();
+		void skipAll();
+		bool canReadLine();
+		int availableBytes();
+		void flush();
+		bool atEnd();
+	protected:
+		QString linebreak;
+		int pos;
+		QByteArray buffer;
+};

@@ -5,28 +5,32 @@ project(TastefulServer)
 option(WITH_EXAMPLES "Compile with examples" OFF)
 
 if (WITH_EXAMPLES)
-	message ("-- Compile Tasteful Server WITH examples")
+	message (STATUS "Compile Tasteful Server WITH examples")
 	
 	add_subdirectory(examples)
 else (WITH_EXAMPLES)
-	message ("-- Compile Tasteful Server WITHOUT examples")
+	message (STATUS "Compile Tasteful Server WITHOUT examples")
 endif (WITH_EXAMPLES)
 
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core REQUIRED)
 
-include_directories("include/")
+include_directories("include/" "src/")
 
 add_definitions(-std=c++0x -Wreturn-type -Werror=return-type)
 
 set(Server_sources
-	src/core/ThreadPool.cpp
 	src/core/ByteArrayStream.cpp
+	src/core/QVariantTree.h
 	src/core/QVariantTree.cpp
+	src/core/Task.cpp
+	src/core/ThreadPool.h
+	src/core/ThreadPool.cpp
 	
+	src/server/SocketCreation.h
 	src/server/SocketCreation.cpp
-	src/server/TcpServer.cpp
 	src/server/ConnectionHandler.cpp
+	src/server/TcpServer.cpp
 	
 	src/http/httpUtil.cpp
 	src/http/HttpMethod.cpp
@@ -47,10 +51,14 @@ set(Server_sources
 )
 
 set(Server_headers
+	include/ByteArrayStream.h
+	include/ByteArrayStream
 	include/ContentType.h
 	include/ContentType
 	include/Cookie.h
 	include/Cookie
+	include/ConnectionHandler.h
+	include/ConnectionHandler
 	include/http.h
 	include/http
 	include/HttpEntity.h
@@ -81,26 +89,15 @@ set(Server_headers
 	include/MultiPart
 	include/RequestParameters.h
 	include/RequestParameters
+	include/Task.h
+	include/Task
 	include/TcpServer.h
 	include/TcpServer
 	include/UploadedFile.h
 	include/UploadedFile
 )
 
-set(Server_internal_headers
-	include/internal/ByteArrayStream.h
-	include/internal/ByteArrayStream
-	include/internal/ConnectionHandler.h
-	include/internal/ConnectionHandler
-	include/internal/QVariantTree.h
-	include/internal/QVariantTree
-	include/internal/SocketCreation.h
-	include/internal/SocketCreation
-	include/internal/ThreadPool.h
-	include/internal/ThreadPool
-)
-
-add_library(TastefulServer SHARED ${Server_sources} ${Server_headers} ${Server_internal_headers})
+add_library(TastefulServer SHARED ${Server_sources} ${Server_headers})
 
 qt5_use_modules(TastefulServer Network Xml)
 
@@ -113,4 +110,5 @@ install(TARGETS TastefulServer
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
 )
+
 install(FILES "${CMAKE_SOURCE_DIR}/FindTastefulServer.cmake" DESTINATION ${CMAKE_ROOT}/Modules)

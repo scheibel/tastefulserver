@@ -16,3 +16,6 @@ documentation
 *.lai
 *.la
 *.a
+
+# Qt Creator files
+*CMakeLists.txt.user

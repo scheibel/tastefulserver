@@ -7,56 +7,47 @@
   * Authors:
   *     Roland Lux <rollux2000@googlemail.com>
   *     Willy Scheibel <willyscheibel@gmx.de>
-  * 
+  *
   * This file is part of Tasteful Server.
   *
   * Tasteful Server is free software: you can redistribute it and/or modify
   * it under the terms of the GNU Lesser General Public License as published by
   * the Free Software Foundation, either version 3 of the License, or
   * (at your option) any later version.
-  * 
+  *
   * Tasteful Server is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   * GNU Lesser General Public License for more details.
-  * 
+  *
   * You should have received a copy of the GNU Lesser General Public License
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <QString>
-#include <QByteArray>
+#pragma once
 
-namespace internal {
+#include <QObject>
+#include <QThread>
+#include <QSet>
 
-class ByteArrayStream {
-	public:
-		ByteArrayStream(const QByteArray& bytes, const QString& linebreak="\n");
-	 
-		static ByteArrayStream forLinebreak(const QString& linebreak);
-	
-		void append(const QByteArray& bytes);
-		QByteArray read(unsigned length);
-		void skip(unsigned length);
-		QString readLine();
-		void skipUpTo(const QString& delimiter);
-		void skipUpTo(const QChar& delimiter);
-		void skipBehind(const QString& delimiter);
-		void skipBehind(const QChar& delimiter);
-		bool canReadUpTo(const QString& delimiter);
-		bool canReadUpTo(const QChar& delimiter);
-		QByteArray readUpTo(const QString& delimiter, bool skipDelimiter = false);
-		QByteArray readUpTo(const QChar& delimiter, bool skipDelimiter = false);
-		QByteArray readAll();
-		void skipAll();
-		bool canReadLine();
-		int availableBytes();
-		void flush();
-		bool atEnd();
+class Task : public QObject {
+	Q_OBJECT;
+	public slots:
+		virtual void startUp();
+	signals:
+		void finished(Task* task);
 	protected:
-		QString linebreak;
-		int pos;
-		QByteArray buffer;
+		void finish();
 };
 
-}
+class TaskThread : public QThread {
+	Q_OBJECT;
+	public:
+		void addTask(Task* task);
+	private slots:
+		void endTask(Task* task);
+	private:
+		void startTask(Task* task);
+	protected:
+		QSet<Task*> tasks;
+};

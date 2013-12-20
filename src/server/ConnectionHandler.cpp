@@ -24,7 +24,9 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <internal/ConnectionHandler>
+#include <ConnectionHandler>
+
+#include <server/SocketCreation.h>
 
 #include <QDebug>
 

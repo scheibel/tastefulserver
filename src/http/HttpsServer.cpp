@@ -26,6 +26,8 @@
 
 #include <HttpsServer>
 
+#include <server/SocketCreation.h>
+
 using namespace internal;
 
 HttpsServer::HttpsServer(const QSslCertificate& certificate, const QSslKey& privateKey, const HttpHandler::RequestCallback& callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {

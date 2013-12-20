@@ -26,7 +26,9 @@
 
 #include <RequestParameters>
 #include <UploadedFile>
-#include <internal/ByteArrayStream>
+#include <ByteArrayStream>
+
+#include <core/QVariantTree.h>
 
 #include <QUrl>
 #include <QRegExp>

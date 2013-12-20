@@ -24,7 +24,7 @@
   * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
   **/
 
-#include <internal/SocketCreation>
+#include <server/SocketCreation.h>
 
 using namespace internal;
 
