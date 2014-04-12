@@ -29,6 +29,8 @@
 
 #include <QStringList>
 
+namespace tastefulserver {
+
 HttpHandler::HttpHandler(const RequestCallback& callback)
 : callback(callback)
 , buffer(ByteArrayStream::forLinebreak(http::Linebreak))
@@ -186,3 +188,5 @@ bool HttpHandler::handleError() {
 	state = READ_REQUEST_LINE;
 	return true;
 }
+
+} // namespace tastefulserver

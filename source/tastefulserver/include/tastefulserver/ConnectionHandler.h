@@ -32,24 +32,24 @@
 
 #include <QAbstractSocket>
 
-namespace internal {
-    class SocketCreation;
-}
+namespace tastefulserver {
+
+class SocketCreation;
 	
 class TASTEFULSERVER_API ConnectionHandler : public Task {
     Q_OBJECT
 	public:
 		ConnectionHandler();
-        ConnectionHandler(internal::SocketCreation* socketCreation);
+        ConnectionHandler(SocketCreation* socketCreation);
 		~ConnectionHandler();
 	
-        void setSocketCreator(internal::SocketCreation* socketCreation);
+        void setSocketCreator(SocketCreation* socketCreation);
 	
 		void startUp();
 	protected:
 		QAbstractSocket* _socket;
 	private:
-        internal::SocketCreation* socketCreation;
+        SocketCreation* socketCreation;
 		void createSocket();
 	private slots:
 		void disconnected();
@@ -70,3 +70,5 @@ class TASTEFULSERVER_API ConnectionHandler : public Task {
 	
 		virtual void receive(const QByteArray& data) = 0;
 };
+
+} // namespace tastefulserver

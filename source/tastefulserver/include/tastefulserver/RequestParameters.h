@@ -36,12 +36,10 @@
 #include <QByteArray>
 #include <QSharedPointer>
 
-namespace internal {
-    class QVariantAbstractTree;
-    class QVariantTree;
-}
+namespace tastefulserver {
 
-using namespace internal;
+class QVariantAbstractTree;
+class QVariantTree;
 
 class TASTEFULSERVER_API RequestParameters {
 	public:
@@ -71,3 +69,5 @@ class TASTEFULSERVER_API RequestParameters {
 
 		QSharedPointer<QVariantTree> params;
 };
+
+} // namespace tastefulserver

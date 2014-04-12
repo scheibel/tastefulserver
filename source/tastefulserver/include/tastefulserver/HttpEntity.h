@@ -36,6 +36,8 @@
 #include <QHash>
 #include <QTextStream>
 
+namespace tastefulserver {
+
 namespace http {
 	const QString Linebreak = "\r\n";
 }
@@ -68,3 +70,5 @@ class TASTEFULSERVER_API HttpEntity {
 		void writeHeaderOn(const HttpHeader& header, QTextStream& stream) const;
 		virtual void writeHeadersOn(QTextStream& stream) const;
 };
+
+} // namespace tastefulserver

@@ -28,6 +28,8 @@
 
 #include <tastefulserver/HttpServer.h>
 
+using namespace tastefulserver;
+
 int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 

@@ -32,7 +32,7 @@
 #include <tastefulserver/ByteArrayStream.h>
 #include <tastefulserver/http.h>
 
-using namespace internal;
+namespace tastefulserver {
 
 class TASTEFULSERVER_API HttpHandler : public ConnectionHandler {
 	public:
@@ -65,3 +65,5 @@ class TASTEFULSERVER_API HttpHandler : public ConnectionHandler {
 			HANDLE_ERROR
 		} state;
 };
+
+} // namespace tastefulserver

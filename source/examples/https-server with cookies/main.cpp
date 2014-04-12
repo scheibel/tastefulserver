@@ -68,6 +68,8 @@ hBGw7TiSG6vp
 )DATA", QSsl::Rsa);
 }
 
+using namespace tastefulserver;
+
 int main(int argc, char** argv) {
 	QCoreApplication app(argc, argv);
 	

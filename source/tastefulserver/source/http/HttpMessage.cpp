@@ -28,6 +28,8 @@
 
 #include <QTextStream>
 
+namespace tastefulserver {
+
 HttpMessage::HttpMessage() : httpVersion(HttpVersion(1,1)) {
 }
 
@@ -85,3 +87,5 @@ MultiPart& HttpMessage::getMultiPart() {
 const MultiPart& HttpMessage::getMultiPart() const {
 	return multiPart;
 }
+
+} // namespace tastefulserver

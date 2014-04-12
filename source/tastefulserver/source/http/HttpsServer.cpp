@@ -28,7 +28,7 @@
 
 #include "../server/SocketCreation.h"
 
-using namespace internal;
+namespace tastefulserver {
 
 HttpsServer::HttpsServer(const QSslCertificate& certificate, const QSslKey& privateKey, const HttpHandler::RequestCallback& callback) : HttpServer(callback), certificate(certificate), privateKey(privateKey) {
 }
@@ -38,3 +38,5 @@ ConnectionHandler* HttpsServer::createConnectionHandler(qintptr socketDescriptor
 	https->setSocketCreator(new SslSocketCreation(socketDescriptor, certificate, privateKey));
 	return https;
 }
+
+} // namespace tastefulserver

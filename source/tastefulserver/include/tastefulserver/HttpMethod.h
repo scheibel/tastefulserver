@@ -31,6 +31,8 @@
 #include <QString>
 #include <QHash>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpMethod {
 	public:
 		typedef enum {
@@ -73,3 +75,5 @@ class TASTEFULSERVER_API HttpMethod {
 
 		static QHash<QString, Method> makeHash();
 };
+
+} // namespace tastefulserver

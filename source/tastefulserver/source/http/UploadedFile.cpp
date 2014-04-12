@@ -26,6 +26,8 @@
 
 #include <tastefulserver/UploadedFile.h>
 
+namespace tastefulserver {
+
 UploadedFile::UploadedFile() {
 }
 
@@ -55,3 +57,5 @@ const QByteArray& UploadedFile::getContent() const {
 const ContentType& UploadedFile::getContentType() const {
 	return contentType;
 }
+
+} // namespace tastefulserver

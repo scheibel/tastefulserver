@@ -30,6 +30,8 @@
 #include <QTextStream>
 #include <QStringList>
 
+namespace tastefulserver {
+
 const QString Cookie::MaxAge = "Max-Age";
 const QString Cookie::Comment = "Comment";
 const QString Cookie::Domain = "Domain";
@@ -188,3 +190,5 @@ QHash<QString, Cookie>::iterator Cookies::end() {
 QHash<QString, Cookie>::const_iterator Cookies::end() const {
 	return cookies.end();
 }
+
+} // namespace tastefulserver

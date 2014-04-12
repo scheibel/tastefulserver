@@ -32,6 +32,8 @@
 
 #include <QString>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API ContentType : public HttpHeaderElement {
 	public:
 		static const QString Charset;
@@ -70,3 +72,5 @@ class TASTEFULSERVER_API ContentType : public HttpHeaderElement {
 		QString type;
 		QString subtype;
 };
+
+} // namespace tastefulserver

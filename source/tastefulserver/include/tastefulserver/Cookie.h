@@ -34,6 +34,8 @@
 #include <QHash>
 #include <QTextStream>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API Cookie {
 	public:
 		static const QString MaxAge;
@@ -93,3 +95,5 @@ class TASTEFULSERVER_API Cookies {
 	private:
 		QHash<QString, Cookie> cookies;
 };
+
+} // namespace tastefulserver

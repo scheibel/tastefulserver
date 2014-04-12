@@ -28,10 +28,10 @@
 
 #include <QList>
 
+namespace tastefulserver {
+
 class Task;
 class TaskThread;
-
-namespace internal {
 
 class ThreadPool {
 	public:
@@ -51,4 +51,4 @@ class ThreadPool {
 		QList<TaskThread*> threads;
 };
 
-}
+} // namespace tastefulserver

@@ -30,6 +30,8 @@
 
 #include <QString>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpVersion {
 	public:
 		HttpVersion();
@@ -53,3 +55,5 @@ class TASTEFULSERVER_API HttpVersion {
 		unsigned _major;
 		unsigned _minor;
 };
+
+} // namespace tastefulserver

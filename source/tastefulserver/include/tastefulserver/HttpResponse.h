@@ -32,6 +32,8 @@
 #include <tastefulserver/httpStatusCodes.h>
 #include <tastefulserver/HttpRequest.h>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpResponse : public HttpMessage {
 	public:
 		HttpResponse();
@@ -54,3 +56,5 @@ class TASTEFULSERVER_API HttpResponse : public HttpMessage {
 	
 		virtual void writeHeadersOn(QTextStream& stream) const;
 };
+
+} // namespace tastefulserver

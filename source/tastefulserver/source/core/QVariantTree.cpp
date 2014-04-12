@@ -28,7 +28,7 @@
 #include <QStringList>
 #include <QTextStream>
 
-using namespace internal;
+namespace tastefulserver {
 
 QVariantNullTree QVariantAbstractTree::nullValue;
 
@@ -193,3 +193,5 @@ QVariant QVariantNullTree::asQVariant() {
 QString QVariantNullTree::printString(unsigned indent) {
 	return "NULL";
 }
+
+} // namespace tastefulserver

@@ -32,6 +32,8 @@
 #include <QThread>
 #include <QSet>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API Task : public QObject {
     Q_OBJECT
 	public slots:
@@ -53,3 +55,5 @@ class TASTEFULSERVER_API TaskThread : public QThread {
 	protected:
 		QSet<Task*> tasks;
 };
+
+} // namespace tastefulserver

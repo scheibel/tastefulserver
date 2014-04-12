@@ -33,7 +33,7 @@
 #include <QSslCertificate>
 #include <QSslKey>
 
-namespace internal {
+namespace tastefulserver {
 
 class SocketCreation {
 	public:
@@ -74,4 +74,4 @@ class SslSocketCreation : public TcpSocketCreation {
 		QSslKey privateKey;
 };
 
-}
+} // namespace tastefulserver

@@ -35,6 +35,8 @@
 #include <QList>
 #include <QHash>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API Part {
 	public:
 		Part();
@@ -64,3 +66,5 @@ class TASTEFULSERVER_API MultiPart {
 		ContentType type;
 		QList<Part> parts;
 };
+
+} // namespace tastefulserver

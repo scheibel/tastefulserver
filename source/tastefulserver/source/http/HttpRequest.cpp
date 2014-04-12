@@ -28,6 +28,8 @@
 
 #include <QTextStream>
 
+namespace tastefulserver {
+
 HttpRequest::HttpRequest() : bad(true), _port(0) {
 }
 
@@ -126,3 +128,5 @@ QByteArray HttpRequest::toByteArray() const {
 
 	return byteArray;
 }
+
+} // namespace tastefulserver

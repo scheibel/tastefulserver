@@ -30,10 +30,12 @@
 
 #include <QDebug>
 
+namespace tastefulserver {
+
 ConnectionHandler::ConnectionHandler() : socketCreation(nullptr), _socket(nullptr) {
 }
 
-ConnectionHandler::ConnectionHandler(internal::SocketCreation* socketCreation) : socketCreation(socketCreation), _socket(nullptr) {
+ConnectionHandler::ConnectionHandler(SocketCreation* socketCreation) : socketCreation(socketCreation), _socket(nullptr) {
 }
 
 ConnectionHandler::~ConnectionHandler() {
@@ -41,7 +43,7 @@ ConnectionHandler::~ConnectionHandler() {
 	delete socketCreation;
 }
 
-void ConnectionHandler::setSocketCreator(internal::SocketCreation* socketCreation) {
+void ConnectionHandler::setSocketCreator(SocketCreation* socketCreation) {
 	delete this->socketCreation;
 	this->socketCreation = socketCreation;
 }
@@ -103,3 +105,5 @@ void ConnectionHandler::disconnect() {
 
 void ConnectionHandler::onDisconnect() {
 }
+
+} // namespace tastefulserver

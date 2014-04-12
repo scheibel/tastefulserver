@@ -26,6 +26,8 @@
 
 #include <tastefulserver/Task.h>
 
+namespace tastefulserver {
+
 void Task::startUp() {
 }
 
@@ -49,3 +51,5 @@ void TaskThread::startTask(Task* task) {
 	connect(task, SIGNAL(finished(Task*)), this, SLOT(endTask(Task*)));
 	QMetaObject::invokeMethod(task, "startUp", Qt::QueuedConnection);
 }
+
+} // namespace tastefulserver

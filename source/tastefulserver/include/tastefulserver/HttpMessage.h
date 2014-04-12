@@ -35,6 +35,8 @@
 #include <tastefulserver/ContentType.h>
 #include <tastefulserver/MultiPart.h>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpMessage : public HttpEntity {
 	public:
 		HttpMessage();
@@ -61,3 +63,5 @@ class TASTEFULSERVER_API HttpMessage : public HttpEntity {
 		ContentType contentType;
 		MultiPart multiPart;
 };
+
+} // namespace tastefulserver

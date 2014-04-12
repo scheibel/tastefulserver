@@ -26,7 +26,7 @@
 
 #include "SocketCreation.h"
 
-using namespace internal;
+namespace tastefulserver {
 
 SocketCreation::SocketCreation(qintptr socketDescriptor) : socketDescriptor(socketDescriptor) {
 }
@@ -90,3 +90,5 @@ QAbstractSocket* SslSocketCreation::operator()() const {
 bool SslSocketCreation::isSsl() const {
 	return true;
 }
+
+} // namespace tastefulserver

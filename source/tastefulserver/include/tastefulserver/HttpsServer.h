@@ -33,7 +33,7 @@
 #include <QSslCertificate>
 #include <QSslKey>
 
-using namespace internal;
+namespace tastefulserver {
 
 class TASTEFULSERVER_API HttpsServer : public HttpServer {
 	public:
@@ -44,3 +44,5 @@ class TASTEFULSERVER_API HttpsServer : public HttpServer {
 		QSslCertificate certificate;
 		QSslKey privateKey;
 };
+
+} // namespace tastefulserver

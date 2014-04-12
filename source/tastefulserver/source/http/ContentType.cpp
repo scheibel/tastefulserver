@@ -28,6 +28,8 @@
 
 #include <QDebug>
 
+namespace tastefulserver {
+
 const QString ContentType::Charset = "charset";
 const QString ContentType::Boundary = "boundary";
 
@@ -111,3 +113,5 @@ QString ContentType::getBoundary() const {
 bool ContentType::isMultiPart() const {
 	return type==Multipart;
 }
+
+} // namespace tastefulserver

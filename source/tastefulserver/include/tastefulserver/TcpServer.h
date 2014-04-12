@@ -30,10 +30,9 @@
 
 #include <QTcpServer>
 
-namespace internal {
-    class ThreadPool;
-}
+namespace tastefulserver {
 
+class ThreadPool;
 class ConnectionHandler;
 
 class TASTEFULSERVER_API TcpServer : public QTcpServer {
@@ -48,6 +47,8 @@ class TASTEFULSERVER_API TcpServer : public QTcpServer {
 
         virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
 
-        static internal::ThreadPool* threadPool;
+        static ThreadPool* threadPool;
 		static int serverCount;
 };
+
+} // namespace tastefulserver

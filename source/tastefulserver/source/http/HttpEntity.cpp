@@ -28,6 +28,8 @@
 
 #include <QTextStream>
 
+namespace tastefulserver {
+
 HttpEntity::HttpEntity() {
 }
 
@@ -119,3 +121,5 @@ QByteArray HttpEntity::toByteArray() const {
 	
 	return byteArray;
 }
+
+} // namespace tastefulserver

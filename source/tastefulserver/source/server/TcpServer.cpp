@@ -28,7 +28,9 @@
 #include "../core/ThreadPool.h"
 #include <tastefulserver/ConnectionHandler.h>
 
-internal::ThreadPool* TcpServer::threadPool = new internal::ThreadPool();
+namespace tastefulserver {
+
+ThreadPool* TcpServer::threadPool = new ThreadPool();
 int TcpServer::serverCount = 0;
 
 TcpServer::TcpServer() {
@@ -51,3 +53,5 @@ void TcpServer::setNumThreads(int numThreads) {
 void TcpServer::incomingConnection(qintptr socketDescriptor) {
     threadPool->addTask(createConnectionHandler(socketDescriptor));
 }
+
+} // namespace tastefulserver

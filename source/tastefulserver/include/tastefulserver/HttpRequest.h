@@ -35,6 +35,8 @@
 #include <QUrl>
 #include <QHostAddress>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpRequest : public HttpMessage {
 	public:
 		HttpRequest();
@@ -72,3 +74,5 @@ class TASTEFULSERVER_API HttpRequest : public HttpMessage {
 		QUrl url;
 		RequestParameters requestParams;
 };
+
+} // namespace tastefulserver

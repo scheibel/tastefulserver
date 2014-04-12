@@ -26,6 +26,8 @@
 
 #pragma once
 
+namespace tastefulserver {
+
 namespace http {
 	const unsigned Continue = 100;
 	const unsigned SwitchingProtocols = 101;
@@ -73,3 +75,5 @@ namespace http {
 	const unsigned GatewayTimeout = 504;
 	const unsigned HTTPVersionNotSupported = 505;
 }
+
+} // namespace tastefulserver

@@ -32,6 +32,8 @@
 #include <QList>
 #include <QHash>
 
+namespace tastefulserver {
+
 namespace http {
 	typedef const QString HeaderName;
 	
@@ -196,3 +198,5 @@ class TASTEFULSERVER_API HttpHeader {
 	
 		void parse(const QString& headerString);
 };
+
+} // namespace tastefulserver

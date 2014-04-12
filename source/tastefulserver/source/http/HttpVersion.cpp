@@ -27,6 +27,8 @@
 #include <tastefulserver/HttpMessage.h>
 #include <tastefulserver/HttpHeader.h>
 
+namespace tastefulserver {
+
 HttpVersion::HttpVersion() : _major(0), _minor(0) {
 }
 
@@ -82,3 +84,5 @@ HttpVersion HttpVersion::fromString(const QString& string) {
 	unsigned _minor = version.mid(pos+1).toUInt();
 	return HttpVersion(_major, _minor);
 }
+
+} // namespace tastefulserver

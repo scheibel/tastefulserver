@@ -26,6 +26,8 @@
 
 #include <tastefulserver/ByteArrayStream.h>
 
+namespace tastefulserver {
+
 ByteArrayStream::ByteArrayStream(const QByteArray& bytes, const QString& linebreak) : buffer(bytes), linebreak(linebreak), pos(0) {
 }
 
@@ -143,3 +145,5 @@ QByteArray ByteArrayStream::readAll() {
 bool ByteArrayStream::atEnd() {
 	return pos == buffer.size();
 }
+
+} // namespace tastefulserver

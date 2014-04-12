@@ -29,6 +29,8 @@
 #include <tastefulserver/HttpHeader.h>
 #include <tastefulserver/ByteArrayStream.h>
 
+namespace tastefulserver {
+
 Part::Part() {
 }
 
@@ -93,3 +95,5 @@ void MultiPart::parse(const QByteArray& content) {
 		parts << Part(headers, partContent);
 	}
 }
+
+} // namespace tastefulserver

@@ -33,6 +33,8 @@
 #include <tastefulserver/TcpServer.h>
 #include <tastefulserver/HttpHandler.h>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API HttpServer : public TcpServer {
 	public:
 		HttpServer(const HttpHandler::RequestCallback& callback);
@@ -41,3 +43,5 @@ class TASTEFULSERVER_API HttpServer : public TcpServer {
 
 		virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
 };
+
+} // namespace tastefulserver

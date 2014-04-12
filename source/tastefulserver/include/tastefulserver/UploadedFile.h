@@ -35,6 +35,8 @@
 
 #include <tastefulserver/ContentType.h>
 
+namespace tastefulserver {
+
 class TASTEFULSERVER_API UploadedFile {
 	public:
 		UploadedFile();
@@ -54,4 +56,6 @@ class TASTEFULSERVER_API UploadedFile {
 		ContentType contentType;
 };
 
-Q_DECLARE_METATYPE(UploadedFile)
+} // namespace tastefulserver
+
+Q_DECLARE_METATYPE(tastefulserver::UploadedFile)

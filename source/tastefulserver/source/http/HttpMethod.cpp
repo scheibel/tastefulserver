@@ -26,6 +26,8 @@
 
 #include <tastefulserver/HttpMethod.h>
 
+namespace tastefulserver {
+
 HttpMethod::HttpMethod() : _method(INVALID) {
 }
 
@@ -122,3 +124,5 @@ QString HttpMethod::toString() const {
 			return "INVALID";
 	}
 }
+
+} // namespace tastefulserver

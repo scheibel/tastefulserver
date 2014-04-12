@@ -28,7 +28,7 @@
 
 #include <tastefulserver/Task.h>
 
-using namespace internal;
+namespace tastefulserver {
 
 ThreadPool::ThreadPool(int numThreads) : next(0), started(false) {
 	setNumThreads(numThreads);
@@ -78,3 +78,5 @@ void ThreadPool::addTask(Task* task) {
 	threads[next]->addTask(task);
 	next = (next+1)%threadCount;
 }
+
+} // namespace tastefulserver

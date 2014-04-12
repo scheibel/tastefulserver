@@ -28,6 +28,8 @@
 
 #include "../server/SocketCreation.h"
 
+namespace tastefulserver {
+
 HttpServer::HttpServer(const HttpHandler::RequestCallback& callback) : callback(callback) {
 }
 
@@ -36,3 +38,5 @@ ConnectionHandler* HttpServer::createConnectionHandler(qintptr socketDescriptor)
 	http->setSocketCreator(new TcpSocketCreation(socketDescriptor));
 	return http;
 }
+
+} // namespace tastefulserver

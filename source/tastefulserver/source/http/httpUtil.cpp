@@ -29,71 +29,73 @@
 
 #include <QHash>
 
-using namespace http;
-
-namespace internal {
+namespace tastefulserver {
 	
 QHash<unsigned, QString> makeReasonHash() {
 	QHash<unsigned, QString> hash;
 	
 	hash.reserve(50);
 	
-	hash.insert(Continue, "Continue");
-	hash.insert(SwitchingProtocols, "Switching Protocols");
-	hash.insert(OK, "OK");
-	hash.insert(Created, "Created");
-	hash.insert(Accepted, "Accepted");
-	hash.insert(NonAuthoritativeInformation, "Non-Authoritative Information");
-	hash.insert(NoContent, "No Content");
-	hash.insert(ResetContent, "Reset Content");
-	hash.insert(PartialContent, "Partial Content");
+    hash.insert(http::Continue, "Continue");
+    hash.insert(http::SwitchingProtocols, "Switching Protocols");
+    hash.insert(http::OK, "OK");
+    hash.insert(http::Created, "Created");
+    hash.insert(http::Accepted, "Accepted");
+    hash.insert(http::NonAuthoritativeInformation, "Non-Authoritative Information");
+    hash.insert(http::NoContent, "No Content");
+    hash.insert(http::ResetContent, "Reset Content");
+    hash.insert(http::PartialContent, "Partial Content");
 	
-	hash.insert(MultipleChoices, "Multiple Choices");
-	hash.insert(MovedPermanently, "Moved Permanently");
-	hash.insert(Found, "Found");
-	hash.insert(SeeOther, "See Other");
-	hash.insert(NotModified, "Not Modified");
-	hash.insert(UseProxy, "Use Proxy");
-	hash.insert(TemporaryRedirect, "Temporary Redirect");
+    hash.insert(http::MultipleChoices, "Multiple Choices");
+    hash.insert(http::MovedPermanently, "Moved Permanently");
+    hash.insert(http::Found, "Found");
+    hash.insert(http::SeeOther, "See Other");
+    hash.insert(http::NotModified, "Not Modified");
+    hash.insert(http::UseProxy, "Use Proxy");
+    hash.insert(http::TemporaryRedirect, "Temporary Redirect");
 	
-	hash.insert(BadRequest, "Bad Request");
-	hash.insert(Unauthorized, "Unauthorized");
-	hash.insert(PaymentRequired, "Payment Required");
-	hash.insert(Forbidden, "Forbidden");
-	hash.insert(NotFound, "Not Found");
-	hash.insert(MethodNotAllowed, "Method Not Allowed");
-	hash.insert(NotAcceptable, "Not Acceptable");
-	hash.insert(ProxyAuthenticationRequired, "Proxy Authentication Required");
-	hash.insert(RequestTimeout, "Request Time-out");
-	hash.insert(Conflict, "Conflict");
-	hash.insert(Gone, "Gone");
-	hash.insert(LengthRequired, "Length Required");
-	hash.insert(PreconditionFailed, "PreconditionFailed");
-	hash.insert(RequestEntityTooLarge, "Request Entity Too Large");
-	hash.insert(RequestURITooLarge, "Request-URI Too Large");
-	hash.insert(UnsupportedMediaType, "Unsupported Media Type");
-	hash.insert(RequestedRangeNotSatisfiable, "Requested range not satisfiable");
-	hash.insert(ExpectationFailed, "Expectation Failed");
+    hash.insert(http::BadRequest, "Bad Request");
+    hash.insert(http::Unauthorized, "Unauthorized");
+    hash.insert(http::PaymentRequired, "Payment Required");
+    hash.insert(http::Forbidden, "Forbidden");
+    hash.insert(http::NotFound, "Not Found");
+    hash.insert(http::MethodNotAllowed, "Method Not Allowed");
+    hash.insert(http::NotAcceptable, "Not Acceptable");
+    hash.insert(http::ProxyAuthenticationRequired, "Proxy Authentication Required");
+    hash.insert(http::RequestTimeout, "Request Time-out");
+    hash.insert(http::Conflict, "Conflict");
+    hash.insert(http::Gone, "Gone");
+    hash.insert(http::LengthRequired, "Length Required");
+    hash.insert(http::PreconditionFailed, "PreconditionFailed");
+    hash.insert(http::RequestEntityTooLarge, "Request Entity Too Large");
+    hash.insert(http::RequestURITooLarge, "Request-URI Too Large");
+    hash.insert(http::UnsupportedMediaType, "Unsupported Media Type");
+    hash.insert(http::RequestedRangeNotSatisfiable, "Requested range not satisfiable");
+    hash.insert(http::ExpectationFailed, "Expectation Failed");
 	
-	hash.insert(InternalServerError, "Internal Server Error");
-	hash.insert(NotImplemented, "Not Implemented");
-	hash.insert(BadGateway, "Bad Gateway");
-	hash.insert(ServiceUnavailable, "Service Unavailable");
-	hash.insert(InternalServerError, "Gateway Time-out");
-	hash.insert(HTTPVersionNotSupported, "HTTP Version not supported");
+    hash.insert(http::InternalServerError, "Internal Server Error");
+    hash.insert(http::NotImplemented, "Not Implemented");
+    hash.insert(http::BadGateway, "Bad Gateway");
+    hash.insert(http::ServiceUnavailable, "Service Unavailable");
+    hash.insert(http::InternalServerError, "Gateway Time-out");
+    hash.insert(http::HTTPVersionNotSupported, "HTTP Version not supported");
 	
 	hash.squeeze();
 	
 	return hash;
 }
 
-}
+namespace http {
 
-QString http::reason(const unsigned statusCode) {
-	static QHash<unsigned, QString> hash = internal::makeReasonHash();
+QString reason(const unsigned statusCode) {
+    static QHash<unsigned, QString> hash = makeReasonHash();
 	return hash[statusCode];
 }
 
-QString http::dateString(const QDateTime& dateTime) {
+QString dateString(const QDateTime& dateTime) {
 	return dateTime.toUTC().toString("ddd, dd MMM yyyy hh:mm:ss 'GMT'");
 }
+
+} // namespace http
+
+} // namespace tastefulserver

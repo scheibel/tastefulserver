@@ -29,6 +29,8 @@
 #include <QStringList>
 #include <QTextStream>
 
+namespace tastefulserver {
+
 NameValuePair::NameValuePair() {
 }
 
@@ -234,3 +236,5 @@ void HttpHeader::parse(const QString& headerString) {
 	name = headerString.left(pos);
 	value = headerString.mid(pos+1).trimmed();
 }
+
+} // namespace tastefulserver

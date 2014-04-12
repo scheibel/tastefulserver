@@ -29,6 +29,8 @@
 
 #include <QTextStream>
 
+namespace tastefulserver {
+
 HttpResponse::HttpResponse() {
 	initialize();
 }
@@ -93,3 +95,5 @@ QByteArray HttpResponse::toByteArray() const {
 	
 	return byteArray;
 }
+
+} // namespace tastefulserver

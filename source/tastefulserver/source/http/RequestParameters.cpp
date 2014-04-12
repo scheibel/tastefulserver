@@ -33,7 +33,7 @@
 #include <QUrl>
 #include <QRegExp>
 
-using namespace internal;
+namespace tastefulserver {
 
 RequestParameters::RequestParameters() : params(new QVariantTree()) {
 }
@@ -179,3 +179,5 @@ QList<QString> RequestParameters::extractIndices(const QString& key) const {
 
 	return indices;
 }
+
+} // namespace tastefulserver

@@ -50,6 +50,7 @@ set(sources
 	${source_path}/core/ThreadPool.h
 	${source_path}/core/Task.cpp
 	${source_path}/core/QVariantTree.h
+	${source_path}/core/QVariantTree.hpp
 	${source_path}/core/ByteArrayStream.cpp
 	${source_path}/core/QVariantTree.cpp
 	${source_path}/http/Cookie.cpp
