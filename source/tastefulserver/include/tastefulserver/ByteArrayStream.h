@@ -40,8 +40,8 @@ class TASTEFULSERVER_API ByteArrayStream {
 		static ByteArrayStream forLinebreak(const QString& linebreak);
 	
 		void append(const QByteArray& bytes);
-		QByteArray read(unsigned length);
-		void skip(unsigned length);
+        QByteArray read(int length);
+        void skip(int length);
 		QString readLine();
 		void skipUpTo(const QString& delimiter);
 		void skipUpTo(const QChar& delimiter);
@@ -58,9 +58,9 @@ class TASTEFULSERVER_API ByteArrayStream {
 		void flush();
 		bool atEnd();
 	protected:
+        QByteArray buffer;
 		QString linebreak;
-		int pos;
-		QByteArray buffer;
+        int pos;
 };
 
 } // namespace tastefulserver

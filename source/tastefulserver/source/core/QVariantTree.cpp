@@ -32,6 +32,10 @@ namespace tastefulserver {
 
 QVariantNullTree QVariantAbstractTree::nullValue;
 
+QVariantAbstractTree::~QVariantAbstractTree()
+{
+}
+
 bool QVariantAbstractTree::isTree() {
 	return false;
 }
@@ -161,7 +165,7 @@ bool QVariantLeaf::isLeaf() {
 	return true;
 }
 
-QVariantAbstractTree* QVariantLeaf::basicGet(const QString& key) {
+QVariantAbstractTree* QVariantLeaf::basicGet(const QString& /*key*/) {
 	return nullptr;
 }
 
@@ -169,7 +173,7 @@ QVariant QVariantLeaf::asQVariant() {
 	return element;
 }
 
-QString QVariantLeaf::printString(unsigned indent) {
+QString QVariantLeaf::printString(unsigned /*indent*/) {
 	if (element.type()==QVariant::UserType) return QString("%1()").arg(element.typeName());
 	return element.toString();
 }
@@ -182,7 +186,7 @@ bool QVariantNullTree::isNull() {
 	return true;
 }
 
-QVariantAbstractTree* QVariantNullTree::basicGet(const QString& key) {
+QVariantAbstractTree* QVariantNullTree::basicGet(const QString& /*key*/) {
 	return nullptr;
 }
 
@@ -190,7 +194,7 @@ QVariant QVariantNullTree::asQVariant() {
 	return QVariant();
 }
 
-QString QVariantNullTree::printString(unsigned indent) {
+QString QVariantNullTree::printString(unsigned /*indent*/) {
 	return "NULL";
 }
 

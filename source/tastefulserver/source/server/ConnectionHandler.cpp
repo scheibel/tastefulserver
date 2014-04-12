@@ -32,10 +32,16 @@
 
 namespace tastefulserver {
 
-ConnectionHandler::ConnectionHandler() : socketCreation(nullptr), _socket(nullptr) {
+ConnectionHandler::ConnectionHandler()
+: _socket(nullptr)
+, socketCreation(nullptr)
+{
 }
 
-ConnectionHandler::ConnectionHandler(SocketCreation* socketCreation) : socketCreation(socketCreation), _socket(nullptr) {
+ConnectionHandler::ConnectionHandler(SocketCreation* socketCreation)
+: _socket(nullptr)
+, socketCreation(socketCreation)
+{
 }
 
 ConnectionHandler::~ConnectionHandler() {

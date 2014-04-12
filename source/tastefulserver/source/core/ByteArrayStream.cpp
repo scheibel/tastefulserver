@@ -28,7 +28,10 @@
 
 namespace tastefulserver {
 
-ByteArrayStream::ByteArrayStream(const QByteArray& bytes, const QString& linebreak) : buffer(bytes), linebreak(linebreak), pos(0) {
+ByteArrayStream::ByteArrayStream(const QByteArray& bytes, const QString& linebreak)
+: buffer(bytes)
+, linebreak(linebreak)
+, pos(0) {
 }
 
 ByteArrayStream ByteArrayStream::forLinebreak(const QString& linebreak) {
@@ -52,7 +55,7 @@ int ByteArrayStream::availableBytes() {
 	return buffer.size()-pos;
 }
 
-QByteArray ByteArrayStream::read(unsigned length) {
+QByteArray ByteArrayStream::read(int length) {
 	if (availableBytes()<length) {
 		pos = buffer.size();
 		return buffer.mid(pos);
@@ -62,7 +65,7 @@ QByteArray ByteArrayStream::read(unsigned length) {
 	return bytes;
 }
 
-void ByteArrayStream::skip(unsigned length) {
+void ByteArrayStream::skip(int length) {
 	if (availableBytes()<length) {
 		pos = buffer.size();
 		return;

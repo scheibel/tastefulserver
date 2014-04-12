@@ -30,10 +30,19 @@
 
 namespace tastefulserver {
 
-HttpRequest::HttpRequest() : bad(true), _port(0) {
+HttpRequest::HttpRequest()
+: _port(0)
+, bad(true)
+{
 }
 
-HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps) : HttpMessage(httpVersion), bad(false), method(method), requestUri(requestUri), _port(0) {
+HttpRequest::HttpRequest(const HttpMethod& method, const QString& requestUri, const HttpVersion& httpVersion, bool isHttps)
+: HttpMessage(httpVersion)
+, _port(0)
+, bad(false)
+, method(method)
+, requestUri(requestUri)
+{
 	url = QUrl::fromEncoded(requestUri.toLatin1());
 	if (url.scheme().isEmpty()) url.setScheme(isHttps ? "https" : "http");
 	requestParams.parseUrl(url);

@@ -30,7 +30,11 @@
 
 namespace tastefulserver {
 
-ThreadPool::ThreadPool(int numThreads) : next(0), started(false) {
+ThreadPool::ThreadPool(int numThreads)
+: started(false)
+, threadCount(0)
+, next(0)
+{
 	setNumThreads(numThreads);
 }
 

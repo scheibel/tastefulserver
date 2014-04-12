@@ -38,6 +38,8 @@ namespace tastefulserver {
 class SocketCreation {
 	public:
 		SocketCreation(qintptr socketDescriptor);
+        virtual ~SocketCreation();
+
 		virtual QAbstractSocket* operator()() const = 0;
 
 		virtual bool isTcp() const;

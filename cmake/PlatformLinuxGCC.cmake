@@ -35,7 +35,7 @@ else()
 	set(EXCEPTION_FLAG "-fno-exceptions")
 endif()
 
-set(LINUX_COMPILE_FLAGS "-fvisibility=hidden -pthread -pipe -fPIC -Wreturn-type ${EXCEPTION_FLAG}") # -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wconversion -Wno-error=float-equal -Wno-error=switch
+set(LINUX_COMPILE_FLAGS "-fvisibility=hidden -pthread -pipe -fPIC -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wno-error=float-equal -Wno-error=switch -Wreturn-type ${EXCEPTION_FLAG}")
 # pthread       -> use pthread library
 # no-rtti       -> disable c++ rtti
 # no-exceptions -> disable exception handling

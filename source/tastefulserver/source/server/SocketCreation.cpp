@@ -31,6 +31,10 @@ namespace tastefulserver {
 SocketCreation::SocketCreation(qintptr socketDescriptor) : socketDescriptor(socketDescriptor) {
 }
 
+SocketCreation::~SocketCreation()
+{
+}
+
 bool SocketCreation::isTcp() const {
 	return false;
 }

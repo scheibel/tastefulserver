@@ -38,6 +38,8 @@ class QVariantNullTree;
 
 class QVariantAbstractTree {
     public:
+        virtual ~QVariantAbstractTree();
+
         virtual bool isTree();
         virtual bool isLeaf();
         virtual bool isNull();

@@ -118,7 +118,7 @@ void RequestParameters::parseList(const QList<QPair<QString, QVariant>>& paramet
 
 		QVariantTree* currentParams = params.data();
 		QString index;
-		for (unsigned i = 0; i < indices.size() - 1; ++i) {
+        for (int i = 0; i < indices.size() - 1; ++i) {
 			index = indices[i].isEmpty() ? QString::number(currentParams->size()) : indices[i];
 			currentParams = &currentParams->obtainSubtree(index);
 		}
@@ -162,8 +162,7 @@ QList<QString> RequestParameters::extractIndices(const QString& key) const {
 
 	QList<QString> indices = QList<QString>() << name;
 
-	bool valid = true;
-	while (stream.canReadUpTo('[')) {
+    while (stream.canReadUpTo('[')) {
 		stream.skipBehind('[');
 
 		if (stream.canReadUpTo(']')) {
