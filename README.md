@@ -11,19 +11,11 @@ This library comes with a HTTP suite for handling incoming HTTP requests.
 You can pass your own callback to handle those completely preparsed requests with an object oriented interface.
 SSL for HTTPS is also supported.
 
-As it is now, only Linux is tested as development and deployment environment, so no build information for Windows, MacOS or any other OS is provided.
-Since all platform-dependent features of the Tasteful Server are provided through Qt, it should also run on any other OS to which Qt was ported.
-
-Content
-------------
-
- * [Features](#features)
- * [Requirements](#requirements)
- * [Building Tasteful Server](#building-tasteful-server)
- * [Running Examples](#running-examples)
- * [Installation](#installation)
- * [Known Projects Using Tasteful Server](#known-projects-using-tasteful-server)
- * [License](#license)
+Platform independency is provided through [cmake-init](https://github.com/hpicgs/cmake-init).
+Currently supported platforms are:
+ * Windows
+ * Linux
+ * OS X
 
 Features
 -------------
@@ -42,39 +34,8 @@ Requirements
 ---------------------
 
  * [Qt 5.0](http://qt.nokia.com/)
- * [gcc 4.6](http://gcc.gnu.org/)
- * [CMake 2.6](http://www.cmake.org/)
- 
-Building Tasteful Server
------------------------------------
- 
-    > mkdir build && cd build
-    > cmake ..
-    > make
- 
-Running Examples
----------------------------------
-
-First you have to compile Tasteful Server with examples.
-
-    > cmake .. -DWITH_EXAMPLES=ON
-    > make
-
-Then you can start the simple HTTP server.
-
-    > ./examples/HttpServer
-
-And then open your favorite browser and navigate to [localhost:8080](http://localhost:8080).  
-For an Https-Server with the URL [https://localhost:8080](https://localhost:8080) you can start:
-
-    > ./examples/HttpsServer
-
-Installation
-----------------
-
-The Tasteful Server library and its header files can be installed in your system using the following command:
-
-    > sudo make install
+ * [gcc 4.7](http://gcc.gnu.org/)
+ * [CMake 2.8.9](http://www.cmake.org/)
 
 Known Projects Using Tasteful Server
 --------------------------------------------------------
