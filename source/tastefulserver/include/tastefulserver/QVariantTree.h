@@ -30,13 +30,15 @@
 #include <QHash>
 #include <QVariant>
 
+#include <tastefulserver/tastefulserver_api.h>
+
 namespace tastefulserver {
 
 class QVariantTree;
 class QVariantLeaf;
 class QVariantNullTree;
 
-class QVariantAbstractTree
+class TASTEFULSERVER_API QVariantAbstractTree
 {
 public:
     virtual ~QVariantAbstractTree();
@@ -63,7 +65,7 @@ protected:
     static QVariantNullTree nullValue;
 };
 
-class QVariantTree : public QVariantAbstractTree
+class TASTEFULSERVER_API QVariantTree : public QVariantAbstractTree
 {
 public:
     ~QVariantTree();
@@ -85,7 +87,7 @@ protected:
     QHash<QString, QVariantAbstractTree *> children;
 };
 
-class QVariantLeaf : public QVariantAbstractTree
+class TASTEFULSERVER_API QVariantLeaf : public QVariantAbstractTree
 {
 public:
     QVariantLeaf(QVariant value);
@@ -101,7 +103,7 @@ protected:
     QVariant element;
 };
 
-class QVariantNullTree : public QVariantAbstractTree
+class TASTEFULSERVER_API QVariantNullTree : public QVariantAbstractTree
 {
 public:
     bool isNull();

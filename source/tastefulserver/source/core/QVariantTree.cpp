@@ -24,7 +24,7 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "QVariantTree.h"
+#include <tastefulserver/QVariantTree.h>
 #include <QStringList>
 #include <QTextStream>
 

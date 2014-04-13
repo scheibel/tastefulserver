@@ -28,7 +28,7 @@
 #include <tastefulserver/UploadedFile.h>
 #include <tastefulserver/ByteArrayStream.h>
 
-#include "../core/QVariantTree.h"
+#include <tastefulserver/QVariantTree.h>
 
 #include <QUrl>
 #include <QRegExp>

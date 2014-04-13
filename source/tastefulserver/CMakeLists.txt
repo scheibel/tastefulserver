@@ -49,8 +49,6 @@ set(sources
 	${source_path}/core/ThreadPool.cpp
 	${source_path}/core/ThreadPool.h
 	${source_path}/core/Task.cpp
-	${source_path}/core/QVariantTree.h
-	${source_path}/core/QVariantTree.hpp
 	${source_path}/core/ByteArrayStream.cpp
 	${source_path}/core/QVariantTree.cpp
 	${source_path}/http/Cookie.cpp
@@ -112,6 +110,8 @@ set(api_includes
 	${include_path}/HttpVersion.h
 	${include_path}/MultiPart
 	${include_path}/MultiPart.h
+	${include_path}/QVariantTree.h
+	${include_path}/QVariantTree.hpp
 	${include_path}/RequestParameters
 	${include_path}/RequestParameters.h
 	${include_path}/Task
@@ -141,7 +141,7 @@ else()
 endif()
 
 target_link_libraries(${target} ${libs})
-qt5_use_modules(${target} Core Network Xml)
+qt5_use_modules(${target} Core Network)
 
 set_target_properties(${target}
     PROPERTIES

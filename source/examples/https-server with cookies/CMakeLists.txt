@@ -58,7 +58,7 @@ source_group_by_path(${source_path} "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$"
 add_executable(${target} ${sources})
 
 target_link_libraries(${target} ${libs})
-qt5_use_modules(${target} Core Network Xml)
+qt5_use_modules(${target} Core Network)
 
 set_target_properties(${target}
     PROPERTIES
