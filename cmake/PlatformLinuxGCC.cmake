@@ -29,13 +29,7 @@ set(DEFAULT_COMPILE_DEFS_RELEASE
     NDEBUG	                  # Release build
 )
 
-if (OPTION_ERRORS_AS_EXCEPTION)
-	set(EXCEPTION_FLAG "-fexceptions")
-else()
-	set(EXCEPTION_FLAG "-fno-exceptions")
-endif()
-
-set(LINUX_COMPILE_FLAGS "-fvisibility=hidden -pthread -pipe -fPIC -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wno-error=float-equal -Wno-error=switch -Wreturn-type ${EXCEPTION_FLAG}")
+set(LINUX_COMPILE_FLAGS "-fvisibility=hidden -pthread -pipe -fPIC -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wno-error=float-equal -Wno-error=switch -Wreturn-type -fno-exceptions")
 # pthread       -> use pthread library
 # no-rtti       -> disable c++ rtti
 # no-exceptions -> disable exception handling
