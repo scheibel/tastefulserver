@@ -36,7 +36,7 @@
 namespace tastefulserver {
 
 RequestParameters::RequestParameters()
-    : params(new QVariantTree())
+    : m_params(new QVariantTree())
 {
 }
 
@@ -69,7 +69,7 @@ RequestParameters RequestParameters::fromMultiPart(const MultiPart & multiPart)
 
 QString RequestParameters::toString() const
 {
-    return params->printString();
+    return m_params->printString();
 }
 
 void RequestParameters::parseUrl(const QUrl & url)
@@ -147,7 +147,7 @@ void RequestParameters::parseList(const QList<QPair<QString, QVariant >> & param
 
         QList<QString> indices = extractIndices(pair.first);
 
-        QVariantTree * currentParams = params.data();
+        QVariantTree * currentParams = m_params.data();
         QString index;
         for (int i = 0;i < indices.size() - 1;++i)
         {
@@ -167,27 +167,27 @@ QVariantAbstractTree &RequestParameters::operator[](const QString & key) const
 
 QVariantAbstractTree &RequestParameters::getByPath(const QString & path) const
 {
-    return params->getByPath(path);
+    return m_params->getByPath(path);
 }
 
 QVariantAbstractTree &RequestParameters::get(const QString & key) const
 {
-    return params->get(key);
+    return m_params->get(key);
 }
 
 void RequestParameters::insert(const QString & key, const QVariant & value)
 {
-    params->insert(key, value);
+    m_params->insert(key, value);
 }
 
 bool RequestParameters::contains(const QString & key) const
 {
-    return params->contains(key);
+    return m_params->contains(key);
 }
 
 bool RequestParameters::containsPath(const QString & path) const
 {
-    return params->containsPath(path);
+    return m_params->containsPath(path);
 }
 
 QList<QString> RequestParameters::extractIndices(const QString & key) const

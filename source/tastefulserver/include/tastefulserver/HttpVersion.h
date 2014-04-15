@@ -36,7 +36,7 @@ class TASTEFULSERVER_API HttpVersion
 {
 public:
     HttpVersion();
-    HttpVersion(unsigned _major, unsigned _minor);
+    HttpVersion(unsigned majorVersion, unsigned minorVersion);
 
     bool isInvalid() const;
     unsigned getMajor() const;
@@ -54,8 +54,8 @@ public:
     static HttpVersion fromString(const QString & string);
 
 private:
-    unsigned _major;
-    unsigned _minor;
+    unsigned m_major;
+    unsigned m_minor;
 };
 
 } // namespace tastefulserver

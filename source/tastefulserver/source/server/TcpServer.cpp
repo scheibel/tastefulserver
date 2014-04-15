@@ -30,34 +30,34 @@
 
 namespace tastefulserver {
 
-ThreadPool * TcpServer::threadPool = new ThreadPool();
-int TcpServer::serverCount = 0;
+ThreadPool * TcpServer::s_threadPool = new ThreadPool();
+int TcpServer::s_serverCount = 0;
 TcpServer::TcpServer()
 {
-    serverCount++;
-    if (!threadPool->isStarted())
+    s_serverCount++;
+    if (!s_threadPool->isStarted())
     {
-        threadPool->start();
+        s_threadPool->start();
     }
 }
 
 TcpServer::~TcpServer()
 {
-    serverCount--;
-    if (serverCount<=0)
+    s_serverCount--;
+    if (s_serverCount<=0)
     {
-        threadPool->stop();
+        s_threadPool->stop();
     }
 }
 
 void TcpServer::setNumThreads(int numThreads)
 {
-    threadPool->setNumThreads(numThreads);
+    s_threadPool->setNumThreads(numThreads);
 }
 
 void TcpServer::incomingConnection(qintptr socketDescriptor)
 {
-    threadPool->addTask(createConnectionHandler(socketDescriptor));
+    s_threadPool->addTask(createConnectionHandler(socketDescriptor));
 }
 
 } // namespace tastefulserver

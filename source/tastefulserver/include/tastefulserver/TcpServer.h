@@ -48,8 +48,9 @@ public:
 protected:
     virtual void incomingConnection(qintptr socketDescriptor);
     virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const = 0;
-    static ThreadPool * threadPool;
-    static int serverCount;
+
+    static ThreadPool * s_threadPool;
+    static int s_serverCount;
 };
 
 } // namespace tastefulserver

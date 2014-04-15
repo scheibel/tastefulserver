@@ -31,48 +31,48 @@
 namespace tastefulserver {
 
 HttpMessage::HttpMessage()
-    : httpVersion(HttpVersion(1, 1))
+    : m_httpVersion(HttpVersion(1, 1))
 {
 }
 
 HttpMessage::HttpMessage(const HttpVersion & httpVersion)
-    : httpVersion(httpVersion)
+    : m_httpVersion(httpVersion)
 {
 }
 
 HttpVersion &HttpMessage::getHttpVersion()
 {
-    return httpVersion;
+    return m_httpVersion;
 }
 
 const HttpVersion &HttpMessage::getHttpVersion() const
 {
-    return httpVersion;
+    return m_httpVersion;
 }
 
 Cookies &HttpMessage::getCookies()
 {
-    return cookies;
+    return m_cookies;
 }
 
 const Cookies &HttpMessage::getCookies() const
 {
-    return cookies;
+    return m_cookies;
 }
 
 bool HttpMessage::hasCookies() const
 {
-    return !cookies.isEmpty();
+    return !m_cookies.isEmpty();
 }
 
 ContentType &HttpMessage::getContentType()
 {
-    return contentType;
+    return m_contentType;
 }
 
 const ContentType &HttpMessage::getContentType() const
 {
-    return contentType;
+    return m_contentType;
 }
 
 void HttpMessage::keepAlive()
@@ -92,17 +92,17 @@ int HttpMessage::getContentLength() const
 
 bool HttpMessage::isMultiPart() const
 {
-    return contentType.isMultiPart();
+    return m_contentType.isMultiPart();
 }
 
 MultiPart &HttpMessage::getMultiPart()
 {
-    return multiPart;
+    return m_multiPart;
 }
 
 const MultiPart &HttpMessage::getMultiPart() const
 {
-    return multiPart;
+    return m_multiPart;
 }
 
 } // namespace tastefulserver

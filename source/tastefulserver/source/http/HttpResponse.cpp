@@ -66,36 +66,36 @@ void HttpResponse::setDate(const QDateTime & date)
 
 void HttpResponse::setStatusCode(unsigned statusCode)
 {
-    this->statusCode = statusCode;
+    m_statusCode = statusCode;
 }
 
 unsigned HttpResponse::getStatusCode() const
 {
-    return statusCode;
+    return m_statusCode;
 }
 
 void HttpResponse::setCookie(const Cookie & cookie)
 {
-    cookies.set(cookie);
+    m_cookies.set(cookie);
 }
 
 Cookie &HttpResponse::setCookie(const QString & key, const QString & value)
 {
     setCookie(Cookie(key, value));
 
-    return cookies[key];
+    return m_cookies[key];
 }
 
 void HttpResponse::writeHeadersOn(QTextStream & stream) const
 {
     HttpMessage::writeHeadersOn(stream);
 
-    for (const Cookie & cookie : cookies)
+    for (const Cookie & cookie : m_cookies)
     {
         HttpHeader header(http::SetCookie, cookie.toString());
         writeHeaderOn(header, stream);
     }
-    HttpHeader header(http::ContentType, contentType.toString());
+    HttpHeader header(http::ContentType, m_contentType.toString());
     writeHeaderOn(header, stream);
 }
 
@@ -104,8 +104,8 @@ QByteArray HttpResponse::toByteArray() const
     QByteArray byteArray;
     QTextStream stream(&byteArray);
 
-    stream << httpVersion.toString() << " " << statusCode;
-    QString reason = http::reason(statusCode);
+    stream << m_httpVersion.toString() << " " << m_statusCode;
+    QString reason = http::reason(m_statusCode);
     if (!reason.isNull())
     {
         stream << " " << reason;

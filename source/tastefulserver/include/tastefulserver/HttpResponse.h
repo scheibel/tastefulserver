@@ -47,11 +47,11 @@ public:
     void setDate(const QDateTime & date);
 
     void setCookie(const Cookie & cookie);
-    Cookie&setCookie(const QString & key, const QString & value);
+    Cookie & setCookie(const QString & key, const QString & value);
     virtual QByteArray toByteArray() const;
 
 protected:
-    unsigned statusCode;
+    unsigned m_statusCode;
 
     void initialize();
 

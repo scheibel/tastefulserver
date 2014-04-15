@@ -67,13 +67,13 @@ public:
     virtual QByteArray toByteArray() const;
 
 protected:
-    QHostAddress _address;
-    unsigned _port;
-    bool bad;
-    HttpMethod method;
-    QString requestUri;
-    QUrl url;
-    RequestParameters requestParams;
+    QHostAddress m_address;
+    unsigned m_port;
+    bool m_bad;
+    HttpMethod m_method;
+    QString m_requestUri;
+    QUrl m_url;
+    RequestParameters m_requestParams;
 };
 
 } // namespace tastefulserver

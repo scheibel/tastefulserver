@@ -36,19 +36,19 @@ NameValuePair::NameValuePair()
 }
 
 NameValuePair::NameValuePair(const QString & name, const QString & value)
-    : name(name)
-    , value(value)
+    : m_name(name)
+    , m_value(value)
 {
 }
 
-QString NameValuePair::getName() const
+const QString & NameValuePair::getName() const
 {
-    return name;
+    return m_name;
 }
 
-QString NameValuePair::getValue() const
+const QString & NameValuePair::getValue() const
 {
-    return value;
+    return m_value;
 }
 
 HttpHeaderElementParameter::HttpHeaderElementParameter()
@@ -65,10 +65,10 @@ QString HttpHeaderElementParameter::toString() const
     QString string;
     QTextStream stream(&string);
 
-    stream << name;
-    if (!value.isEmpty())
+    stream << m_name;
+    if (!m_value.isEmpty())
     {
-        stream << "=" << value;
+        stream << "=" << m_value;
     }
 
     return string;
@@ -89,12 +89,12 @@ void HttpHeaderElementParameter::parse(const QString & param)
 
     if (pos<0)
     {
-        name = param;
+        m_name = param;
     }
     else
     {
-        name = param.left(pos);
-        value = stripQuotes(param.mid(pos + 1));
+        m_name = param.left(pos);
+        m_value = stripQuotes(param.mid(pos + 1));
     }
 }
 
@@ -132,28 +132,28 @@ void HttpHeaderElement::parse(const QString & elementString)
     QStringList parts = elementString.split(';');
     HttpHeaderElementParameter me = HttpHeaderElementParameter::fromString(parts[0].trimmed());
 
-    name = me.getName();
-    value = me.getValue();
+    m_name = me.getName();
+    m_value = me.getValue();
     for (int i = 1;i<parts.size();++i)
     {
         HttpHeaderElementParameter param = HttpHeaderElementParameter::fromString(parts[i].trimmed());
-        parameters.insert(param.getName(), param);
+        m_parameters.insert(param.getName(), param);
     }
 }
 
 bool HttpHeaderElement::isSet(const QString & paramName) const
 {
-    return parameters.contains(paramName);
+    return m_parameters.contains(paramName);
 }
 
 QString HttpHeaderElement::getParameter(const QString & paramName) const
 {
-    return parameters[paramName].getValue();
+    return m_parameters[paramName].getValue();
 }
 
 QList<HttpHeaderElementParameter> HttpHeaderElement::getParameters() const
 {
-    return parameters.values();
+    return m_parameters.values();
 }
 
 QString HttpHeaderElement::toString() const
@@ -161,12 +161,12 @@ QString HttpHeaderElement::toString() const
     QString string;
     QTextStream stream(&string);
 
-    stream << name;
-    if (!value.isEmpty())
+    stream << m_name;
+    if (!m_value.isEmpty())
     {
-        stream << "=" << value;
+        stream << "=" << m_value;
     }
-    for (const HttpHeaderElementParameter & param : parameters)
+    for (const HttpHeaderElementParameter & param : m_parameters)
     {
         stream << "; " << param.toString();
     }
@@ -175,13 +175,13 @@ QString HttpHeaderElement::toString() const
 }
 
 HttpHeaderValue::HttpHeaderValue()
-    : modified(false)
+    : m_modified(false)
 {
 }
 
 HttpHeaderValue::HttpHeaderValue(const QString & value)
-    : value(value)
-    , modified(false)
+    : m_value(value)
+    , m_modified(false)
 {
 }
 
@@ -189,14 +189,14 @@ HttpHeaderElement HttpHeaderValue::getElement() const
 {
     parseElementsIfNecessary();
 
-    return elements.first();
+    return m_elements.first();
 }
 
 QList<HttpHeaderElement> HttpHeaderValue::getElements() const
 {
     parseElementsIfNecessary();
 
-    return elements;
+    return m_elements;
 }
 
 bool HttpHeaderValue::isValid() const
@@ -209,41 +209,41 @@ void HttpHeaderValue::merge(const QList<HttpHeaderElement> & newElements)
     parseElementsIfNecessary();
     if (!newElements.isEmpty())
     {
-        elements.append(newElements);
-        modified = true;
+        m_elements.append(newElements);
+        m_modified = true;
     }
 }
 
 QString HttpHeaderValue::toString() const
 {
-    if (modified)
+    if (m_modified)
     {
         QString string;
         QTextStream stream(&string);
 
-        for (int i = 0;i<elements.size();++i)
+        for (int i = 0;i<m_elements.size();++i)
         {
             if (i>0)
             {
                 stream << ", ";
             }
-            stream << elements[i].toString();
+            stream << m_elements[i].toString();
         }
 
         return string;
     }
 
-    return value;
+    return m_value;
 }
 
 void HttpHeaderValue::parseElementsIfNecessary() const
 {
-    if (elements.isEmpty())
+    if (m_elements.isEmpty())
     {
-        QStringList parts = value.split(',');
+        QStringList parts = m_value.split(',');
         for (QString & part : parts)
         {
-            elements << HttpHeaderElement::fromString(part);
+            m_elements << HttpHeaderElement::fromString(part);
         }
     }
 }
@@ -253,50 +253,50 @@ HttpHeader::HttpHeader()
 }
 
 HttpHeader::HttpHeader(const QString & name, const QString & value)
-    : name(name)
-    , value(value)
+    : m_name(name)
+    , m_value(value)
 {
 }
 
 QString HttpHeader::getName() const
 {
-    return name;
+    return m_name;
 }
 
 QString HttpHeader::getValue() const
 {
-    return value.toString();
+    return m_value.toString();
 }
 
 void HttpHeader::setValue(const QString & value)
 {
-    this->value = value;
+    m_value = value;
 }
 
 bool HttpHeader::isValid() const
 {
-    return !name.isEmpty() && value.isValid();
+    return !m_name.isEmpty() && m_value.isValid();
 }
 
 bool HttpHeader::merge(const HttpHeader & header)
 {
-    if (name!=header.getName())
+    if (m_name!=header.getName())
     {
         return false;
     }
-    value.merge(header.getElements());
+    m_value.merge(header.getElements());
 
     return true;
 }
 
 HttpHeaderElement HttpHeader::getElement() const
 {
-    return value.getElement();
+    return m_value.getElement();
 }
 
 QList<HttpHeaderElement> HttpHeader::getElements() const
 {
-    return value.getElements();
+    return m_value.getElements();
 }
 
 QString HttpHeader::toString() const
@@ -304,7 +304,7 @@ QString HttpHeader::toString() const
     QString string;
     QTextStream stream(&string);
 
-    stream << name << ": " << value.toString();
+    stream << m_name << ": " << m_value.toString();
 
     return string;
 }
@@ -331,8 +331,8 @@ void HttpHeader::parse(const QString & headerString)
     {
         return;
     }
-    name = headerString.left(pos);
-    value = headerString.mid(pos + 1).trimmed();
+    m_name = headerString.left(pos);
+    m_value = headerString.mid(pos + 1).trimmed();
 }
 
 } // namespace tastefulserver

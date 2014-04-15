@@ -31,16 +31,16 @@
 namespace tastefulserver {
 
 ThreadPool::ThreadPool(int numThreads)
-    : started(false)
-    , threadCount(0)
-    , next(0)
+    : m_started(false)
+    , m_threadCount(0)
+    , m_next(0)
 {
     setNumThreads(numThreads);
 }
 
 void ThreadPool::setNumThreads(int numThreads)
 {
-    if (started)
+    if (m_started)
     {
         return;
     }
@@ -53,48 +53,48 @@ void ThreadPool::setNumThreads(int numThreads)
             numThreads = 1;
         }
     }
-    threadCount = numThreads;
+    m_threadCount = numThreads;
 }
 
 bool ThreadPool::isStarted() const
 {
-    return started;
+    return m_started;
 }
 
 void ThreadPool::start()
 {
-    if (started)
+    if (m_started)
     {
         return;
     }
 
-    for (int i = 0;i<threadCount;++i)
+    for (int i = 0;i<m_threadCount;++i)
     {
         TaskThread * thread = new TaskThread();
-        threads << thread;
+        m_threads << thread;
         thread->start();
     }
-    started = true;
+    m_started = true;
 }
 
 void ThreadPool::stop()
 {
-    if (started)
+    if (m_started)
     {
         return;
     }
 
-    for (TaskThread * thread : threads)
+    for (TaskThread * thread : m_threads)
     {
         thread->terminate();
         delete thread;
     }
-    started = false;
+    m_started = false;
 }
 
 ThreadPool::~ThreadPool()
 {
-    if (started)
+    if (m_started)
     {
         stop();
     }
@@ -102,8 +102,8 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::addTask(Task * task)
 {
-    threads[next]->addTask(task);
-    next = (next + 1) % threadCount;
+    m_threads[m_next]->addTask(task);
+    m_next = (m_next + 1) % m_threadCount;
 }
 
 } // namespace tastefulserver

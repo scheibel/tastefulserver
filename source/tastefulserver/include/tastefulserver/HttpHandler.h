@@ -37,6 +37,11 @@ namespace tastefulserver {
 class TASTEFULSERVER_API HttpHandler : public ConnectionHandler
 {
 public:
+    enum State
+    {
+        READ_REQUEST_LINE, READ_HEADER, READ_CONTENT, HANDLE_REQUEST, HANDLE_ERROR
+    };
+
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
 
     HttpHandler(const RequestCallback & callback);
@@ -59,11 +64,7 @@ private:
     bool m_hasBadRequestCallback;
     ByteArrayStream m_buffer;
     HttpRequest m_request;
-    enum
-    {
-        READ_REQUEST_LINE, READ_HEADER, READ_CONTENT, HANDLE_REQUEST, HANDLE_ERROR
-    } m_state;
-
+    State m_state;
 };
 
 } // namespace tastefulserver

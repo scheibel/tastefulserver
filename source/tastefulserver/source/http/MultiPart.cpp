@@ -36,32 +36,32 @@ Part::Part()
 }
 
 Part::Part(const QList<HttpHeader> & headers, const QByteArray & content)
-    : content(content)
+    : m_content(content)
 {
     for (const HttpHeader & header : headers)
     {
-        this->headers.insert(header.getName(), header);
+        m_headers.insert(header.getName(), header);
     }
 }
 
 bool Part::hasHeader(const http::HeaderName & headerName) const
 {
-    return headers.contains(headerName);
+    return m_headers.contains(headerName);
 }
 
 HttpHeader Part::getHeader(const http::HeaderName & headerName) const
 {
-    return headers[headerName];
+    return m_headers[headerName];
 }
 
 QList<HttpHeader> Part::getHeaders() const
 {
-    return headers.values();
+    return m_headers.values();
 }
 
 QByteArray Part::getContent() const
 {
-    return content;
+    return m_content;
 }
 
 MultiPart::MultiPart()
@@ -69,28 +69,28 @@ MultiPart::MultiPart()
 }
 
 MultiPart::MultiPart(const ContentType & type)
-    : type(type)
+    : m_type(type)
 {
 }
 
 bool MultiPart::isFormData() const
 {
-    return type.getSubtype()==ContentType::FormData;
+    return m_type.getSubtype()==ContentType::FormData;
 }
 
 QList<Part> MultiPart::getParts() const
 {
-    return parts;
+    return m_parts;
 }
 
 void MultiPart::parse(const QByteArray & content)
 {
-    if (!type.isMultiPart())
+    if (!m_type.isMultiPart())
     {
         return;
     }
 
-    QString boundary = type.getBoundary();
+    QString boundary = m_type.getBoundary();
     if (boundary.isEmpty())
     {
         return;
@@ -114,7 +114,7 @@ void MultiPart::parse(const QByteArray & content)
         }
         QByteArray partContent = stream.readUpTo(http::Linebreak + boundary, true);
         stream.skip(2);
-        parts << Part(headers, partContent);
+        m_parts << Part(headers, partContent);
     }
 }
 

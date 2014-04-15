@@ -47,7 +47,7 @@ public:
     virtual bool isUdp() const;
 
 protected:
-    qintptr socketDescriptor;
+    qintptr m_socketDescriptor;
 };
 
 class UdpSocketCreation : public SocketCreation
@@ -74,8 +74,8 @@ public:
     virtual bool isSsl() const;
 
 protected:
-    QSslCertificate certificate;
-    QSslKey privateKey;
+    QSslCertificate m_certificate;
+    QSslKey m_privateKey;
 };
 
 } // namespace tastefulserver

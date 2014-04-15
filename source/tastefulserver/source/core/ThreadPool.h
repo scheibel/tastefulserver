@@ -47,10 +47,10 @@ public:
     void addTask(Task * task);
 
 protected:
-    bool started;
-    int threadCount;
-    unsigned next;
-    QList<TaskThread *> threads;
+    bool m_started;
+    int m_threadCount;
+    unsigned m_next;
+    QList<TaskThread *> m_threads;
 };
 
 } // namespace tastefulserver

@@ -33,7 +33,7 @@ UploadedFile::UploadedFile()
 }
 
 UploadedFile::UploadedFile(const ContentType & contentType)
-    : contentType(contentType)
+    : m_contentType(contentType)
 {
 }
 
@@ -44,27 +44,27 @@ QVariant UploadedFile::toQVariant() const
 
 void UploadedFile::setFilename(const QString & filename)
 {
-    this->filename = filename;
+    m_filename = filename;
 }
 
 void UploadedFile::setContent(const QByteArray & content)
 {
-    this->content = content;
+    m_content = content;
 }
 
 const QString &UploadedFile::getFilename() const
 {
-    return filename;
+    return m_filename;
 }
 
 const QByteArray &UploadedFile::getContent() const
 {
-    return content;
+    return m_content;
 }
 
 const ContentType &UploadedFile::getContentType() const
 {
-    return contentType;
+    return m_contentType;
 }
 
 } // namespace tastefulserver

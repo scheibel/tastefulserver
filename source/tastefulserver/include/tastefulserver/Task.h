@@ -62,7 +62,7 @@ private:
     void startTask(Task * task);
 
 protected:
-    QSet<Task *> tasks;
+    QSet<Task *> m_tasks;
 };
 
 } // namespace tastefulserver

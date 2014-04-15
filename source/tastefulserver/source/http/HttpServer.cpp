@@ -31,13 +31,13 @@
 namespace tastefulserver {
 
 HttpServer::HttpServer(const HttpHandler::RequestCallback & callback)
-    : callback(callback)
+    : m_callback(callback)
 {
 }
 
 ConnectionHandler * HttpServer::createConnectionHandler(qintptr socketDescriptor) const
 {
-    HttpHandler * http = new HttpHandler(callback);
+    HttpHandler * http = new HttpHandler(m_callback);
 
     http->setSocketCreator(new TcpSocketCreation(socketDescriptor));
 

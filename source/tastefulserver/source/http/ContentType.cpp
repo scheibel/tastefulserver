@@ -49,12 +49,12 @@ ContentType::ContentType(const QString & type, const QString & subtype)
 
 void ContentType::updateName()
 {
-    name = m_type + '/' + m_subtype;
+    m_name = m_type + '/' + m_subtype;
 }
 
 bool ContentType::is(const QString & type, const QString & subtype) const
 {
-    return this->m_type==type && this->m_subtype==subtype;
+    return m_type==type && m_subtype==subtype;
 }
 
 bool ContentType::operator==(const ContentType & contentType) const
@@ -64,14 +64,14 @@ bool ContentType::operator==(const ContentType & contentType) const
 
 void ContentType::setType(const QString & type)
 {
-    this->m_type = type;
+    m_type = type;
 
     updateName();
 }
 
 void ContentType::setSubtype(const QString & subtype)
 {
-    this->m_subtype = subtype;
+    m_subtype = subtype;
 
     updateName();
 }
@@ -107,7 +107,7 @@ void ContentType::parse(const QString & value)
 {
     HttpHeaderElement::parse(value);
 
-    setTypeAndSubtype(name);
+    setTypeAndSubtype(m_name);
 }
 
 const QString &ContentType::getType() const

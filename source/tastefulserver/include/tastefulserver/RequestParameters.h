@@ -49,9 +49,9 @@ public:
     bool contains(const QString & key) const;
     bool containsPath(const QString & path) const;
 
-    QVariantAbstractTree &operator[](const QString & key) const;
-    QVariantAbstractTree&get(const QString & key) const;
-    QVariantAbstractTree&getByPath(const QString & path) const;
+    QVariantAbstractTree & operator[](const QString & key) const;
+    QVariantAbstractTree & get(const QString & key) const;
+    QVariantAbstractTree & getByPath(const QString & path) const;
 
     void insert(const QString & key, const QVariant & value);
 
@@ -69,7 +69,7 @@ protected:
     void parseList(const QList<QPair<QString, QVariant >> &parameters);
     QList<QString> extractIndices(const QString & key) const;
 
-    QSharedPointer<QVariantTree> params;
+    QSharedPointer<QVariantTree> m_params;
 };
 
 } // namespace tastefulserver

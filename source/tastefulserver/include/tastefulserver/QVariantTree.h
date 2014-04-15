@@ -62,7 +62,7 @@ public:
 
 protected:
     virtual QVariantAbstractTree* basicGet(const QString & key) = 0;
-    static QVariantNullTree nullValue;
+    static QVariantNullTree s_nullValue;
 };
 
 class TASTEFULSERVER_API QVariantTree : public QVariantAbstractTree
@@ -84,7 +84,7 @@ public:
 protected:
     QVariantAbstractTree* basicGet(const QString & key);
 
-    QHash<QString, QVariantAbstractTree *> children;
+    QHash<QString, QVariantAbstractTree *> m_children;
 };
 
 class TASTEFULSERVER_API QVariantLeaf : public QVariantAbstractTree
@@ -100,7 +100,7 @@ public:
 
 protected:
     QVariantAbstractTree* basicGet(const QString & key);
-    QVariant element;
+    QVariant m_element;
 };
 
 class TASTEFULSERVER_API QVariantNullTree : public QVariantAbstractTree

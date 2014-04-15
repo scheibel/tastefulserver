@@ -30,65 +30,65 @@
 namespace tastefulserver {
 
 HttpVersion::HttpVersion()
-    : _major(0)
-    , _minor(0)
+    : m_major(0)
+    , m_minor(0)
 {
 }
 
-HttpVersion::HttpVersion(unsigned _major, unsigned _minor)
-    : _major(_major)
-    , _minor(_minor)
+HttpVersion::HttpVersion(unsigned majorVersion, unsigned minorVersion)
+    : m_major(majorVersion)
+    , m_minor(minorVersion)
 {
 }
 
 bool HttpVersion::isInvalid() const
 {
-    return _major==0 && _minor==0;
+    return m_major==0 && m_minor==0;
 }
 
 unsigned HttpVersion::getMajor() const
 {
-    return _major;
+    return m_major;
 }
 
 unsigned HttpVersion::getMinor() const
 {
-    return _minor;
+    return m_minor;
 }
 
 bool HttpVersion::operator<(const HttpVersion & httpVersion) const
 {
-    return _major<httpVersion._major && _minor<httpVersion._minor;
+    return m_major<httpVersion.m_major && m_minor<httpVersion.m_minor;
 }
 
 bool HttpVersion::operator<=(const HttpVersion & httpVersion) const
 {
-    return _major<=httpVersion._major && _minor<=httpVersion._minor;
+    return m_major<=httpVersion.m_major && m_minor<=httpVersion.m_minor;
 }
 
 bool HttpVersion::operator>(const HttpVersion & httpVersion) const
 {
-    return _major>httpVersion._major && _minor>httpVersion._minor;
+    return m_major>httpVersion.m_major && m_minor>httpVersion.m_minor;
 }
 
 bool HttpVersion::operator>=(const HttpVersion & httpVersion) const
 {
-    return _major>=httpVersion._major && _minor>=httpVersion._minor;
+    return m_major>=httpVersion.m_major && m_minor>=httpVersion.m_minor;
 }
 
 bool HttpVersion::operator==(const HttpVersion & httpVersion) const
 {
-    return _major==httpVersion._major && _minor==httpVersion._minor;
+    return m_major==httpVersion.m_major && m_minor==httpVersion.m_minor;
 }
 
 bool HttpVersion::operator!=(const HttpVersion & httpVersion) const
 {
-    return _major!=httpVersion._major || _minor!=httpVersion._minor;
+    return m_major!=httpVersion.m_major || m_minor!=httpVersion.m_minor;
 }
 
 QString HttpVersion::toString() const
 {
-    return QString("HTTP/%1.%2").arg(_major).arg(_minor);
+    return QString("HTTP/%1.%2").arg(m_major).arg(m_minor);
 }
 
 HttpVersion HttpVersion::fromString(const QString & string)

@@ -52,8 +52,8 @@ ConnectionHandler::~ConnectionHandler()
 
 void ConnectionHandler::setSocketCreator(SocketCreation * socketCreation)
 {
-    delete this->m_socketCreation;
-    this->m_socketCreation = socketCreation;
+    delete m_socketCreation;
+    m_socketCreation = socketCreation;
 }
 
 void ConnectionHandler::startUp()

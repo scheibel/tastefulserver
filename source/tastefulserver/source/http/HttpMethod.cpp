@@ -29,17 +29,17 @@
 namespace tastefulserver {
 
 HttpMethod::HttpMethod()
-    : _method(INVALID)
+    : m_method(INVALID)
 {
 }
 
 HttpMethod::HttpMethod(const Method & method)
-    : _method(method)
+    : m_method(method)
 {
 }
 
 HttpMethod::HttpMethod(const HttpMethod & method)
-    : _method(method._method)
+    : m_method(method.m_method)
 {
 }
 
@@ -69,61 +69,61 @@ QHash<QString, HttpMethod::Method> HttpMethod::makeHash()
 
 HttpMethod &HttpMethod::operator=(const Method & method)
 {
-    _method = method;
+    m_method = method;
 
     return *this;
 }
 
 HttpMethod &HttpMethod::operator=(const HttpMethod & method)
 {
-    _method = method._method;
+    m_method = method.m_method;
 
     return *this;
 }
 
 bool HttpMethod::operator==(const Method & method) const
 {
-    return _method == method;
+    return m_method == method;
 }
 
 bool HttpMethod::operator==(const HttpMethod & method) const
 {
-    return _method == method._method;
+    return m_method == method.m_method;
 }
 
 bool HttpMethod::operator!=(const Method & method) const
 {
-    return _method != method;
+    return m_method != method;
 }
 
 bool HttpMethod::operator!=(const HttpMethod & method) const
 {
-    return _method != method._method;
+    return m_method != method.m_method;
 }
 
 HttpMethod::operator unsigned() const
 {
-    return _method;
+    return m_method;
 }
 
 HttpMethod::operator Method() const
 {
-    return _method;
+    return m_method;
 }
 
 bool HttpMethod::isInvalid() const
 {
-    return _method == INVALID;
+    return m_method == INVALID;
 }
 
 HttpMethod::Method HttpMethod::method() const
 {
-    return _method;
+    return m_method;
 }
 
 QString HttpMethod::toString() const
 {
-    switch (_method)
+    switch (m_method)
     {
         case GET:
 

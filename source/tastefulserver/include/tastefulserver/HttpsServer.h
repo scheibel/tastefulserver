@@ -43,8 +43,8 @@ public:
     ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
 
 private:
-    QSslCertificate certificate;
-    QSslKey privateKey;
+    QSslCertificate m_certificate;
+    QSslKey m_privateKey;
 };
 
 } // namespace tastefulserver

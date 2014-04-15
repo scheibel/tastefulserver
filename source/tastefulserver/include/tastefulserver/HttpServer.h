@@ -41,7 +41,7 @@ public:
     HttpServer(const HttpHandler::RequestCallback & callback);
 
 protected:
-    HttpHandler::RequestCallback callback;
+    HttpHandler::RequestCallback m_callback;
     virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
 };
 

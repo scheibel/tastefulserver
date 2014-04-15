@@ -53,9 +53,9 @@ public:
     QVariant toQVariant() const;
 
 private:
-    QString filename;
-    QByteArray content;
-    ContentType contentType;
+    QString m_filename;
+    QByteArray m_content;
+    ContentType m_contentType;
 };
 
 } // namespace tastefulserver

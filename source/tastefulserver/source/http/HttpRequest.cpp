@@ -31,54 +31,54 @@
 namespace tastefulserver {
 
 HttpRequest::HttpRequest()
-    : _port(0)
-    , bad(true)
+    : m_port(0)
+    , m_bad(true)
 {
 }
 
 HttpRequest::HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion, bool isHttps)
     : HttpMessage(httpVersion)
-    , _port(0)
-    , bad(false)
-    , method(method)
-    , requestUri(requestUri)
+    , m_port(0)
+    , m_bad(false)
+    , m_method(method)
+    , m_requestUri(requestUri)
 {
-    url = QUrl::fromEncoded(requestUri.toLatin1());
-    if (url.scheme().isEmpty())
+    m_url = QUrl::fromEncoded(requestUri.toLatin1());
+    if (m_url.scheme().isEmpty())
     {
-        url.setScheme(isHttps ? "https" : "http");
+        m_url.setScheme(isHttps ? "https" : "http");
     }
-    requestParams.parseUrl(url);
+    m_requestParams.parseUrl(m_url);
 }
 
 bool HttpRequest::isBad() const
 {
-    return bad;
+    return m_bad;
 }
 
 void HttpRequest::markBad()
 {
-    bad = true;
+    m_bad = true;
 }
 
 const QHostAddress &HttpRequest::address() const
 {
-    return _address;
+    return m_address;
 }
 
 void HttpRequest::setAddress(const QHostAddress & address)
 {
-    _address = address;
+    m_address = address;
 }
 
 unsigned HttpRequest::port() const
 {
-    return _port;
+    return m_port;
 }
 
 void HttpRequest::setPort(unsigned port)
 {
-    _port = port;
+    m_port = port;
 }
 
 bool HttpRequest::isXMLHttpRequest() const
@@ -88,12 +88,12 @@ bool HttpRequest::isXMLHttpRequest() const
 
 HttpMethod HttpRequest::getMethod() const
 {
-    return method;
+    return m_method;
 }
 
 QString HttpRequest::getRequestUri() const
 {
-    return requestUri;
+    return m_requestUri;
 }
 
 void HttpRequest::parseHeader(const HttpHeader & header)
@@ -103,15 +103,15 @@ void HttpRequest::parseHeader(const HttpHeader & header)
     QString value = header.getValue();
     if (headerName==http::Host)
     {
-        url.setAuthority(value);
+        m_url.setAuthority(value);
     }
     else if (headerName==http::Cookie)
     {
-        cookies.parse(value);
+        m_cookies.parse(value);
     }
     else if (headerName==http::ContentType)
     {
-        contentType.parse(value);
+        m_contentType.parse(value);
     }
 }
 
@@ -120,37 +120,37 @@ void HttpRequest::parseContent(const QByteArray & content)
     setContent(content);
     if (isMultiPart())
     {
-        multiPart = MultiPart(contentType);
-        multiPart.parse(content);
-        if (multiPart.isFormData())
+        m_multiPart = MultiPart(m_contentType);
+        m_multiPart.parse(content);
+        if (m_multiPart.isFormData())
         {
-            requestParams.parseMultiPart(multiPart);
+            m_requestParams.parseMultiPart(m_multiPart);
         }
     }
-    else if (contentType.is(ContentType::Application, ContentType::XWWWFormUrlEncoded))
+    else if (m_contentType.is(ContentType::Application, ContentType::XWWWFormUrlEncoded))
     {
-        requestParams.parseUrlEncoded(content);
+        m_requestParams.parseUrlEncoded(content);
     }
 }
 
 QUrl HttpRequest::getUrl() const
 {
-    return url;
+    return m_url;
 }
 
 QString HttpRequest::getPath() const
 {
-    return url.path();
+    return m_url.path();
 }
 
 RequestParameters &HttpRequest::getParameters()
 {
-    return requestParams;
+    return m_requestParams;
 }
 
 const RequestParameters &HttpRequest::getParameters() const
 {
-    return requestParams;
+    return m_requestParams;
 }
 
 QByteArray HttpRequest::toByteArray() const
@@ -158,7 +158,7 @@ QByteArray HttpRequest::toByteArray() const
     QByteArray byteArray;
     QTextStream stream(&byteArray);
 
-    stream << method.toString() << " " << requestUri << " " << httpVersion.toString() << http::Linebreak;
+    stream << m_method.toString() << " " << m_requestUri << " " << m_httpVersion.toString() << http::Linebreak;
 
     stream << HttpMessage::toByteArray();
 

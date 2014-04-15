@@ -29,7 +29,7 @@
 namespace tastefulserver {
 
 SocketCreation::SocketCreation(qintptr socketDescriptor)
-    : socketDescriptor(socketDescriptor)
+    : m_socketDescriptor(socketDescriptor)
 {
 }
 
@@ -61,7 +61,7 @@ QAbstractSocket * UdpSocketCreation::operator()() const
 {
     QUdpSocket * socket = new QUdpSocket();
 
-    socket->setSocketDescriptor(socketDescriptor);
+    socket->setSocketDescriptor(m_socketDescriptor);
 
     return socket;
 }
@@ -80,7 +80,7 @@ QAbstractSocket * TcpSocketCreation::operator()() const
 {
     QTcpSocket * socket = new QTcpSocket();
 
-    socket->setSocketDescriptor(socketDescriptor);
+    socket->setSocketDescriptor(m_socketDescriptor);
 
     return socket;
 }
@@ -92,8 +92,8 @@ bool TcpSocketCreation::isTcp() const
 
 SslSocketCreation::SslSocketCreation(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey)
     : TcpSocketCreation(socketDescriptor)
-    , certificate(certificate)
-    , privateKey(privateKey)
+    , m_certificate(certificate)
+    , m_privateKey(privateKey)
 {
 }
 
@@ -101,10 +101,10 @@ QAbstractSocket * SslSocketCreation::operator()() const
 {
     QSslSocket * socket = new QSslSocket();
 
-    socket->setSocketDescriptor(socketDescriptor);
+    socket->setSocketDescriptor(m_socketDescriptor);
 
-    socket->setLocalCertificate(certificate);
-    socket->setPrivateKey(privateKey);
+    socket->setLocalCertificate(m_certificate);
+    socket->setPrivateKey(m_privateKey);
 
     socket->startServerEncryption();
 

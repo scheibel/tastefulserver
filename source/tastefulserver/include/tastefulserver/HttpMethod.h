@@ -36,10 +36,10 @@ namespace tastefulserver {
 class TASTEFULSERVER_API HttpMethod
 {
 public:
-    typedef enum
+    enum Method
     {
         INVALID, GET, POST, PUT, DELETE, UPDATE, TRACE, HEAD, OPTIONS, CONNECT
-    } Method;
+    };
 
     HttpMethod();
     HttpMethod(const Method & method);
@@ -64,7 +64,7 @@ public:
     QString toString() const;
 
 private:
-    Method _method;
+    Method m_method;
     static QHash<QString, Method> makeHash();
 };
 

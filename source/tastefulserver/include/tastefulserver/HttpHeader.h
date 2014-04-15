@@ -115,12 +115,12 @@ public:
     NameValuePair();
     NameValuePair(const QString & name, const QString & value);
 
-    QString getName() const;
-    QString getValue() const;
+    const QString & getName() const;
+    const QString & getValue() const;
 
 protected:
-    QString name;
-    QString value;
+    QString m_name;
+    QString m_value;
 };
 
 class TASTEFULSERVER_API HttpHeaderElementParameter : public NameValuePair
@@ -154,7 +154,7 @@ public:
     QString toString() const;
 
 protected:
-    QHash<QString, HttpHeaderElementParameter> parameters;
+    QHash<QString, HttpHeaderElementParameter> m_parameters;
 
     void parse(const QString & elementString);
 };
@@ -176,9 +176,9 @@ public:
 protected:
     void parseElementsIfNecessary() const;
 
-    QString value;
-    bool modified;
-    mutable QList<HttpHeaderElement> elements;
+    QString m_value;
+    bool m_modified;
+    mutable QList<HttpHeaderElement> m_elements;
 };
 
 class TASTEFULSERVER_API HttpHeader
@@ -203,8 +203,8 @@ public:
     QList<HttpHeaderElement> getElements() const;
 
 protected:
-    QString name;
-    HttpHeaderValue value;
+    QString m_name;
+    HttpHeaderValue m_value;
 
     void parse(const QString & headerString);
 };

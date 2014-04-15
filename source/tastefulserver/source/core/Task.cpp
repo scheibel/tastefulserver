@@ -40,13 +40,13 @@ void Task::finish()
 void TaskThread::addTask(Task * task)
 {
     task->moveToThread(this);
-    tasks.insert(task);
+    m_tasks.insert(task);
     startTask(task);
 }
 
 void TaskThread::endTask(Task * task)
 {
-    tasks.remove(task);
+    m_tasks.remove(task);
     task->deleteLater();
 }
 

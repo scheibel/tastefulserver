@@ -30,7 +30,7 @@
 
 namespace tastefulserver {
 
-QVariantNullTree QVariantAbstractTree::nullValue;
+QVariantNullTree QVariantAbstractTree::s_nullValue;
 QVariantAbstractTree::~QVariantAbstractTree()
 {
 }
@@ -69,7 +69,7 @@ QVariantAbstractTree &QVariantAbstractTree::get(const QString & key)
 {
     QVariantAbstractTree * tree = basicGet(key);
 
-    return tree ? *tree : nullValue;
+    return tree ? *tree : s_nullValue;
 }
 
 QVariantAbstractTree &QVariantAbstractTree::getByPath(const QString & path)
@@ -83,7 +83,7 @@ QVariantAbstractTree &QVariantAbstractTree::getByPath(const QString & path)
 
         if (!tree)
         {
-            return nullValue;
+            return s_nullValue;
         }
     }
 
@@ -102,7 +102,7 @@ bool QVariantAbstractTree::containsPath(const QString & path)
 
 QVariantTree::~QVariantTree()
 {
-    for (QVariantAbstractTree * child : children)
+    for (QVariantAbstractTree * child : m_children)
     {
         delete child;
     }
@@ -115,16 +115,16 @@ bool QVariantTree::isTree()
 
 int QVariantTree::size()
 {
-    return children.size();
+    return m_children.size();
 }
 
 void QVariantTree::insert(const QString & key, QVariantAbstractTree * value)
 {
-    if (children.contains(key))
+    if (m_children.contains(key))
     {
-        delete children.take(key);
+        delete m_children.take(key);
     }
-    children.insert(key, value);
+    m_children.insert(key, value);
 }
 
 void QVariantTree::insert(const QString & key, QVariant value)
@@ -148,16 +148,16 @@ QVariantTree &QVariantTree::obtainSubtree(const QString & key)
 
 QVariantAbstractTree * QVariantTree::basicGet(const QString & key)
 {
-    return children.value(key, nullptr);
+    return m_children.value(key, nullptr);
 }
 
 QVariant QVariantTree::asQVariant()
 {
     QVariantMap map;
 
-    for (QString & key : children.keys())
+    for (QString & key : m_children.keys())
     {
-        map.insert(key, children[key]->asQVariant());
+        map.insert(key, m_children[key]->asQVariant());
     }
 
     return map;
@@ -170,11 +170,11 @@ QString QVariantTree::printString(unsigned indent)
     QString indentString(indent, ' ');
 
     stream << "{" << endl;
-    QStringList keys = children.keys();
+    QStringList keys = m_children.keys();
     for (int i = 0;i<keys.size();++i)
     {
         QString key = keys[i];
-        stream << indentString << "  " << key << " = " << children[key]->printString(indent + 2);
+        stream << indentString << "  " << key << " = " << m_children[key]->printString(indent + 2);
         if (i<keys.size() - 1)
         {
             stream << ",";
@@ -187,7 +187,7 @@ QString QVariantTree::printString(unsigned indent)
 }
 
 QVariantLeaf::QVariantLeaf(QVariant value)
-    : element(value)
+    : m_element(value)
 {
 }
 
@@ -203,22 +203,22 @@ QVariantAbstractTree * QVariantLeaf::basicGet(const QString & /*key*/)
 
 QVariant QVariantLeaf::asQVariant()
 {
-    return element;
+    return m_element;
 }
 
 QString QVariantLeaf::printString(unsigned /*indent*/)
 {
-    if (element.type()==QVariant::UserType)
+    if (m_element.type()==QVariant::UserType)
     {
-        return QString("%1()").arg(element.typeName());
+        return QString("%1()").arg(m_element.typeName());
     }
 
-    return element.toString();
+    return m_element.toString();
 }
 
 void QVariantLeaf::setElement(const QVariant & newElement)
 {
-    element = newElement;
+    m_element = newElement;
 }
 
 bool QVariantNullTree::isNull()

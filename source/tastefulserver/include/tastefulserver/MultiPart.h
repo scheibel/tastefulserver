@@ -50,8 +50,8 @@ public:
     QByteArray getContent() const;
 
 protected:
-    QHash<QString, HttpHeader> headers;
-    QByteArray content;
+    QHash<QString, HttpHeader> m_headers;
+    QByteArray m_content;
 };
 
 class TASTEFULSERVER_API MultiPart
@@ -67,8 +67,8 @@ public:
     QList<Part> getParts() const;
 
 protected:
-    ContentType type;
-    QList<Part> parts;
+    ContentType m_type;
+    QList<Part> m_parts;
 };
 
 } // namespace tastefulserver

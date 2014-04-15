@@ -29,11 +29,13 @@
 #include <QString>
 #include <QDateTime>
 
+#include <tastefulserver/tastefulserver_api.h>
+
 namespace tastefulserver {
 
 namespace http {
-QString reason(const unsigned statusCode);
-QString dateString(const QDateTime & dateTime);
+TASTEFULSERVER_API QString reason(const unsigned statusCode);
+TASTEFULSERVER_API QString dateString(const QDateTime & dateTime);
 } // namespace http
 
 } // namespace tastefulserver
