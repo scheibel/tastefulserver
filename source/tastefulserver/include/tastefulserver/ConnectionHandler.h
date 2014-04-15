@@ -50,10 +50,10 @@ public:
     void startUp();
 
 protected:
-    QAbstractSocket * _socket;
+    QAbstractSocket * m_socket;
 
 private:
-    SocketCreation * socketCreation;
+    SocketCreation * m_socketCreation;
     void createSocket();
 
 private slots:

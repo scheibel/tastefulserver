@@ -33,61 +33,61 @@
 namespace tastefulserver {
 
 ConnectionHandler::ConnectionHandler()
-    : _socket(nullptr)
-    , socketCreation(nullptr)
+    : m_socket(nullptr)
+    , m_socketCreation(nullptr)
 {
 }
 
 ConnectionHandler::ConnectionHandler(SocketCreation * socketCreation)
-    : _socket(nullptr)
-    , socketCreation(socketCreation)
+    : m_socket(nullptr)
+    , m_socketCreation(socketCreation)
 {
 }
 
 ConnectionHandler::~ConnectionHandler()
 {
-    delete _socket;
-    delete socketCreation;
+    delete m_socket;
+    delete m_socketCreation;
 }
 
 void ConnectionHandler::setSocketCreator(SocketCreation * socketCreation)
 {
-    delete this->socketCreation;
-    this->socketCreation = socketCreation;
+    delete this->m_socketCreation;
+    this->m_socketCreation = socketCreation;
 }
 
 void ConnectionHandler::startUp()
 {
     createSocket();
 
-    QObject::connect(_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    QObject::connect(_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    QObject::connect(_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 }
 
 void ConnectionHandler::createSocket()
 {
-    _socket = (*socketCreation)();
+    m_socket = (*m_socketCreation)();
 }
 
 QAbstractSocket &ConnectionHandler::socket()
 {
-    return *_socket;
+    return *m_socket;
 }
 
 bool ConnectionHandler::isUdpConnection() const
 {
-    return socketCreation->isUdp();
+    return m_socketCreation->isUdp();
 }
 
 bool ConnectionHandler::isTcpConnection() const
 {
-    return socketCreation->isTcp();
+    return m_socketCreation->isTcp();
 }
 
 bool ConnectionHandler::isSslConnection() const
 {
-    return socketCreation->isSsl();
+    return m_socketCreation->isSsl();
 }
 
 void ConnectionHandler::disconnected()
@@ -98,12 +98,12 @@ void ConnectionHandler::disconnected()
 
 void ConnectionHandler::readyRead()
 {
-    receive(_socket->readAll());
+    receive(m_socket->readAll());
 }
 
 void ConnectionHandler::send(const QByteArray & data)
 {
-    _socket->write(data);
+    m_socket->write(data);
 }
 
 void ConnectionHandler::error(QAbstractSocket::SocketError e)
@@ -115,13 +115,13 @@ void ConnectionHandler::onError(QAbstractSocket::SocketError e)
 {
     if (e!=QAbstractSocket::RemoteHostClosedError)
     {
-        qDebug() << "Socket error: " << _socket->errorString();
+        qDebug() << "Socket error: " << m_socket->errorString();
     }
 }
 
 void ConnectionHandler::disconnect()
 {
-    _socket->disconnectFromHost();
+    m_socket->disconnectFromHost();
 }
 
 void ConnectionHandler::onDisconnect()

@@ -36,12 +36,12 @@ HttpEntity::HttpEntity()
 
 bool HttpEntity::hasHeader(const http::HeaderName & headerName) const
 {
-    return headers.contains(headerName);
+    return m_headers.contains(headerName);
 }
 
 HttpHeader HttpEntity::getHeader(const http::HeaderName & headerName) const
 {
-    const QList<HttpHeader> & list = headers[headerName];
+    const QList<HttpHeader> & list = m_headers[headerName];
 
     if (list.isEmpty())
     {
@@ -53,7 +53,7 @@ HttpHeader HttpEntity::getHeader(const http::HeaderName & headerName) const
 
 QList<HttpHeader> HttpEntity::getHeaders(const http::HeaderName & headerName) const
 {
-    return headers[headerName];
+    return m_headers[headerName];
 }
 
 void HttpEntity::addHeaders(const QList<HttpHeader> & headers)
@@ -66,7 +66,7 @@ void HttpEntity::addHeaders(const QList<HttpHeader> & headers)
 
 void HttpEntity::addHeader(const HttpHeader & header)
 {
-    headers[header.getName()] << header;
+    m_headers[header.getName()] << header;
 }
 
 void HttpEntity::setHeader(const http::HeaderName & headerName, const QString & value, bool merge)
@@ -76,7 +76,7 @@ void HttpEntity::setHeader(const http::HeaderName & headerName, const QString & 
 
 void HttpEntity::setHeader(const HttpHeader & header, bool merge)
 {
-    QList<HttpHeader> & list = headers[header.getName()];
+    QList<HttpHeader> & list = m_headers[header.getName()];
     if (list.isEmpty())
     {
         list << header;
@@ -96,23 +96,23 @@ void HttpEntity::setHeader(const HttpHeader & header, bool merge)
 
 void HttpEntity::removeHeader(const http::HeaderName & headerName)
 {
-    headers.remove(headerName);
+    m_headers.remove(headerName);
 }
 
 QByteArray HttpEntity::getContent() const
 {
-    return content;
+    return m_content;
 }
 
 void HttpEntity::clearContent()
 {
-    content.clear();
+    m_content.clear();
     removeHeader(http::ContentLength);
 }
 
 void HttpEntity::setContent(const QByteArray & content)
 {
-    this->content = content;
+    m_content = content;
     setHeader(http::ContentLength, QString::number(content.size()));
 }
 
@@ -126,7 +126,7 @@ void HttpEntity::writeHeaderOn(const HttpHeader & header, QTextStream & stream) 
 
 void HttpEntity::writeHeadersOn(QTextStream & stream) const
 {
-    for (const QList<HttpHeader> & list : headers)
+    for (const QList<HttpHeader> & list : m_headers)
     {
         for (const HttpHeader & header : list)
         {
@@ -144,9 +144,9 @@ QByteArray HttpEntity::toByteArray() const
 
     stream << http::Linebreak;
 
-    if (!content.isNull())
+    if (!m_content.isNull())
     {
-        stream << content;
+        stream << m_content;
     }
 
     return byteArray;

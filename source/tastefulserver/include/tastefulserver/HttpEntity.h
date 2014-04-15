@@ -66,8 +66,8 @@ public:
     virtual QByteArray toByteArray() const;
 
 protected:
-    QHash<QString, QList<HttpHeader >> headers;
-    QByteArray content;
+    QHash<QString, QList<HttpHeader >> m_headers;
+    QByteArray m_content;
 
     void writeHeaderOn(const HttpHeader & header, QTextStream & stream) const;
     virtual void writeHeadersOn(QTextStream & stream) const;

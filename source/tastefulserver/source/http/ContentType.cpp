@@ -41,37 +41,37 @@ ContentType::ContentType()
 }
 
 ContentType::ContentType(const QString & type, const QString & subtype)
-    : type(type)
-    , subtype(subtype)
+    : m_type(type)
+    , m_subtype(subtype)
 {
     updateName();
 }
 
 void ContentType::updateName()
 {
-    name = type + '/' + subtype;
+    name = m_type + '/' + m_subtype;
 }
 
 bool ContentType::is(const QString & type, const QString & subtype) const
 {
-    return this->type==type && this->subtype==subtype;
+    return this->m_type==type && this->m_subtype==subtype;
 }
 
 bool ContentType::operator==(const ContentType & contentType) const
 {
-    return type == contentType.type && subtype == contentType.subtype;
+    return m_type == contentType.m_type && m_subtype == contentType.m_subtype;
 }
 
 void ContentType::setType(const QString & type)
 {
-    this->type = type;
+    this->m_type = type;
 
     updateName();
 }
 
 void ContentType::setSubtype(const QString & subtype)
 {
-    this->subtype = subtype;
+    this->m_subtype = subtype;
 
     updateName();
 }
@@ -82,13 +82,13 @@ void ContentType::setTypeAndSubtype(const QString & typeAndSubtype)
 
     if (pos<0)
     {
-        type = typeAndSubtype;
-        subtype = QString();
+        m_type = typeAndSubtype;
+        m_subtype = QString();
     }
     else
     {
-        type = typeAndSubtype.left(pos);
-        subtype = typeAndSubtype.mid(pos + 1);
+        m_type = typeAndSubtype.left(pos);
+        m_subtype = typeAndSubtype.mid(pos + 1);
     }
 
     updateName();
@@ -112,12 +112,12 @@ void ContentType::parse(const QString & value)
 
 const QString &ContentType::getType() const
 {
-    return type;
+    return m_type;
 }
 
 const QString &ContentType::getSubtype() const
 {
-    return subtype;
+    return m_subtype;
 }
 
 QString ContentType::getCharset() const
@@ -132,7 +132,7 @@ QString ContentType::getBoundary() const
 
 bool ContentType::isMultiPart() const
 {
-    return type==Multipart;
+    return m_type==Multipart;
 }
 
 } // namespace tastefulserver

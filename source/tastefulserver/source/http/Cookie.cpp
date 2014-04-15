@@ -41,100 +41,100 @@ const QString Cookie::Expires = "Expires";
 const QString Cookie::Secure = "Secure";
 const QString Cookie::HttpOnly = "HttpOnly";
 Cookie::Cookie()
-    : secure(false)
-    , httpOnly(false)
+    : m_secure(false)
+    , m_httpOnly(false)
 {
 }
 
 Cookie::Cookie(const QString & name, const QString & value)
-    : name(name)
-    , value(value)
-    , secure(false)
-    , httpOnly(false)
+    : m_name(name)
+    , m_value(value)
+    , m_secure(false)
+    , m_httpOnly(false)
 {
 }
 
-QString Cookie::getName() const
+const QString & Cookie::getName() const
 {
-    return name;
+    return m_name;
 }
 
-QString Cookie::getValue() const
+const QString & Cookie::getValue() const
 {
-    return value;
+    return m_value;
 }
 
-Cookie &Cookie::setValue(const QString & value)
+Cookie & Cookie::setValue(const QString & value)
 {
-    this->value = value;
+    m_value = value;
 
     return *this;
 }
 
-Cookie &Cookie::setMaxAge(unsigned seconds)
+Cookie & Cookie::setMaxAge(unsigned seconds)
 {
-    attributes[MaxAge] = QString::number(seconds);
+    m_attributes[MaxAge] = QString::number(seconds);
 
     return *this;
 }
 
-Cookie &Cookie::setComment(const QString & comment)
+Cookie & Cookie::setComment(const QString & comment)
 {
-    attributes[Comment] = comment;
+    m_attributes[Comment] = comment;
 
     return *this;
 }
 
-Cookie &Cookie::setDomain(const QString & domain)
+Cookie & Cookie::setDomain(const QString & domain)
 {
-    attributes[Domain] = domain;
+    m_attributes[Domain] = domain;
 
     return *this;
 }
 
-Cookie &Cookie::setPath(const QString & path)
+Cookie & Cookie::setPath(const QString & path)
 {
-    attributes[Path] = path;
+    m_attributes[Path] = path;
 
     return *this;
 }
 
-Cookie &Cookie::setVersion(const QString & version)
+Cookie & Cookie::setVersion(const QString & version)
 {
-    attributes[Version] = version;
+    m_attributes[Version] = version;
 
     return *this;
 }
 
-Cookie &Cookie::setExpires(const QDateTime & dateTime)
+Cookie & Cookie::setExpires(const QDateTime & dateTime)
 {
     return setExpires(http::dateString(dateTime));
 }
 
-Cookie &Cookie::setExpires(const QString & expires)
+Cookie & Cookie::setExpires(const QString & expires)
 {
-    attributes[Expires] = expires;
+    m_attributes[Expires] = expires;
 
     return *this;
 }
 
-Cookie &Cookie::setSecure(bool secure)
+Cookie & Cookie::setSecure(bool secure)
 {
-    this->secure = secure;
+    m_secure = secure;
 
     return *this;
 }
 
-Cookie &Cookie::setHttpOnly(bool httpOnly)
+Cookie & Cookie::setHttpOnly(bool httpOnly)
 {
-    this->httpOnly = httpOnly;
+    m_httpOnly = httpOnly;
 
     return *this;
 }
 
 QString Cookie::toString() const
 {
-    if (name.isNull())
+    if (m_name.isNull())
     {
         return QString();
     }
@@ -142,17 +142,17 @@ QString Cookie::toString() const
     QString string;
     QTextStream stream(&string);
 
-    stream << name << "=" << value;
+    stream << m_name << "=" << m_value;
 
-    for (QString & attribute : attributes.keys())
+    for (QString & attribute : m_attributes.keys())
     {
-        stream << "; " << attribute << "=" << attributes[attribute];
+        stream << "; " << attribute << "=" << m_attributes[attribute];
     }
-    if (secure)
+    if (m_secure)
     {
         stream << "; " << Secure;
     }
-    if (httpOnly)
+    if (m_httpOnly)
     {
         stream << "; " << HttpOnly;
     }
@@ -162,39 +162,39 @@ QString Cookie::toString() const
 
 bool Cookies::isEmpty() const
 {
-    return cookies.isEmpty();
+    return m_cookies.isEmpty();
 }
 
 void Cookies::set(const Cookie & cookie)
 {
-    cookies[cookie.getName()] = cookie;
+    m_cookies[cookie.getName()] = cookie;
 }
 
 bool Cookies::has(const QString & name) const
 {
-    return cookies.contains(name);
+    return m_cookies.contains(name);
 }
 
 Cookie Cookies::get(const QString & name) const
 {
-    return has(name) ? cookies[name] : Cookie();
+    return has(name) ? m_cookies[name] : Cookie();
 }
 
 Cookie &Cookies::operator[](const QString & name)
 {
-    return cookies[name];
+    return m_cookies[name];
 }
 
 const Cookie Cookies::operator[](const QString & name) const
 {
-    return cookies[name];
+    return m_cookies[name];
 }
 
 void Cookies::clear(Cookie & cookie)
 {
     cookie.setValue("deleted");
     cookie.setExpires(QDateTime::fromTime_t(0));
-    cookies[cookie.getName()] = cookie;
+    m_cookies[cookie.getName()] = cookie;
 }
 
 Cookies Cookies::fromString(const QString & cookiesString)
@@ -223,22 +223,22 @@ void Cookies::parse(const QString & cookiesString)
 
 QHash<QString, Cookie>::iterator Cookies::begin()
 {
-    return cookies.begin();
+    return m_cookies.begin();
 }
 
 QHash<QString, Cookie>::const_iterator Cookies::begin() const
 {
-    return cookies.begin();
+    return m_cookies.begin();
 }
 
 QHash<QString, Cookie>::iterator Cookies::end()
 {
-    return cookies.end();
+    return m_cookies.end();
 }
 
 QHash<QString, Cookie>::const_iterator Cookies::end() const
 {
-    return cookies.end();
+    return m_cookies.end();
 }
 
 } // namespace tastefulserver

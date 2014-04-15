@@ -54,15 +54,15 @@ private:
     bool handleRequest();
     bool handleError();
 
-    RequestCallback callback;
-    RequestCallback badRequestCallback;
-    bool hasBadRequestCallback;
-    ByteArrayStream buffer;
-    HttpRequest request;
+    RequestCallback m_callback;
+    RequestCallback m_badRequestCallback;
+    bool m_hasBadRequestCallback;
+    ByteArrayStream m_buffer;
+    HttpRequest m_request;
     enum
     {
         READ_REQUEST_LINE, READ_HEADER, READ_CONTENT, HANDLE_REQUEST, HANDLE_ERROR
-    } state;
+    } m_state;
 
 };
 

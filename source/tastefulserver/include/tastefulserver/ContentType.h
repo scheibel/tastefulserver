@@ -55,8 +55,8 @@ public:
     void setSubtype(const QString & subtype);
     void setTypeAndSubtype(const QString & typeAndSubype);
 
-    const QString&getType() const;
-    const QString&getSubtype() const;
+    const QString & getType() const;
+    const QString & getSubtype() const;
 
     QString getCharset() const;
     QString getBoundary() const;
@@ -68,8 +68,8 @@ public:
 protected:
     void updateName();
 
-    QString type;
-    QString subtype;
+    QString m_type;
+    QString m_subtype;
 };
 
 } // namespace tastefulserver

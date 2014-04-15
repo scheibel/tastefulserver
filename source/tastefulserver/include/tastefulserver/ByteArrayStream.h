@@ -48,21 +48,21 @@ public:
     void skipUpTo(const QChar & delimiter);
     void skipBehind(const QString & delimiter);
     void skipBehind(const QChar & delimiter);
-    bool canReadUpTo(const QString & delimiter);
-    bool canReadUpTo(const QChar & delimiter);
+    bool canReadUpTo(const QString & delimiter) const;
+    bool canReadUpTo(const QChar & delimiter) const;
     QByteArray readUpTo(const QString & delimiter, bool skipDelimiter = false);
     QByteArray readUpTo(const QChar & delimiter, bool skipDelimiter = false);
     QByteArray readAll();
     void skipAll();
-    bool canReadLine();
-    int availableBytes();
+    bool canReadLine() const;
+    int availableBytes() const;
     void flush();
-    bool atEnd();
+    bool atEnd() const;
 
 protected:
-    QByteArray buffer;
-    QString linebreak;
-    int pos;
+    QByteArray m_buffer;
+    QString m_linebreak;
+    int m_pos;
 };
 
 } // namespace tastefulserver

@@ -32,10 +32,10 @@
 namespace tastefulserver {
 
 HttpHandler::HttpHandler(const RequestCallback & callback)
-    : callback(callback)
-    , buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+    : m_callback(callback)
+    , m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
 {
-    badRequestCallback = [](const HttpRequest & request) {
+    m_badRequestCallback = [](const HttpRequest & request) {
             HttpResponse response(request);
 
             response.setStatusCode(http::BadRequest);
@@ -43,27 +43,27 @@ HttpHandler::HttpHandler(const RequestCallback & callback)
             return response;
         };
 
-    state = READ_REQUEST_LINE;
+    m_state = READ_REQUEST_LINE;
 }
 
 HttpHandler::HttpHandler(const RequestCallback & callback, const RequestCallback & badRequestCallback)
-    : callback(callback)
-    , badRequestCallback(badRequestCallback)
-    , hasBadRequestCallback(true)
-    , buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+    : m_callback(callback)
+    , m_badRequestCallback(badRequestCallback)
+    , m_hasBadRequestCallback(true)
+    , m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
 {
-    state = READ_REQUEST_LINE;
+    m_state = READ_REQUEST_LINE;
 }
 
 void HttpHandler::receive(const QByteArray & data)
 {
-    buffer.append(data);
+    m_buffer.append(data);
 
     bool continueReading = true;
 
     while (continueReading)
     {
-        switch (state)
+        switch (m_state)
         {
             case READ_REQUEST_LINE:
                 continueReading = readRequestLine();
@@ -86,13 +86,13 @@ void HttpHandler::receive(const QByteArray & data)
 
 void HttpHandler::setBadRequestCallback(const RequestCallback & badRequestCallback)
 {
-    this->badRequestCallback = badRequestCallback;
-    hasBadRequestCallback = true;
+    m_badRequestCallback = badRequestCallback;
+    m_hasBadRequestCallback = true;
 }
 
 void HttpHandler::uninstallBadRequestCallback()
 {
-    badRequestCallback = [](const HttpRequest & request) {
+    m_badRequestCallback = [](const HttpRequest & request) {
             HttpResponse response(request);
 
             response.setStatusCode(http::BadRequest);
@@ -100,17 +100,17 @@ void HttpHandler::uninstallBadRequestCallback()
             return response;
         };
 
-    hasBadRequestCallback = false;
+    m_hasBadRequestCallback = false;
 }
 
 bool HttpHandler::readRequestLine()
 {
-    if (!buffer.canReadLine())
+    if (!m_buffer.canReadLine())
     {
         return false;
     }
 
-    QString line = buffer.readLine();
+    QString line = m_buffer.readLine();
 
     if (line.isEmpty())
     {
@@ -120,7 +120,7 @@ bool HttpHandler::readRequestLine()
     QStringList parts = line.split(' ');
     if (parts.size()<3)
     {
-        state = HANDLE_ERROR;
+        m_state = HANDLE_ERROR;
 
         return true;
     }
@@ -129,33 +129,33 @@ bool HttpHandler::readRequestLine()
 
     if (method.isInvalid() || httpVersion.isInvalid())
     {
-        state = HANDLE_ERROR;
+        m_state = HANDLE_ERROR;
 
         return true;
     }
 
     QString requestUri = parts[1];
 
-    request = HttpRequest(method, requestUri, httpVersion, isSslConnection());
-    request.setAddress(_socket->peerAddress());
-    request.setPort(_socket->peerPort());
+    m_request = HttpRequest(method, requestUri, httpVersion, isSslConnection());
+    m_request.setAddress(m_socket->peerAddress());
+    m_request.setPort(m_socket->peerPort());
 
-    state = READ_HEADER;
+    m_state = READ_HEADER;
 
     return true;
 }
 
 bool HttpHandler::readHeader()
 {
-    if (!buffer.canReadLine())
+    if (!m_buffer.canReadLine())
     {
         return false;
     }
 
-    QString line = buffer.readLine();
+    QString line = m_buffer.readLine();
     if (line.isEmpty())
     {
-        state = request.hasHeader(http::ContentLength) ? READ_CONTENT : HANDLE_REQUEST;
+        m_state = m_request.hasHeader(http::ContentLength) ? READ_CONTENT : HANDLE_REQUEST;
 
         return true;
     }
@@ -164,7 +164,7 @@ bool HttpHandler::readHeader()
         int pos = line.indexOf(": ");
         if (pos<0)
         {
-            request.markBad();
+            m_request.markBad();
 
             return true;
         }
@@ -172,7 +172,7 @@ bool HttpHandler::readHeader()
         QString fieldName = line.left(pos);
         QString fieldValue = line.mid(pos + 2);
         HttpHeader header(fieldName, fieldValue);
-        request.parseHeader(header);
+        m_request.parseHeader(header);
     }
 
     return true;
@@ -180,26 +180,26 @@ bool HttpHandler::readHeader()
 
 bool HttpHandler::readContent()
 {
-    int length = request.getContentLength();
+    int length = m_request.getContentLength();
 
-    if (buffer.availableBytes()<length)
+    if (m_buffer.availableBytes()<length)
     {
         return false;
     }
-    QByteArray content = buffer.read(length);
-    request.parseContent(content);
-    state = HANDLE_REQUEST;
+    QByteArray content = m_buffer.read(length);
+    m_request.parseContent(content);
+    m_state = HANDLE_REQUEST;
 
     return true;
 }
 
 bool HttpHandler::handleRequest()
 {
-    HttpResponse response = hasBadRequestCallback && request.isBad() ? badRequestCallback(request) : callback(request);
+    HttpResponse response = m_hasBadRequestCallback && m_request.isBad() ? m_badRequestCallback(m_request) : m_callback(m_request);
 
     send(response.toByteArray());
-    buffer.flush();
-    state = READ_REQUEST_LINE;
+    m_buffer.flush();
+    m_state = READ_REQUEST_LINE;
 
     if (!response.isKeepAlive())
     {
@@ -211,13 +211,13 @@ bool HttpHandler::handleRequest()
 
 bool HttpHandler::handleError()
 {
-    request.markBad();
+    m_request.markBad();
 
     HttpResponse response;
     response.setStatusCode(http::BadRequest);
     send(response.toByteArray());
 
-    state = READ_REQUEST_LINE;
+    m_state = READ_REQUEST_LINE;
 
     return true;
 }

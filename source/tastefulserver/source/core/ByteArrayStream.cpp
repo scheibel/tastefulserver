@@ -29,9 +29,9 @@
 namespace tastefulserver {
 
 ByteArrayStream::ByteArrayStream(const QByteArray & bytes, const QString & linebreak)
-    : buffer(bytes)
-    , linebreak(linebreak)
-    , pos(0)
+    : m_buffer(bytes)
+    , m_linebreak(linebreak)
+    , m_pos(0)
 {
 }
 
@@ -42,35 +42,35 @@ ByteArrayStream ByteArrayStream::forLinebreak(const QString & linebreak)
 
 void ByteArrayStream::append(const QByteArray & bytes)
 {
-    buffer.append(bytes);
+    m_buffer.append(bytes);
 }
 
 void ByteArrayStream::flush()
 {
-    buffer = buffer.remove(0, pos);
-    pos = 0;
+    m_buffer = m_buffer.remove(0, m_pos);
+    m_pos = 0;
 }
 
-bool ByteArrayStream::canReadLine()
+bool ByteArrayStream::canReadLine() const
 {
-    return buffer.indexOf(linebreak, pos)>=0;
+    return m_buffer.indexOf(m_linebreak, m_pos)>=0;
 }
 
-int ByteArrayStream::availableBytes()
+int ByteArrayStream::availableBytes() const
 {
-    return buffer.size() - pos;
+    return m_buffer.size() - m_pos;
 }
 
 QByteArray ByteArrayStream::read(int length)
 {
     if (availableBytes()<length)
     {
-        pos = buffer.size();
+        m_pos = m_buffer.size();
 
-        return buffer.mid(pos);
+        return m_buffer.mid(m_pos);
     }
-    QByteArray bytes = buffer.mid(pos, length);
-    pos += length;
+    QByteArray bytes = m_buffer.mid(m_pos, length);
+    m_pos += length;
 
     return bytes;
 }
@@ -79,40 +79,40 @@ void ByteArrayStream::skip(int length)
 {
     if (availableBytes()<length)
     {
-        pos = buffer.size();
+        m_pos = m_buffer.size();
 
         return;
     }
-    pos += length;
+    m_pos += length;
 }
 
 QString ByteArrayStream::readLine()
 {
-    int p = buffer.indexOf(linebreak, pos);
+    int p = m_buffer.indexOf(m_linebreak, m_pos);
 
     if (p<0)
     {
         return readAll();
     }
-    QString line = QString(buffer.mid(pos, p - pos));
-    pos = p + linebreak.size();
+    QString line = QString(m_buffer.mid(m_pos, p - m_pos));
+    m_pos = p + m_linebreak.size();
 
     return line;
 }
 
-bool ByteArrayStream::canReadUpTo(const QString & delimiter)
+bool ByteArrayStream::canReadUpTo(const QString & delimiter) const
 {
-    return buffer.indexOf(delimiter, pos)>=0;
+    return m_buffer.indexOf(delimiter, m_pos)>=0;
 }
 
-bool ByteArrayStream::canReadUpTo(const QChar & delimiter)
+bool ByteArrayStream::canReadUpTo(const QChar & delimiter) const
 {
-    return buffer.indexOf(delimiter, pos)>=0;
+    return m_buffer.indexOf(delimiter, m_pos)>=0;
 }
 
 void ByteArrayStream::skipUpTo(const QString & delimiter)
 {
-    int p = buffer.indexOf(delimiter, pos);
+    int p = m_buffer.indexOf(delimiter, m_pos);
 
     if (p<0)
     {
@@ -120,13 +120,13 @@ void ByteArrayStream::skipUpTo(const QString & delimiter)
     }
     else
     {
-        pos = p;
+        m_pos = p;
     }
 }
 
 void ByteArrayStream::skipUpTo(const QChar & delimiter)
 {
-    int p = buffer.indexOf(delimiter, pos);
+    int p = m_buffer.indexOf(delimiter, m_pos);
 
     if (p<0)
     {
@@ -134,7 +134,7 @@ void ByteArrayStream::skipUpTo(const QChar & delimiter)
     }
     else
     {
-        pos = p;
+        m_pos = p;
     }
 }
 
@@ -152,14 +152,14 @@ void ByteArrayStream::skipBehind(const QChar & delimiter)
 
 QByteArray ByteArrayStream::readUpTo(const QString & delimiter, bool skipDelimiter)
 {
-    int p = buffer.indexOf(delimiter, pos);
+    int p = m_buffer.indexOf(delimiter, m_pos);
 
     if (p<0)
     {
         return readAll();
     }
-    QByteArray part = buffer.mid(pos, p - pos);
-    pos = p;
+    QByteArray part = m_buffer.mid(m_pos, p - m_pos);
+    m_pos = p;
     if (skipDelimiter)
     {
         skip(delimiter.size());
@@ -170,14 +170,14 @@ QByteArray ByteArrayStream::readUpTo(const QString & delimiter, bool skipDelimit
 
 QByteArray ByteArrayStream::readUpTo(const QChar & delimiter, bool skipDelimiter)
 {
-    int p = buffer.indexOf(delimiter, pos);
+    int p = m_buffer.indexOf(delimiter, m_pos);
 
     if (p<0)
     {
         return readAll();
     }
-    QByteArray part = buffer.mid(pos, p - pos);
-    pos = p;
+    QByteArray part = m_buffer.mid(m_pos, p - m_pos);
+    m_pos = p;
     if (skipDelimiter)
     {
         skip(1);
@@ -188,21 +188,21 @@ QByteArray ByteArrayStream::readUpTo(const QChar & delimiter, bool skipDelimiter
 
 void ByteArrayStream::skipAll()
 {
-    pos = buffer.size();
+    m_pos = m_buffer.size();
 }
 
 QByteArray ByteArrayStream::readAll()
 {
-    QByteArray bytes = buffer.mid(pos);
+    QByteArray bytes = m_buffer.mid(m_pos);
 
-    pos = buffer.size();
+    m_pos = m_buffer.size();
 
     return bytes;
 }
 
-bool ByteArrayStream::atEnd()
+bool ByteArrayStream::atEnd() const
 {
-    return pos == buffer.size();
+    return m_pos == m_buffer.size();
 }
 
 } // namespace tastefulserver

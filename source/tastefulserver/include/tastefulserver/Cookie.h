@@ -36,6 +36,7 @@
 
 namespace tastefulserver {
 
+// TODO: Subclass NameValuePair?
 class TASTEFULSERVER_API Cookie
 {
 public:
@@ -52,28 +53,28 @@ public:
     Cookie();
     Cookie(const QString & name, const QString & value);
 
-    QString getName() const;
-    QString getValue() const;
+    const QString & getName() const;
+    const QString & getValue() const;
 
-    Cookie&setValue(const QString & value);
-    Cookie&setMaxAge(unsigned seconds);
-    Cookie&setComment(const QString & comment);
-    Cookie&setDomain(const QString & domain);
-    Cookie&setPath(const QString & path);
-    Cookie&setVersion(const QString & version);
-    Cookie&setExpires(const QDateTime & dateTime);
-    Cookie&setExpires(const QString & expires);
-    Cookie&setSecure(bool secure);
-    Cookie&setHttpOnly(bool httpOnly);
+    Cookie & setValue(const QString & value);
+    Cookie & setMaxAge(unsigned seconds);
+    Cookie & setComment(const QString & comment);
+    Cookie & setDomain(const QString & domain);
+    Cookie & setPath(const QString & path);
+    Cookie & setVersion(const QString & version);
+    Cookie & setExpires(const QDateTime & dateTime);
+    Cookie & setExpires(const QString & expires);
+    Cookie & setSecure(bool secure);
+    Cookie & setHttpOnly(bool httpOnly);
 
     QString toString() const;
 
 private:
-    QString name;
-    QString value;
-    bool secure;
-    bool httpOnly;
-    QHash<QString, QString> attributes;
+    QString m_name;
+    QString m_value;
+    bool m_secure;
+    bool m_httpOnly;
+    QHash<QString, QString> m_attributes;
 };
 
 class TASTEFULSERVER_API Cookies
@@ -84,7 +85,7 @@ public:
     void set(const Cookie & cookie);
     bool has(const QString & name) const;
     Cookie get(const QString & name) const;
-    Cookie &operator[](const QString & name);
+    Cookie & operator[](const QString & name);
     const Cookie operator[](const QString & name) const;
     void clear(Cookie & cookie);
 
@@ -98,7 +99,7 @@ public:
     static Cookies fromString(const QString & cookiesString);
 
 private:
-    QHash<QString, Cookie> cookies;
+    QHash<QString, Cookie> m_cookies;
 };
 
 } // namespace tastefulserver
