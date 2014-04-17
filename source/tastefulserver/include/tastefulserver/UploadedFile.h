@@ -26,14 +26,15 @@
 
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
-
 #include <QString>
 #include <QByteArray>
 #include <QMetaType>
-#include <QVariant>
+
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/ContentType.h>
+
+class QVariant;
 
 namespace tastefulserver {
 
@@ -46,9 +47,9 @@ public:
     void setFilename(const QString & filename);
     void setContent(const QByteArray & content);
 
-    const QString&getFilename() const;
-    const QByteArray&getContent() const;
-    const ContentType&getContentType() const;
+    const QString & getFilename() const;
+    const QByteArray & getContent() const;
+    const ContentType & getContentType() const;
 
     QVariant toQVariant() const;
 

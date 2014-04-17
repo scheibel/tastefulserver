@@ -26,6 +26,9 @@
 
 #include <tastefulserver/HttpMethod.h>
 
+#include <QString>
+#include <QHash>
+
 namespace tastefulserver {
 
 HttpMethod::HttpMethod()

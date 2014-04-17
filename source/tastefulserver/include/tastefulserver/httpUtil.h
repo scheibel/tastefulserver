@@ -26,10 +26,10 @@
 
 #pragma once
 
-#include <QString>
-#include <QDateTime>
-
 #include <tastefulserver/tastefulserver_api.h>
+
+class QString;
+class QDateTime;
 
 namespace tastefulserver {
 

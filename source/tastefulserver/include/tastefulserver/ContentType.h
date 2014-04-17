@@ -26,11 +26,11 @@
 
 #pragma once
 
+#include <QString>
+
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpHeader.h>
-
-#include <QString>
 
 namespace tastefulserver {
 

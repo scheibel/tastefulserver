@@ -25,9 +25,11 @@
  **/
 
 #include <tastefulserver/HttpResponse.h>
-#include <tastefulserver/httpUtil.h>
 
 #include <QTextStream>
+#include <QDateTime>
+
+#include <tastefulserver/httpUtil.h>
 
 namespace tastefulserver {
 

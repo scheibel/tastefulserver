@@ -26,15 +26,17 @@
 
 #pragma once
 
+#include <QByteArray>
+#include <QHash>
+
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpHeader.h>
 
-#include <QString>
-#include <QByteArray>
-#include <QList>
-#include <QHash>
-#include <QTextStream>
+class QTextStream;
+template <typename T>
+class QList;
+class QString;
 
 namespace tastefulserver {
 

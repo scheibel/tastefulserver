@@ -26,10 +26,10 @@
 
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
-
 #include <QString>
 #include <QByteArray>
+
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 

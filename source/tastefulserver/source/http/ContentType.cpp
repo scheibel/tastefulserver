@@ -26,8 +26,6 @@
 
 #include <tastefulserver/ContentType.h>
 
-#include <QDebug>
-
 namespace tastefulserver {
 
 const QString ContentType::Charset = "charset";

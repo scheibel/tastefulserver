@@ -25,6 +25,7 @@
  **/
 
 #include <tastefulserver/QVariantTree.h>
+
 #include <QStringList>
 #include <QTextStream>
 

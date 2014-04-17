@@ -26,20 +26,18 @@
 
 #pragma once
 
+#include <QSharedPointer>
+
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/MultiPart.h>
-
-#include <QString>
-#include <QStringList>
-#include <QVariantMap>
-#include <QByteArray>
-#include <QSharedPointer>
+class QString;
+class QByteArray;
 
 namespace tastefulserver {
 
 class QVariantAbstractTree;
 class QVariantTree;
+class MultiPart;
 
 class TASTEFULSERVER_API RequestParameters
 {

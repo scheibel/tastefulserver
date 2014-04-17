@@ -26,6 +26,8 @@
 
 #include <tastefulserver/UploadedFile.h>
 
+#include <QVariant>
+
 namespace tastefulserver {
 
 UploadedFile::UploadedFile()

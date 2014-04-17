@@ -30,7 +30,6 @@
 
 #include <tastefulserver/HttpEntity.h>
 #include <tastefulserver/HttpVersion.h>
-#include <tastefulserver/HttpHeader.h>
 #include <tastefulserver/Cookie.h>
 #include <tastefulserver/ContentType.h>
 #include <tastefulserver/MultiPart.h>

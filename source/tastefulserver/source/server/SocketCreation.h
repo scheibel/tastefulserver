@@ -27,9 +27,6 @@
 #pragma once
 
 #include <QAbstractSocket>
-#include <QUdpSocket>
-#include <QTcpSocket>
-#include <QSslSocket>
 #include <QSslCertificate>
 #include <QSslKey>
 

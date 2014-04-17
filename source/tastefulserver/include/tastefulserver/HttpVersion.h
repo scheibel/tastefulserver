@@ -28,7 +28,7 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <QString>
+class QString;
 
 namespace tastefulserver {
 

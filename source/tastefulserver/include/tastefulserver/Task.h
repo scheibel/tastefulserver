@@ -26,11 +26,11 @@
 
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
-
 #include <QObject>
 #include <QThread>
 #include <QSet>
+
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 

@@ -26,12 +26,12 @@
 
 #pragma once
 
+#include <QSslCertificate>
+#include <QSslKey>
+
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpServer.h>
-
-#include <QSslCertificate>
-#include <QSslKey>
 
 namespace tastefulserver {
 

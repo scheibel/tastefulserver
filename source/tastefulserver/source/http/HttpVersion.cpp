@@ -25,6 +25,7 @@
  **/
 
 #include <tastefulserver/HttpMessage.h>
+
 #include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {

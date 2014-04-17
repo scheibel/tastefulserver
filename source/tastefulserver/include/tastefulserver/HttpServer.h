@@ -26,9 +26,9 @@
 
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
-
 #include <functional>
+
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
 #include <tastefulserver/HttpHandler.h>

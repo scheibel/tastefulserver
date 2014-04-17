@@ -25,9 +25,12 @@
  **/
 
 #include <tastefulserver/httpUtil.h>
-#include <tastefulserver/httpStatusCodes.h>
 
 #include <QHash>
+#include <QString>
+#include <QDateTime>
+
+#include <tastefulserver/httpStatusCodes.h>
 
 namespace tastefulserver {
 

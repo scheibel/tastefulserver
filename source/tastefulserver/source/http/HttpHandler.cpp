@@ -25,9 +25,10 @@
  **/
 
 #include <tastefulserver/HttpHandler.h>
-#include <tastefulserver/HttpHeader.h>
 
 #include <QStringList>
+
+#include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 

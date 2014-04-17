@@ -25,10 +25,12 @@
  **/
 
 #include <tastefulserver/Cookie.h>
-#include <tastefulserver/HttpHeader.h>
 
 #include <QTextStream>
 #include <QStringList>
+#include <QDateTime>
+
+#include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 

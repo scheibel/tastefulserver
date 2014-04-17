@@ -25,13 +25,15 @@
  **/
 
 #include <tastefulserver/RequestParameters.h>
-#include <tastefulserver/UploadedFile.h>
-#include <tastefulserver/ByteArrayStream.h>
-
-#include <tastefulserver/QVariantTree.h>
 
 #include <QUrl>
 #include <QRegExp>
+#include <QByteArray>
+
+#include <tastefulserver/MultiPart.h>
+#include <tastefulserver/UploadedFile.h>
+#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/QVariantTree.h>
 
 namespace tastefulserver {
 

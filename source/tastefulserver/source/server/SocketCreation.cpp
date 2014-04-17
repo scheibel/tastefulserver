@@ -26,6 +26,10 @@
 
 #include "SocketCreation.h"
 
+#include <QUdpSocket>
+#include <QTcpSocket>
+#include <QSslSocket>
+
 namespace tastefulserver {
 
 SocketCreation::SocketCreation(qintptr socketDescriptor)

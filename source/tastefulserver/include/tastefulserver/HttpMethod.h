@@ -28,8 +28,9 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <QString>
-#include <QHash>
+class QString;
+template <typename Key, typename Value>
+class QHash;
 
 namespace tastefulserver {
 

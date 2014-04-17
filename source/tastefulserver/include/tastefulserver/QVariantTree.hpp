@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include "QVariantTree.h"
+#include <tastefulserver/QVariantTree.h>
 
 namespace tastefulserver {
 

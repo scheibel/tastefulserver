@@ -26,11 +26,11 @@
 
 #pragma once
 
+#include <QAbstractSocket>
+
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/Task.h>
-
-#include <QAbstractSocket>
 
 namespace tastefulserver {
 
@@ -62,7 +62,7 @@ private slots:
     void error(QAbstractSocket::SocketError e);
 
 protected:
-    QAbstractSocket&socket();
+    QAbstractSocket & socket();
 
     bool isUdpConnection() const;
     bool isTcpConnection() const;
