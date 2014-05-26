@@ -38,7 +38,81 @@ WebsocketHandler::WebsocketHandler()
 
 void WebsocketHandler::receive(const QByteArray & data)
 {
-    qDebug() << data;
+    int offset = 0;
+    qint64 length = 0;
+
+    char type = data[offset];
+    ++offset;
+
+    int opcode = type & 15;
+
+//    *  %x0 denotes a continuation frame
+//    *  %x1 denotes a text frame
+//    *  %x2 denotes a binary frame
+//    *  %x3-7 are reserved for further non-control frames
+//    *  %x8 denotes a connection close
+//    *  %x9 denotes a ping
+//    *  %xA denotes a pong
+//    *  %xB-F are reserved for further control frames
+
+    bool final = (type & (1<<7)) != 0;
+
+    bool reserved1 = (type & (1<<6)) != 0;
+    bool reserved2 = (type & (1<<5)) != 0;
+    bool reserved3 = (type & (1<<4)) != 0;
+
+    qDebug() << "[" << final << reserved1 << reserved2 << reserved3 << "]" << opcode;
+
+
+    char length_ = data[offset];
+    ++offset;
+
+    bool masked = (length_ & ~(1<<7)) != length_;
+
+    length_ = length_ & ~(1<<7);
+
+    qDebug() << (int)length_ << masked;
+
+
+    length = length_;
+
+    if (length_ == 126)
+    {
+        // next 2 bytes
+
+        QByteArray l = data.mid(offset, 2);
+        offset += 2;
+
+        length = *reinterpret_cast<qint16*>(l.data());
+
+    }
+    else if (length_ == 127)
+    {
+        // next 8 bytes
+
+        QByteArray l = data.mid(offset, 8);
+        offset += 8;
+
+        length = *reinterpret_cast<qint64*>(l.data());
+
+    }
+
+    QByteArray mask = data.mid(offset, 4);
+    offset += 4;
+
+    QByteArray d2(length, 0);
+
+    int index = 0;
+
+    for (int i = offset; i < data.length(); ++i)
+    {
+        d2[index] = (data[i] ^ mask[index % 4]);
+        ++index;
+    }
+
+
+    qDebug() << length << "[" << (d2) << "]";
+
 }
 
 } // namespace tastefulserver

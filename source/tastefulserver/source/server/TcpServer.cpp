@@ -26,7 +26,7 @@
 
 #include <tastefulserver/TcpServer.h>
 #include "../core/ThreadPool.h"
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 
 namespace tastefulserver {
 

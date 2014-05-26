@@ -25,7 +25,7 @@
  **/
 
 #include <tastefulserver/ProtocolHandler.h>
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 
 #include <QDebug>
 

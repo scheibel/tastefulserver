@@ -24,10 +24,10 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 #include <tastefulserver/ProtocolHandler.h>
 
-#include "../server/SocketCreation.h"
+#include "../server/SocketFactory.h"
 
 #include <QDebug>
 
@@ -42,7 +42,7 @@ Connection::Connection()
 
 Connection::Connection(ProtocolHandler * protocol, SocketFactory * socketCreation)
 : m_socket(nullptr)
-, m_protocol(protocolHandler)
+, m_protocol(protocol)
 , m_socketCreation(socketCreation)
 {
     m_protocol->setConnection(this);

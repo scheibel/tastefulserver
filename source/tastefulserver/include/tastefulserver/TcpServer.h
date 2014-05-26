@@ -29,7 +29,7 @@
 #include <QTcpServer>
 
 #include <tastefulserver/tastefulserver_api.h>
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 
 namespace tastefulserver {
 

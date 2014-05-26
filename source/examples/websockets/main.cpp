@@ -46,6 +46,19 @@ document.writeln("foo");
 // When the connection is open, send some data to the server
 connection.onopen = function () {
   connection.send('Ping'); // Send the message 'Ping' to the server
+
+        var arr = "";
+        for (var i = 0; i<=300; ++i)
+        {
+            arr += i.toString()+",";
+        }
+         connection.send(arr);
+
+         var binary = new Uint8Array(8);
+         for (var i = 0; i < 8; i++) {
+           binary[i] = i;
+         }
+         connection.send(binary.buffer);
 };
 
 // Log errors

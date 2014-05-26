@@ -24,7 +24,7 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "SocketCreation.h"
+#include "SocketFactory.h"
 
 #include <QUdpSocket>
 #include <QTcpSocket>
@@ -32,36 +32,36 @@
 
 namespace tastefulserver {
 
-SocketCreation::SocketCreation(qintptr socketDescriptor)
+SocketFactory::SocketFactory(qintptr socketDescriptor)
     : m_socketDescriptor(socketDescriptor)
 {
 }
 
-SocketCreation::~SocketCreation()
+SocketFactory::~SocketFactory()
 {
 }
 
-bool SocketCreation::isTcp() const
-{
-    return false;
-}
-
-bool SocketCreation::isSsl() const
+bool SocketFactory::isTcp() const
 {
     return false;
 }
 
-bool SocketCreation::isUdp() const
+bool SocketFactory::isSsl() const
 {
     return false;
 }
 
-UdpSocketCreation::UdpSocketCreation(qintptr socketDescriptor)
-    : SocketCreation(socketDescriptor)
+bool SocketFactory::isUdp() const
+{
+    return false;
+}
+
+UdpSocketFactory::UdpSocketFactory(qintptr socketDescriptor)
+    : SocketFactory(socketDescriptor)
 {
 }
 
-QAbstractSocket * UdpSocketCreation::operator()() const
+QAbstractSocket * UdpSocketFactory::operator()() const
 {
     QUdpSocket * socket = new QUdpSocket();
 
@@ -70,17 +70,17 @@ QAbstractSocket * UdpSocketCreation::operator()() const
     return socket;
 }
 
-bool UdpSocketCreation::isUdp() const
+bool UdpSocketFactory::isUdp() const
 {
     return true;
 }
 
-TcpSocketCreation::TcpSocketCreation(qintptr socketDescriptor)
-    : SocketCreation(socketDescriptor)
+TcpSocketFactory::TcpSocketFactory(qintptr socketDescriptor)
+    : SocketFactory(socketDescriptor)
 {
 }
 
-QAbstractSocket * TcpSocketCreation::operator()() const
+QAbstractSocket * TcpSocketFactory::operator()() const
 {
     QTcpSocket * socket = new QTcpSocket();
 
@@ -89,19 +89,19 @@ QAbstractSocket * TcpSocketCreation::operator()() const
     return socket;
 }
 
-bool TcpSocketCreation::isTcp() const
+bool TcpSocketFactory::isTcp() const
 {
     return true;
 }
 
-SslSocketCreation::SslSocketCreation(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey)
-    : TcpSocketCreation(socketDescriptor)
+SslSocketFactory::SslSocketFactory(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey)
+    : TcpSocketFactory(socketDescriptor)
     , m_certificate(certificate)
     , m_privateKey(privateKey)
 {
 }
 
-QAbstractSocket * SslSocketCreation::operator()() const
+QAbstractSocket * SslSocketFactory::operator()() const
 {
     QSslSocket * socket = new QSslSocket();
 
@@ -115,7 +115,7 @@ QAbstractSocket * SslSocketCreation::operator()() const
     return socket;
 }
 
-bool SslSocketCreation::isSsl() const
+bool SslSocketFactory::isSsl() const
 {
     return true;
 }

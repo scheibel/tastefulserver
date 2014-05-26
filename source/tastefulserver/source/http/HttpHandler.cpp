@@ -25,7 +25,7 @@
  **/
 
 #include <tastefulserver/HttpHandler.h>
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 
 #include <QStringList>
 

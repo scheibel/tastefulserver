@@ -26,7 +26,7 @@
 
 #include <tastefulserver/HttpsServer.h>
 
-#include "../server/SocketCreation.h"
+#include "../server/SocketFactory.h"
 
 namespace tastefulserver {
 
