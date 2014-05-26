@@ -40,7 +40,7 @@ class TASTEFULSERVER_API HttpsServer : public HttpServer
 public:
     HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const HttpHandler::RequestCallback & callback);
 
-    ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
+    Connection* createConnection(qintptr socketDescriptor) const;
 
 private:
     QSslCertificate m_certificate;

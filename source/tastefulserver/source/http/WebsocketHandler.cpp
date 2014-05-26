@@ -24,33 +24,21 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/WebsocketHandler.h>
 
-#include <QTcpServer>
+#include <QStringList>
 
-#include <tastefulserver/tastefulserver_api.h>
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 
-class ThreadPool;
-
-class TASTEFULSERVER_API TcpServer : public QTcpServer
+WebsocketHandler::WebsocketHandler()
 {
-    Q_OBJECT
+}
 
-public:
-    TcpServer();
-    virtual ~TcpServer();
-
-    static void setNumThreads(int numThreads);
-
-protected:
-    virtual void incomingConnection(qintptr socketDescriptor);
-    virtual Connection * createConnection(qintptr socketDescriptor) const = 0;
-
-    static ThreadPool * s_threadPool;
-    static int s_serverCount;
-};
+void WebsocketHandler::receive(const QByteArray & data)
+{
+    qDebug() << data;
+}
 
 } // namespace tastefulserver

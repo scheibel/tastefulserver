@@ -37,13 +37,9 @@ HttpsServer::HttpsServer(const QSslCertificate & certificate, const QSslKey & pr
 {
 }
 
-ConnectionHandler * HttpsServer::createConnectionHandler(qintptr socketDescriptor) const
-{
-    HttpHandler * https = new HttpHandler(m_callback);
-
-    https->setSocketCreator(new SslSocketCreation(socketDescriptor, m_certificate, m_privateKey));
-
-    return https;
+Connection * HttpsServer::createConnection(qintptr socketDescriptor) const
+{    
+    return new Connection(new HttpHandler(m_callback), new SslSocketFactory(socketDescriptor, m_certificate, m_privateKey));
 }
 
 } // namespace tastefulserver

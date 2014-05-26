@@ -24,56 +24,52 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/ProtocolHandler.h>
+#include <tastefulserver/ConnectionHandler.h>
 
-#include <QAbstractSocket>
-
-#include <tastefulserver/tastefulserver_api.h>
-
-#include <tastefulserver/Task.h>
+#include <QDebug>
 
 namespace tastefulserver {
 
-class SocketCreation;
-
-class TASTEFULSERVER_API ConnectionHandler : public Task
+ProtocolHandler::ProtocolHandler()
+: m_connection(nullptr)
 {
-    Q_OBJECT
+}
 
-public:
-    ConnectionHandler();
-    ConnectionHandler(SocketCreation * socketCreation);
-    ~ConnectionHandler();
+ProtocolHandler::~ProtocolHandler()
+{
+}
 
-    void setSocketCreator(SocketCreation * socketCreation);
+void ProtocolHandler::setConnection(Connection * connection)
+{
+    m_connection = connection;
+}
 
-    void startUp();
+Connection * ProtocolHandler::connection()
+{
+    return m_connection;
+}
 
-protected:
-    QAbstractSocket * m_socket;
+void ProtocolHandler::send(const QByteArray & data)
+{
+    m_connection->send(data);
+}
 
-private:
-    SocketCreation * m_socketCreation;
-    void createSocket();
+void ProtocolHandler::onError(QAbstractSocket::SocketError e)
+{
+    if (e != QAbstractSocket::RemoteHostClosedError)
+    {
+        qDebug() << "Socket error: " << m_connection->socket().errorString();
+    }
+}
 
-private slots:
-    void disconnected();
-    void readyRead();
-    void error(QAbstractSocket::SocketError e);
+void ProtocolHandler::disconnect()
+{
+    m_connection->disconnect();
+}
 
-protected:
-    QAbstractSocket & socket();
-
-    bool isUdpConnection() const;
-    bool isTcpConnection() const;
-    bool isSslConnection() const;
-
-    void send(const QByteArray & data);
-    void disconnect();
-
-    virtual void onDisconnect();
-    virtual void onError(QAbstractSocket::SocketError e);
-    virtual void receive(const QByteArray & data) = 0;
-};
+void ProtocolHandler::onDisconnect()
+{
+}
 
 } // namespace tastefulserver

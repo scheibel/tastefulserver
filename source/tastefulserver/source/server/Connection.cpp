@@ -25,6 +25,7 @@
  **/
 
 #include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/ProtocolHandler.h>
 
 #include "../server/SocketCreation.h"
 
@@ -32,31 +33,41 @@
 
 namespace tastefulserver {
 
-ConnectionHandler::ConnectionHandler()
-    : m_socket(nullptr)
-    , m_socketCreation(nullptr)
+Connection::Connection()
+: m_socket(nullptr)
+, m_protocol(nullptr)
+, m_socketCreation(nullptr)
 {
 }
 
-ConnectionHandler::ConnectionHandler(SocketCreation * socketCreation)
-    : m_socket(nullptr)
-    , m_socketCreation(socketCreation)
+Connection::Connection(ProtocolHandler * protocol, SocketFactory * socketCreation)
+: m_socket(nullptr)
+, m_protocol(protocolHandler)
+, m_socketCreation(socketCreation)
 {
+    m_protocol->setConnection(this);
 }
 
-ConnectionHandler::~ConnectionHandler()
+Connection::~Connection()
 {
+    delete m_protocol;
     delete m_socket;
     delete m_socketCreation;
 }
 
-void ConnectionHandler::setSocketCreator(SocketCreation * socketCreation)
+void Connection::switchProtocol(ProtocolHandler * protocol)
+{
+    delete m_protocol;
+    m_protocol = protocol;
+}
+
+void Connection::setSocketFactory(SocketFactory * socketCreation)
 {
     delete m_socketCreation;
     m_socketCreation = socketCreation;
 }
 
-void ConnectionHandler::startUp()
+void Connection::startUp()
 {
     createSocket();
 
@@ -65,67 +76,65 @@ void ConnectionHandler::startUp()
     QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 }
 
-void ConnectionHandler::createSocket()
+void Connection::createSocket()
 {
     m_socket = (*m_socketCreation)();
 }
 
-QAbstractSocket &ConnectionHandler::socket()
+QAbstractSocket &Connection::socket()
 {
     return *m_socket;
 }
 
-bool ConnectionHandler::isUdpConnection() const
+bool Connection::isUdpConnection() const
 {
     return m_socketCreation->isUdp();
 }
 
-bool ConnectionHandler::isTcpConnection() const
+bool Connection::isTcpConnection() const
 {
     return m_socketCreation->isTcp();
 }
 
-bool ConnectionHandler::isSslConnection() const
+bool Connection::isSslConnection() const
 {
     return m_socketCreation->isSsl();
 }
 
-void ConnectionHandler::disconnected()
+void Connection::disconnected()
 {
-    onDisconnect();
+    if (m_protocol)
+    {
+        m_protocol->onDisconnect();
+    }
+
     finish();
 }
 
-void ConnectionHandler::readyRead()
+void Connection::readyRead()
 {
-    receive(m_socket->readAll());
+    if (m_protocol)
+    {
+        m_protocol->receive(m_socket->readAll());
+    }
 }
 
-void ConnectionHandler::send(const QByteArray & data)
+void Connection::send(const QByteArray & data)
 {
     m_socket->write(data);
 }
 
-void ConnectionHandler::error(QAbstractSocket::SocketError e)
+void Connection::error(QAbstractSocket::SocketError e)
 {
-    onError(e);
-}
-
-void ConnectionHandler::onError(QAbstractSocket::SocketError e)
-{
-    if (e!=QAbstractSocket::RemoteHostClosedError)
+    if (m_protocol)
     {
-        qDebug() << "Socket error: " << m_socket->errorString();
+        m_protocol->onError(e);
     }
 }
 
-void ConnectionHandler::disconnect()
+void Connection::disconnect()
 {
     m_socket->disconnectFromHost();
-}
-
-void ConnectionHandler::onDisconnect()
-{
 }
 
 } // namespace tastefulserver

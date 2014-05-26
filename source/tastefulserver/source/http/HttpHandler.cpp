@@ -25,16 +25,19 @@
  **/
 
 #include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/ConnectionHandler.h>
 
 #include <QStringList>
 
 #include <tastefulserver/HttpHeader.h>
+#include <tastefulserver/websockets.h>
+#include <tastefulserver/WebsocketHandler.h>
 
 namespace tastefulserver {
 
 HttpHandler::HttpHandler(const RequestCallback & callback)
-    : m_callback(callback)
-    , m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+: m_callback(callback)
+, m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
 {
     m_badRequestCallback = [](const HttpRequest & request) {
             HttpResponse response(request);
@@ -48,10 +51,10 @@ HttpHandler::HttpHandler(const RequestCallback & callback)
 }
 
 HttpHandler::HttpHandler(const RequestCallback & callback, const RequestCallback & badRequestCallback)
-    : m_callback(callback)
-    , m_badRequestCallback(badRequestCallback)
-    , m_hasBadRequestCallback(true)
-    , m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
+: m_callback(callback)
+, m_badRequestCallback(badRequestCallback)
+, m_hasBadRequestCallback(true)
+, m_buffer(ByteArrayStream::forLinebreak(http::Linebreak))
 {
     m_state = READ_REQUEST_LINE;
 }
@@ -137,9 +140,9 @@ bool HttpHandler::readRequestLine()
 
     QString requestUri = parts[1];
 
-    m_request = HttpRequest(method, requestUri, httpVersion, isSslConnection());
-    m_request.setAddress(m_socket->peerAddress());
-    m_request.setPort(m_socket->peerPort());
+    m_request = HttpRequest(method, requestUri, httpVersion, connection()->isSslConnection());
+    m_request.setAddress(connection()->socket().peerAddress());
+    m_request.setPort(connection()->socket().peerPort());
 
     m_state = READ_HEADER;
 
@@ -198,8 +201,23 @@ bool HttpHandler::handleRequest()
 {
     HttpResponse response = m_hasBadRequestCallback && m_request.isBad() ? m_badRequestCallback(m_request) : m_callback(m_request);
 
+    bool doUpgrade = false;
+    if (m_request.hasHeader(http::Upgrade))
+    {
+        response = websocketHandshake(m_request);
+        doUpgrade = true;
+    }
+
     send(response.toByteArray());
     m_buffer.flush();
+
+    if (doUpgrade)
+    {
+        connection()->switchProtocol(new WebsocketHandler());
+
+        return false;
+    }
+
     m_state = READ_REQUEST_LINE;
 
     if (!response.isKeepAlive())

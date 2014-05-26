@@ -28,13 +28,13 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/ProtocolHandler.h>
 #include <tastefulserver/ByteArrayStream.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpHandler : public ConnectionHandler
+class TASTEFULSERVER_API HttpHandler : public ProtocolHandler
 {
 public:
     enum State

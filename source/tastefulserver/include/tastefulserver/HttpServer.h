@@ -42,7 +42,7 @@ public:
 
 protected:
     HttpHandler::RequestCallback m_callback;
-    virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
+    virtual Connection * createConnection(qintptr socketDescriptor) const override;
 };
 
 } // namespace tastefulserver

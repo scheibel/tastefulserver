@@ -61,6 +61,8 @@ public:
 
     void removeHeader(const http::HeaderName & headerName);
 
+    void clearHeaders();
+
     void setContent(const QByteArray & content);
     QByteArray getContent() const;
     void clearContent();

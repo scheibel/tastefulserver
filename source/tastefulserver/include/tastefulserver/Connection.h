@@ -26,31 +26,53 @@
 
 #pragma once
 
-#include <QTcpServer>
+#include <QAbstractSocket>
 
 #include <tastefulserver/tastefulserver_api.h>
-#include <tastefulserver/ConnectionHandler.h>
+
+#include <tastefulserver/Task.h>
 
 namespace tastefulserver {
 
-class ThreadPool;
+class SocketFactory;
+class ProtocolHandler;
 
-class TASTEFULSERVER_API TcpServer : public QTcpServer
+class TASTEFULSERVER_API Connection : public Task
 {
     Q_OBJECT
 
 public:
-    TcpServer();
-    virtual ~TcpServer();
+    Connection();
+    Connection(ProtocolHandler * protocol, SocketFactory * socketCreation);
+    ~Connection();
 
-    static void setNumThreads(int numThreads);
+    void setSocketFactory(SocketFactory * socketCreation);
 
+    void startUp();
+
+    void switchProtocol(ProtocolHandler * protocol);
+
+    QAbstractSocket & socket();
+
+    bool isUdpConnection() const;
+    bool isTcpConnection() const;
+    bool isSslConnection() const;
+
+    void send(const QByteArray & data);
+    void disconnect();
 protected:
-    virtual void incomingConnection(qintptr socketDescriptor);
-    virtual Connection * createConnection(qintptr socketDescriptor) const = 0;
+    QAbstractSocket * m_socket;
+    ProtocolHandler * m_protocol;
 
-    static ThreadPool * s_threadPool;
-    static int s_serverCount;
+private:
+    SocketFactory * m_socketCreation;
+    void createSocket();
+
+private slots:
+    void disconnected();
+    void readyRead();
+    void error(QAbstractSocket::SocketError e);
+
 };
 
 } // namespace tastefulserver

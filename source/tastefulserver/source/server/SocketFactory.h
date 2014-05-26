@@ -32,11 +32,11 @@
 
 namespace tastefulserver {
 
-class SocketCreation
+class SocketFactory
 {
 public:
-    SocketCreation(qintptr socketDescriptor);
-    virtual ~SocketCreation();
+    SocketFactory(qintptr socketDescriptor);
+    virtual ~SocketFactory();
 
     virtual QAbstractSocket * operator()() const = 0;
     virtual bool isTcp() const;
@@ -47,26 +47,26 @@ protected:
     qintptr m_socketDescriptor;
 };
 
-class UdpSocketCreation : public SocketCreation
+class UdpSocketFactory : public SocketFactory
 {
 public:
-    UdpSocketCreation(qintptr socketDescriptor);
+    UdpSocketFactory(qintptr socketDescriptor);
     virtual QAbstractSocket * operator()() const;
     virtual bool isUdp() const;
 };
 
-class TcpSocketCreation : public SocketCreation
+class TcpSocketFactory : public SocketFactory
 {
 public:
-    TcpSocketCreation(qintptr socketDescriptor);
+    TcpSocketFactory(qintptr socketDescriptor);
     virtual QAbstractSocket * operator()() const;
     virtual bool isTcp() const;
 };
 
-class SslSocketCreation : public TcpSocketCreation
+class SslSocketFactory : public TcpSocketFactory
 {
 public:
-    SslSocketCreation(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey);
+    SslSocketFactory(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey);
     virtual QAbstractSocket * operator()() const;
     virtual bool isSsl() const;
 

@@ -107,6 +107,13 @@ HeaderName XXSSProtection = "X-XSS-Protection";
 // cookies
 HeaderName Cookie = "Cookie";
 HeaderName SetCookie = "Set-Cookie";
+
+// websockets
+HeaderName SecWebSocketKey = "Sec-WebSocket-Key";
+HeaderName SecWebSocketAccept = "Sec-WebSocket-Accept";
+HeaderName SecWebSocketVersion = "Sec-WebSocket-Version";
+HeaderName SecWebSocketProtocol = "Sec-WebSocket-Protocol";
+HeaderName Origin = "Origin";
 }
 
 class TASTEFULSERVER_API NameValuePair

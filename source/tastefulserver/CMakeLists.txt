@@ -67,17 +67,20 @@ set(sources
 	${source_path}/http/HttpHeader.cpp
 	${source_path}/http/HttpMethod.cpp
 	${source_path}/http/HttpsServer.cpp
-	${source_path}/server/SocketCreation.h
-	${source_path}/server/ConnectionHandler.cpp
+	${source_path}/http/websockets.cpp
+	${source_path}/http/WebsocketHandler.cpp
+	${source_path}/server/SocketFactory.h
+	${source_path}/server/SocketFactory.cpp
+	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp
-	${source_path}/server/SocketCreation.cpp
+	${source_path}/server/ProtocolHandler.cpp
 )
 
 set(api_includes
 	${include_path}/ByteArrayStream
 	${include_path}/ByteArrayStream.h
-	${include_path}/ConnectionHandler
-	${include_path}/ConnectionHandler.h
+	${include_path}/Connection
+	${include_path}/Connection.h
 	${include_path}/ContentType
 	${include_path}/ContentType.h
 	${include_path}/Cookie
@@ -120,6 +123,9 @@ set(api_includes
 	${include_path}/TcpServer.h
 	${include_path}/UploadedFile
 	${include_path}/UploadedFile.h
+	${include_path}/websockets.h
+	${include_path}/WebsocketHandler.h
+	${include_path}/ProtocolHandler.h
 )
 
 # Group source files

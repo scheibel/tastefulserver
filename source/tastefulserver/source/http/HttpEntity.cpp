@@ -99,6 +99,11 @@ void HttpEntity::removeHeader(const http::HeaderName & headerName)
     m_headers.remove(headerName);
 }
 
+void HttpEntity::clearHeaders()
+{
+    m_headers.clear();
+}
+
 QByteArray HttpEntity::getContent() const
 {
     return m_content;

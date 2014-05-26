@@ -35,13 +35,9 @@ HttpServer::HttpServer(const HttpHandler::RequestCallback & callback)
 {
 }
 
-ConnectionHandler * HttpServer::createConnectionHandler(qintptr socketDescriptor) const
+Connection * HttpServer::createConnection(qintptr socketDescriptor) const
 {
-    HttpHandler * http = new HttpHandler(m_callback);
-
-    http->setSocketCreator(new TcpSocketCreation(socketDescriptor));
-
-    return http;
+    return new Connection(new HttpHandler(m_callback), new TcpSocketFactory(socketDescriptor));
 }
 
 } // namespace tastefulserver
