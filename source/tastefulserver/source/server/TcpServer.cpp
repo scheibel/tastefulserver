@@ -57,7 +57,10 @@ void TcpServer::setNumThreads(int numThreads)
 
 void TcpServer::incomingConnection(qintptr socketDescriptor)
 {
-    s_threadPool->addTask(createConnection(socketDescriptor));
+    Connection * connection = createConnection();
+    connection->setSocketFactory(createSocketFactory(socketDescriptor));
+
+    s_threadPool->addTask(connection);
 }
 
 } // namespace tastefulserver

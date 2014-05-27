@@ -39,16 +39,17 @@ HttpResponse::HttpResponse()
 }
 
 HttpResponse::HttpResponse(const HttpVersion & httpVersion)
-    : HttpMessage(httpVersion)
+: HttpMessage(httpVersion)
 {
     initialize();
 }
 
 HttpResponse::HttpResponse(const HttpRequest & httpRequest)
-    : HttpMessage(httpRequest.getHttpVersion())
+: HttpMessage(httpRequest.getHttpVersion())
 {
     initialize();
-    if ((httpRequest.getHttpVersion()>=HttpVersion(1, 1)) || httpRequest.isKeepAlive())
+
+    if ((httpRequest.getHttpVersion() >= HttpVersion(1, 1)) || httpRequest.isKeepAlive())
     {
         keepAlive();
     }

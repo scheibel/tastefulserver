@@ -26,33 +26,25 @@
 
 #pragma once
 
-#include <QTcpServer>
-
 #include <tastefulserver/tastefulserver_api.h>
-#include <tastefulserver/Connection.h>
-#include <tastefulserver/SocketFactory.h>
+
+#include <tastefulserver/Protocol.h>
+#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-class ThreadPool;
-
-class TASTEFULSERVER_API TcpServer : public QTcpServer
+class TASTEFULSERVER_API WebsocketProtocol : public Protocol
 {
-    Q_OBJECT
-
 public:
-    TcpServer();
-    virtual ~TcpServer();
+    WebsocketProtocol();
 
-    static void setNumThreads(int numThreads);
+    void receive(const QByteArray & data);
 
-protected:
-    virtual void incomingConnection(qintptr socketDescriptor);
-    virtual Connection * createConnection() const = 0;
-    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) = 0;
-
-    static ThreadPool * s_threadPool;
-    static int s_serverCount;
+    static const QString MagicString;
+    static QString hashKey(const QString & key);
+    static HttpResponse handshake(const HttpRequest & request);
+private:
 };
 
 } // namespace tastefulserver

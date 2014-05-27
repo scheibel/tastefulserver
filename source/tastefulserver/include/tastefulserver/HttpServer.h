@@ -31,18 +31,25 @@
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
-#include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/HttpProtocol.h>
+#include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
 class TASTEFULSERVER_API HttpServer : public TcpServer
 {
 public:
-    HttpServer(const HttpHandler::RequestCallback & callback);
+    typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
+
+    HttpServer(const RequestCallback & callback);
 
 protected:
-    HttpHandler::RequestCallback m_callback;
-    virtual Connection * createConnection(qintptr socketDescriptor) const override;
+    RequestCallback m_callback;
+    virtual Connection * createConnection() const override;
+
+    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
+
+    bool handle(const HttpRequest & request, HttpProtocol & protocol);
 };
 
 } // namespace tastefulserver

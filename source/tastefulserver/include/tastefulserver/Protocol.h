@@ -26,22 +26,35 @@
 
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
+#include <QAbstractSocket>
 
-#include <tastefulserver/ProtocolHandler.h>
-#include <tastefulserver/ByteArrayStream.h>
-#include <tastefulserver/http.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API WebsocketHandler : public ProtocolHandler
+class Connection;
+
+class TASTEFULSERVER_API Protocol
 {
+    friend class Connection;
 public:
-    WebsocketHandler();
+    Protocol();
+    virtual ~Protocol();
 
-    void receive(const QByteArray & data);
+    Connection * connection();
 
+    void disconnect();
 private:
+    Connection * m_connection;
+
+    void setConnection(Connection * connection);
+
+protected:
+    void send(const QByteArray & data);
+
+    virtual void onDisconnect();
+    virtual void onError(QAbstractSocket::SocketError e);
+    virtual void receive(const QByteArray & data) = 0;
 };
 
 } // namespace tastefulserver

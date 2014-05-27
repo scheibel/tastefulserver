@@ -24,52 +24,32 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/ProtocolHandler.h>
-#include <tastefulserver/Connection.h>
+#pragma once
 
-#include <QDebug>
+#include <tastefulserver/tastefulserver_api.h>
+
+#include <tastefulserver/Protocol.h>
+#include <tastefulserver/HttpRequestParser.h>
+#include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-ProtocolHandler::ProtocolHandler()
-: m_connection(nullptr)
+class TASTEFULSERVER_API HttpProtocol : public Protocol
 {
-}
+public:
+    typedef std::function<bool(const HttpRequest &, HttpProtocol &)> RequestCallback;
 
-ProtocolHandler::~ProtocolHandler()
-{
-}
+    HttpProtocol(const RequestCallback & callback);
+    virtual ~HttpProtocol();
 
-void ProtocolHandler::setConnection(Connection * connection)
-{
-    m_connection = connection;
-}
+    void sendResponse(const HttpResponse & response);
+protected:
+    virtual void receive(const QByteArray & data) override;
 
-Connection * ProtocolHandler::connection()
-{
-    return m_connection;
-}
+    RequestCallback m_callback;
+    HttpRequestParser * m_parser;
 
-void ProtocolHandler::send(const QByteArray & data)
-{
-    m_connection->send(data);
-}
-
-void ProtocolHandler::onError(QAbstractSocket::SocketError e)
-{
-    if (e != QAbstractSocket::RemoteHostClosedError)
-    {
-        qDebug() << "Socket error: " << m_connection->socket().errorString();
-    }
-}
-
-void ProtocolHandler::disconnect()
-{
-    m_connection->disconnect();
-}
-
-void ProtocolHandler::onDisconnect()
-{
-}
+    HttpRequest m_request;
+};
 
 } // namespace tastefulserver

@@ -34,6 +34,10 @@ HttpEntity::HttpEntity()
 {
 }
 
+HttpEntity::~HttpEntity()
+{
+}
+
 bool HttpEntity::hasHeader(const http::HeaderName & headerName) const
 {
     return m_headers.contains(headerName);

@@ -25,19 +25,50 @@
  **/
 
 #include <tastefulserver/HttpServer.h>
-
-#include "../server/SocketFactory.h"
+#include <tastefulserver/WebsocketProtocol.h>
 
 namespace tastefulserver {
 
-HttpServer::HttpServer(const HttpHandler::RequestCallback & callback)
-    : m_callback(callback)
+HttpServer::HttpServer(const RequestCallback & callback)
+: m_callback(callback)
 {
 }
 
-Connection * HttpServer::createConnection(qintptr socketDescriptor) const
+SocketFactory * HttpServer::createSocketFactory(qintptr socketDescriptor)
 {
-    return new Connection(new HttpHandler(m_callback), new TcpSocketFactory(socketDescriptor));
+    return new TcpSocketFactory(socketDescriptor);
+}
+
+Connection * HttpServer::createConnection() const
+{
+    return new Connection(
+        new HttpProtocol([this](const HttpRequest & request, HttpProtocol & protocol) {
+            return handle(request, protocol);
+        })
+    );
+}
+
+bool HttpServer::handle(const HttpRequest & request, HttpProtocol & protocol)
+{
+    if (request.isBad())
+    {
+        HttpResponse response;
+        response.setStatusCode(http::BadRequest);
+
+        protocol.sendResponse(response);
+    }
+    else if (request.getHeader(http::Upgrade).getValue() == "websocket")
+    {
+        protocol.sendResponse(WebsocketProtocol::handshake(request));
+        protocol.connection()->setProtocol(new WebsocketProtocol());
+        return false;
+    }
+    else
+    {
+        protocol.sendResponse(m_callback(request));
+    }
+
+    return true;
 }
 
 } // namespace tastefulserver

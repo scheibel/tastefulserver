@@ -28,43 +28,49 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/ProtocolHandler.h>
 #include <tastefulserver/ByteArrayStream.h>
-#include <tastefulserver/http.h>
+#include <tastefulserver/HttpRequest.h>
+#include <tastefulserver/Connection.h>
+
+#include <QQueue>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpHandler : public ProtocolHandler
+class TASTEFULSERVER_API HttpRequestParser
 {
 public:
     enum State
     {
-        READ_REQUEST_LINE, READ_HEADER, READ_CONTENT, HANDLE_REQUEST, HANDLE_ERROR
+        ParseRequestLine,
+        ParseHeaderLine,
+        ParseContent,
+        FinishRequest,
+        HandleError
     };
 
-    typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
+    HttpRequestParser(const Connection * connection);
 
-    HttpHandler(const RequestCallback & callback);
-    HttpHandler(const RequestCallback & callback, const RequestCallback & badRequestCallback);
+    void addData(const QByteArray & data);
 
-    void receive(const QByteArray & data);
+    bool parse();
+    bool hasReadyRequest();
+    HttpRequest getRequest();
 
-    void setBadRequestCallback(const RequestCallback & badRequestCallback);
-    void uninstallBadRequestCallback();
-
-private:
-    bool readRequestLine();
-    bool readHeader();
-    bool readContent();
-    bool handleRequest();
+protected:
+    bool parseRequestLine();
+    bool parseHeaderLine();
+    bool parseContent();
+    bool finishRequest();
     bool handleError();
 
-    RequestCallback m_callback;
-    RequestCallback m_badRequestCallback;
-    bool m_hasBadRequestCallback;
-    ByteArrayStream m_buffer;
-    HttpRequest m_request;
+    void pushRequest();
+
+    const Connection * m_connection;
+
+    ByteArrayStream m_byteStream;
+    HttpRequest m_currentRequest;
     State m_state;
+    QQueue<HttpRequest> m_readyRequests;
 };
 
 } // namespace tastefulserver

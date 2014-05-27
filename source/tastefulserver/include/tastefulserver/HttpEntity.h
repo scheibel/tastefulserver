@@ -48,6 +48,7 @@ class TASTEFULSERVER_API HttpEntity
 {
 public:
     HttpEntity();
+    virtual ~HttpEntity();
 
     bool hasHeader(const http::HeaderName & headerName) const;
     HttpHeader getHeader(const http::HeaderName & headerName) const;

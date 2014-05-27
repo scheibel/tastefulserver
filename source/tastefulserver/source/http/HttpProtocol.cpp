@@ -24,16 +24,47 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/HttpProtocol.h>
+#include <tastefulserver/Connection.h>
 
-#include <tastefulserver/http.h>
+#include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 
-const QString websocketMagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+HttpProtocol::HttpProtocol(const RequestCallback & callback)
+: m_callback(callback)
+, m_parser(nullptr)
+{
+}
 
-QString hashWebSocketKey(const QString & key);
+HttpProtocol::~HttpProtocol()
+{
+    delete m_parser;
+}
 
-HttpResponse websocketHandshake(const HttpRequest & request);
+void HttpProtocol::sendResponse(const HttpResponse & response)
+{
+    send(response.toByteArray());
+}
+
+void HttpProtocol::receive(const QByteArray & data)
+{
+    if (!m_parser)
+    {
+        m_parser = new HttpRequestParser(connection());
+    }
+
+    m_parser->addData(data);
+
+    while (m_parser->parse())
+    {
+        HttpRequest request = m_parser->getRequest();
+
+        if (!m_callback(request, *this))
+        {
+            return;
+        }
+    }
+}
 
 } // namespace tastefulserver

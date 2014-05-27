@@ -24,35 +24,52 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/Protocol.h>
+#include <tastefulserver/Connection.h>
 
-#include <QAbstractSocket>
-
-#include <tastefulserver/tastefulserver_api.h>
+#include <QDebug>
 
 namespace tastefulserver {
 
-class Connection;
-
-class TASTEFULSERVER_API ProtocolHandler
+Protocol::Protocol()
+: m_connection(nullptr)
 {
-    friend class Connection;
-public:
-    ProtocolHandler();
-    virtual ~ProtocolHandler();
+}
 
-    void setConnection(Connection * connection);
+Protocol::~Protocol()
+{
+}
 
-    Connection * connection();
-private:
-    Connection * m_connection;
-protected:
-    void send(const QByteArray & data);
-    void disconnect();
+void Protocol::setConnection(Connection * connection)
+{
+    m_connection = connection;
+}
 
-    virtual void onDisconnect();
-    virtual void onError(QAbstractSocket::SocketError e);
-    virtual void receive(const QByteArray & data) = 0;
-};
+Connection * Protocol::connection()
+{
+    return m_connection;
+}
+
+void Protocol::send(const QByteArray & data)
+{
+    m_connection->send(data);
+}
+
+void Protocol::onError(QAbstractSocket::SocketError e)
+{
+    if (e != QAbstractSocket::RemoteHostClosedError)
+    {
+        qDebug() << "Socket error: " << m_connection->socket().errorString();
+    }
+}
+
+void Protocol::disconnect()
+{
+    m_connection->disconnect();
+}
+
+void Protocol::onDisconnect()
+{
+}
 
 } // namespace tastefulserver

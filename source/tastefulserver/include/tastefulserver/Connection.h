@@ -30,12 +30,13 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
+#include <tastefulserver/SocketFactory.h>
 #include <tastefulserver/Task.h>
 
 namespace tastefulserver {
 
 class SocketFactory;
-class ProtocolHandler;
+class Protocol;
 
 class TASTEFULSERVER_API Connection : public Task
 {
@@ -43,16 +44,16 @@ class TASTEFULSERVER_API Connection : public Task
 
 public:
     Connection();
-    Connection(ProtocolHandler * protocol, SocketFactory * socketCreation);
+    Connection(Protocol * protocol);
     ~Connection();
 
-    void setSocketFactory(SocketFactory * socketCreation);
+    void setSocketFactory(SocketFactory * socketFactory);
+    void setProtocol(Protocol * protocol);
 
     void startUp();
 
-    void switchProtocol(ProtocolHandler * protocol);
-
     QAbstractSocket & socket();
+    const QAbstractSocket & socket() const;
 
     bool isUdpConnection() const;
     bool isTcpConnection() const;
@@ -60,13 +61,14 @@ public:
 
     void send(const QByteArray & data);
     void disconnect();
-protected:
-    QAbstractSocket * m_socket;
-    ProtocolHandler * m_protocol;
-
 private:
-    SocketFactory * m_socketCreation;
+    SocketFactory * m_socketFactory;
+
     void createSocket();
+
+protected:
+    Protocol * m_protocol;
+    QAbstractSocket * m_socket;
 
 private slots:
     void disconnected();

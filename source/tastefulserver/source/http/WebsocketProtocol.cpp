@@ -24,19 +24,45 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/WebsocketHandler.h>
+#include <tastefulserver/WebsocketProtocol.h>
 
 #include <QStringList>
+#include <QCryptographicHash>
 
 #include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 
-WebsocketHandler::WebsocketHandler()
+const QString WebsocketProtocol::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+
+QString WebsocketProtocol::hashKey(const QString & key)
+{
+    return QCryptographicHash::hash((key + MagicString).toUtf8(), QCryptographicHash::Sha1).toBase64();
+}
+
+HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
+{
+    HttpResponse response;
+
+    response.clearContent();
+    response.clearHeaders();
+
+    response.setStatusCode(http::SwitchingProtocols);
+
+    response.setHeader(http::Upgrade, "websocket");
+    response.setHeader(http::Connection, http::Upgrade);
+    response.setHeader(http::SecWebSocketAccept, hashKey(request.getHeader(http::SecWebSocketKey).getValue()));
+
+    //response.addHeader(request.getHeader(http::SecWebSocketProtocol));
+
+    return response;
+}
+
+WebsocketProtocol::WebsocketProtocol()
 {
 }
 
-void WebsocketHandler::receive(const QByteArray & data)
+void WebsocketProtocol::receive(const QByteArray & data)
 {
     int offset = 0;
     qint64 length = 0;

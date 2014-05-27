@@ -60,72 +60,50 @@ set(sources
 	${source_path}/http/HttpEntity.cpp
 	${source_path}/http/HttpServer.cpp
 	${source_path}/http/HttpMessage.cpp
-	${source_path}/http/HttpHandler.cpp
+	${source_path}/http/HttpProtocol.cpp
 	${source_path}/http/HttpResponse.cpp
 	${source_path}/http/httpUtil.cpp
 	${source_path}/http/UploadedFile.cpp
 	${source_path}/http/HttpHeader.cpp
 	${source_path}/http/HttpMethod.cpp
 	${source_path}/http/HttpsServer.cpp
-	${source_path}/http/websockets.cpp
-	${source_path}/http/WebsocketHandler.cpp
-	${source_path}/server/SocketFactory.h
+	${source_path}/http/WebsocketProtocol.cpp
 	${source_path}/server/SocketFactory.cpp
 	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp
-	${source_path}/server/ProtocolHandler.cpp
+	${source_path}/server/Protocol.cpp
+	${source_path}/http/HttpRequestParser.cpp
 )
 
 set(api_includes
-	${include_path}/ByteArrayStream
 	${include_path}/ByteArrayStream.h
-	${include_path}/Connection
 	${include_path}/Connection.h
-	${include_path}/ContentType
 	${include_path}/ContentType.h
-	${include_path}/Cookie
 	${include_path}/Cookie.h
-	${include_path}/http
-	${include_path}/HttpEntity
 	${include_path}/HttpEntity.h
 	${include_path}/http.h
-	${include_path}/HttpHandler
-	${include_path}/HttpHandler.h
-	${include_path}/HttpHeader
+	${include_path}/HttpProtocol.h
 	${include_path}/HttpHeader.h
-	${include_path}/HttpMessage
 	${include_path}/HttpMessage.h
-	${include_path}/HttpMethod
 	${include_path}/HttpMethod.h
-	${include_path}/HttpRequest
 	${include_path}/HttpRequest.h
-	${include_path}/HttpResponse
 	${include_path}/HttpResponse.h
-	${include_path}/HttpServer
+	${include_path}/HttpRequestParser.h
 	${include_path}/HttpServer.h
-	${include_path}/HttpsServer
 	${include_path}/HttpsServer.h
-	${include_path}/httpStatusCodes
 	${include_path}/httpStatusCodes.h
-	${include_path}/httpUtil
 	${include_path}/httpUtil.h
-	${include_path}/HttpVersion
 	${include_path}/HttpVersion.h
-	${include_path}/MultiPart
 	${include_path}/MultiPart.h
 	${include_path}/QVariantTree.h
 	${include_path}/QVariantTree.hpp
-	${include_path}/RequestParameters
 	${include_path}/RequestParameters.h
-	${include_path}/Task
 	${include_path}/Task.h
-	${include_path}/TcpServer
 	${include_path}/TcpServer.h
-	${include_path}/UploadedFile
 	${include_path}/UploadedFile.h
-	${include_path}/websockets.h
-	${include_path}/WebsocketHandler.h
-	${include_path}/ProtocolHandler.h
+	${include_path}/WebsocketProtocol.h
+	${include_path}/Protocol.h
+	${include_path}/SocketFactory.h
 )
 
 # Group source files

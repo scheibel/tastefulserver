@@ -24,7 +24,7 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include "SocketFactory.h"
+#include <tastefulserver/SocketFactory.h>
 
 #include <QUdpSocket>
 #include <QTcpSocket>

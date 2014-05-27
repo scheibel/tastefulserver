@@ -25,25 +25,23 @@
  **/
 
 #include <tastefulserver/Connection.h>
-#include <tastefulserver/ProtocolHandler.h>
-
-#include "../server/SocketFactory.h"
+#include <tastefulserver/Protocol.h>
 
 #include <QDebug>
 
 namespace tastefulserver {
 
 Connection::Connection()
-: m_socket(nullptr)
+: m_socketFactory(nullptr)
 , m_protocol(nullptr)
-, m_socketCreation(nullptr)
+, m_socket(nullptr)
 {
 }
 
-Connection::Connection(ProtocolHandler * protocol, SocketFactory * socketCreation)
-: m_socket(nullptr)
+Connection::Connection(Protocol * protocol)
+: m_socketFactory(nullptr)
 , m_protocol(protocol)
-, m_socketCreation(socketCreation)
+, m_socket(nullptr)
 {
     m_protocol->setConnection(this);
 }
@@ -52,23 +50,35 @@ Connection::~Connection()
 {
     delete m_protocol;
     delete m_socket;
-    delete m_socketCreation;
+    delete m_socketFactory;
 }
 
-void Connection::switchProtocol(ProtocolHandler * protocol)
+void Connection::setSocketFactory(SocketFactory * socketFactory)
+{
+    if (m_socket)
+    {
+        qDebug() << "Connection already has a socket.";
+        delete socketFactory;
+        return;
+    }
+
+    delete m_socketFactory;
+    m_socketFactory = socketFactory;
+}
+
+void Connection::setProtocol(Protocol * protocol)
 {
     delete m_protocol;
     m_protocol = protocol;
 }
 
-void Connection::setSocketFactory(SocketFactory * socketCreation)
-{
-    delete m_socketCreation;
-    m_socketCreation = socketCreation;
-}
-
 void Connection::startUp()
 {
+    if (m_socket)
+    {
+        return;
+    }
+
     createSocket();
 
     QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
@@ -78,27 +88,32 @@ void Connection::startUp()
 
 void Connection::createSocket()
 {
-    m_socket = (*m_socketCreation)();
+    m_socket = (*m_socketFactory)();
 }
 
-QAbstractSocket &Connection::socket()
+QAbstractSocket & Connection::socket()
+{
+    return *m_socket;
+}
+
+const QAbstractSocket & Connection::socket() const
 {
     return *m_socket;
 }
 
 bool Connection::isUdpConnection() const
 {
-    return m_socketCreation->isUdp();
+    return m_socketFactory->isUdp();
 }
 
 bool Connection::isTcpConnection() const
 {
-    return m_socketCreation->isTcp();
+    return m_socketFactory->isTcp();
 }
 
 bool Connection::isSslConnection() const
 {
-    return m_socketCreation->isSsl();
+    return m_socketFactory->isSsl();
 }
 
 void Connection::disconnected()

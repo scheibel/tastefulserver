@@ -38,13 +38,13 @@ namespace tastefulserver {
 class TASTEFULSERVER_API HttpsServer : public HttpServer
 {
 public:
-    HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const HttpHandler::RequestCallback & callback);
-
-    Connection* createConnection(qintptr socketDescriptor) const;
+    HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback);
 
 private:
     QSslCertificate m_certificate;
     QSslKey m_privateKey;
+
+    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
 };
 
 } // namespace tastefulserver
