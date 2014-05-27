@@ -68,6 +68,7 @@ set(sources
 	${source_path}/http/HttpMethod.cpp
 	${source_path}/http/HttpsServer.cpp
 	${source_path}/http/WebsocketProtocol.cpp
+	${source_path}/http/WebsocketFrame.cpp
 	${source_path}/server/SocketFactory.cpp
 	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp
@@ -102,6 +103,7 @@ set(api_includes
 	${include_path}/TcpServer.h
 	${include_path}/UploadedFile.h
 	${include_path}/WebsocketProtocol.h
+	${include_path}/WebsocketFrame.h
 	${include_path}/Protocol.h
 	${include_path}/SocketFactory.h
 )

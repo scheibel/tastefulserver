@@ -35,7 +35,7 @@ namespace tastefulserver {
 HttpRequestParser::HttpRequestParser(const Connection * connection)
 : m_connection(connection)
 , m_byteStream(ByteArrayStream::forLinebreak(http::Linebreak))
-, m_state(ParseRequestLine)
+, m_state(State::ParseRequestLine)
 {
 }
 
@@ -52,19 +52,19 @@ bool HttpRequestParser::parse()
     {
         switch (m_state)
         {
-            case ParseRequestLine:
+            case State::ParseRequestLine:
                 continueReading = parseRequestLine();
                 break;
-            case ParseHeaderLine:
+            case State::ParseHeaderLine:
                 continueReading = parseHeaderLine();
                 break;
-            case ParseContent:
+            case State::ParseContent:
                 continueReading = parseContent();
                 break;
-            case FinishRequest:
+            case State::FinishRequest:
                 continueReading = finishRequest();
                 break;
-            case HandleError:
+            case State::HandleError:
                 continueReading = handleError();
                 break;
         }
@@ -103,7 +103,7 @@ bool HttpRequestParser::parseRequestLine()
     QStringList parts = line.split(' ');
     if (parts.size()<3)
     {
-        m_state = HandleError;
+        m_state = State::HandleError;
 
         return true;
     }
@@ -113,7 +113,7 @@ bool HttpRequestParser::parseRequestLine()
 
     if (method.isInvalid() || httpVersion.isInvalid())
     {
-        m_state = HandleError;
+        m_state = State::HandleError;
 
         return true;
     }
@@ -124,7 +124,7 @@ bool HttpRequestParser::parseRequestLine()
     m_currentRequest.setAddress(m_connection->socket().peerAddress());
     m_currentRequest.setPort(m_connection->socket().peerPort());
 
-    m_state = ParseHeaderLine;
+    m_state = State::ParseHeaderLine;
 
     return true;
 }
@@ -139,7 +139,7 @@ bool HttpRequestParser::parseHeaderLine()
     QString line = m_byteStream.readLine();
     if (line.isEmpty())
     {
-        m_state = m_currentRequest.hasHeader(http::ContentLength) ? ParseContent : FinishRequest;
+        m_state = m_currentRequest.hasHeader(http::ContentLength) ? State::ParseContent : State::FinishRequest;
 
         return true;
     }
@@ -172,7 +172,7 @@ bool HttpRequestParser::parseContent()
     }
     QByteArray content = m_byteStream.read(length);
     m_currentRequest.parseContent(content);
-    m_state = FinishRequest;
+    m_state = State::FinishRequest;
 
     return true;
 }
@@ -181,7 +181,7 @@ bool HttpRequestParser::finishRequest()
 {
     pushRequest();
 
-    m_state = ParseRequestLine;
+    m_state = State::ParseRequestLine;
 
     m_byteStream.flush();
 
@@ -194,7 +194,7 @@ bool HttpRequestParser::handleError()
 
     pushRequest();
 
-    m_state = ParseRequestLine;
+    m_state = State::ParseRequestLine;
 
     return true;
 }

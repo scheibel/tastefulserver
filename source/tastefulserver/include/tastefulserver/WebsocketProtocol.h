@@ -29,7 +29,7 @@
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/Protocol.h>
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/WebsocketFrame.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
@@ -39,12 +39,11 @@ class TASTEFULSERVER_API WebsocketProtocol : public Protocol
 public:
     WebsocketProtocol();
 
-    void receive(const QByteArray & data);
-
     static const QString MagicString;
     static QString hashKey(const QString & key);
     static HttpResponse handshake(const HttpRequest & request);
-private:
+protected:
+    virtual void receive(const QByteArray & data) override;
 };
 
 } // namespace tastefulserver

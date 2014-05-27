@@ -39,7 +39,7 @@ namespace tastefulserver {
 class TASTEFULSERVER_API HttpRequestParser
 {
 public:
-    enum State
+    enum class State
     {
         ParseRequestLine,
         ParseHeaderLine,
