@@ -36,11 +36,13 @@ namespace tastefulserver {
 class TASTEFULSERVER_API ByteArrayStream
 {
 public:
+    ByteArrayStream(const QString & linebreak = "\n");
     ByteArrayStream(const QByteArray & bytes, const QString & linebreak = "\n");
 
     static ByteArrayStream forLinebreak(const QString & linebreak);
 
     void append(const QByteArray & bytes);
+    char readByte();
     QByteArray read(int length);
     void skip(int length);
     QString readLine();

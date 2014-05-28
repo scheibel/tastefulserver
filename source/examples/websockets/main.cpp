@@ -48,10 +48,11 @@ connection.onopen = function () {
   connection.send('Ping'); // Send the message 'Ping' to the server
 
         var arr = "";
-        for (var i = 0; i<=300; ++i)
+        for (var i = 0; i<300; ++i)
         {
             arr += i.toString()+",";
         }
+        arr+="300";
          connection.send(arr);
 
          var binary = new Uint8Array(8);

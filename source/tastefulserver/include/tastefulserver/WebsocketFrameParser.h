@@ -29,46 +29,65 @@
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/ByteArrayStream.h>
-#include <tastefulserver/HttpRequest.h>
+#include <tastefulserver/WebsocketFrame.h>
 
-#include <QQueue>
+#include <QByteArray>
+#include <array>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpRequestParser
+class TASTEFULSERVER_API WebsocketFrameParser
 {
 public:
-    HttpRequestParser();
+    WebsocketFrameParser();
 
     void addData(const QByteArray & data);
-
-    bool hasReadyRequests() const;
-    HttpRequest popReadyRequest();
 
 protected:
     enum class State
     {
-        ParseRequestLine,
-        ParseHeaderLine,
+        Wait,
+        ParseFrameHeader,
+        ParseLengthMask,
+        ParseExtendedLength,
+        ParseMask,
         ParseContent,
-        FinishRequest,
+        FinishFrame,
         HandleError
     };
 
-    void parse();
-
-    bool parseRequestLine();
-    bool parseHeaderLine();
-    bool parseContent();
-    bool finishRequest();
-    bool handleError();
-
-    void pushRequest();
-
     ByteArrayStream m_byteStream;
-    HttpRequest m_currentRequest;
+    WebsocketFrame m_currentFrame;
     State m_state;
-    QQueue<HttpRequest> m_readyRequests;
+
+    void parse();
+    State parseFrameHeader();
+    State parseLengthMask();
+    State parseExtendedLength();
+    State parseMask();
+    State parseContent();
+    State finishFrame();
+    State handleError();
+
+    union LengthMask {
+        struct {
+            #ifdef LITTLE_ENDIAN
+            unsigned int len : 7;
+            unsigned int mask : 1;
+            #else
+            unsigned int mask : 1;
+            unsigned int len : 7;
+            #endif
+        } data;
+        char raw;
+    };
+
+    qint64 length;
+    LengthMask lengthMask;
+    std::array<char, 4> mask;
+
+    static const unsigned char Next2Bytes;
+    static const unsigned char Next4Bytes;
 };
 
 } // namespace tastefulserver

@@ -30,6 +30,7 @@
 
 #include <tastefulserver/Protocol.h>
 #include <tastefulserver/WebsocketFrame.h>
+#include <tastefulserver/WebsocketFrameParser.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
@@ -43,6 +44,8 @@ public:
     static QString hashKey(const QString & key);
     static HttpResponse handshake(const HttpRequest & request);
 protected:
+    WebsocketFrameParser m_parser;
+
     virtual void receive(const QByteArray & data) override;
 };
 

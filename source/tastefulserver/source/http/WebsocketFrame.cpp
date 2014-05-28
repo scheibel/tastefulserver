@@ -26,67 +26,7 @@
 
 #include <tastefulserver/WebsocketFrame.h>
 
-
 namespace tastefulserver {
-
-WebsocketFrame WebsocketFrame::fromByteArray(const QByteArray & data)
-{
-    qint64 length = 0;
-
-    Header header;
-    header.raw = data[0];
-
-    union {
-        struct {
-#ifdef LITTLE_ENDIAN
-            unsigned int len : 7;
-            unsigned int mask : 1;
-#else
-            unsigned int mask : 1;
-            unsigned int len : 7;
-#endif
-        } data;
-        char raw;
-    } lengthIndicator;
-
-    const static unsigned char Next2Bytes = 126;
-    const static unsigned char Next4Bytes = 127;
-
-    lengthIndicator.raw = data[1];
-
-    int offset = 2;
-
-    if (lengthIndicator.data.len == Next2Bytes)
-    {
-        offset = 4;
-        length = *reinterpret_cast<qint16*>(data.mid(2, 2).data());
-    }
-    else if (lengthIndicator.data.len == Next4Bytes)
-    {
-        offset = 6;
-        length = *reinterpret_cast<qint64*>(data.mid(2, 4).data());
-    }
-
-    QByteArray mask(4, 0);
-
-    if (lengthIndicator.data.mask == 1)
-    {
-        mask = data.mid(offset, 4);
-        offset += 4;
-    }
-
-    QByteArray content(length, 0);
-
-    for (int i = offset, index = 0; i < data.length(); ++i, ++index)
-    {
-        content[index] = (data[i] ^ mask[index % 4]);
-    }
-
-    WebsocketFrame frame(header);
-    frame.setContent(content);
-
-    return frame;
-}
 
 WebsocketFrame::WebsocketFrame()
 {

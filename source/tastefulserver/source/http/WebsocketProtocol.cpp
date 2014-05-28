@@ -58,10 +58,7 @@ WebsocketProtocol::WebsocketProtocol()
 
 void WebsocketProtocol::receive(const QByteArray & data)
 {
-    WebsocketFrame frame = WebsocketFrame::fromByteArray(data);
-
-    qDebug() << (unsigned)frame.getOpCode();
-    qDebug() << frame.getContent();
+    m_parser.addData(data);
 }
 
 
