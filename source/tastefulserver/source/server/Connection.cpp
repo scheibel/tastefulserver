@@ -81,9 +81,9 @@ void Connection::startUp()
 
     createSocket();
 
-    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 }
 
 void Connection::createSocket()

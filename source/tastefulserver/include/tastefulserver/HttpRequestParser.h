@@ -30,7 +30,6 @@
 
 #include <tastefulserver/ByteArrayStream.h>
 #include <tastefulserver/HttpRequest.h>
-#include <tastefulserver/Connection.h>
 
 #include <QQueue>
 
@@ -48,15 +47,16 @@ public:
         HandleError
     };
 
-    HttpRequestParser(const Connection * connection);
+    HttpRequestParser();
 
     void addData(const QByteArray & data);
 
-    bool parse();
-    bool hasReadyRequest();
-    HttpRequest getRequest();
+    bool hasReadyRequests() const;
+    HttpRequest popReadyRequest();
 
 protected:
+    void parse();
+
     bool parseRequestLine();
     bool parseHeaderLine();
     bool parseContent();
@@ -64,8 +64,6 @@ protected:
     bool handleError();
 
     void pushRequest();
-
-    const Connection * m_connection;
 
     ByteArrayStream m_byteStream;
     HttpRequest m_currentRequest;

@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
 {
     QCoreApplication app(argc, argv);
     HttpsServer server(getCertificate(), getPrivateKey(), [](const HttpRequest & request) {
-            HttpResponse response(request);
+            HttpResponse response(http::OK, request);
 
             QByteArray content = request.toByteArray();
             content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
@@ -90,7 +90,6 @@ int main(int argc, char ** argv)
             }
 
             response.setContent(content);
-            response.setStatusCode(http::OK);
             response.setCookie("testcookie", "testvalue").setPath("/test").setMaxAge(30);
 
             return response;

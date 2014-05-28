@@ -41,10 +41,12 @@ class TASTEFULSERVER_API HttpRequest : public HttpMessage
 {
 public:
     HttpRequest();
-    HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion, bool isHttps = false);
+    HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion);
 
     bool isBad() const;
     void markBad();
+
+    void setHttps(bool isHttps);
 
     bool isXMLHttpRequest() const;
 
@@ -68,8 +70,8 @@ public:
 
 protected:
     QHostAddress m_address;
-    unsigned m_port;
     bool m_bad;
+    unsigned m_port;
     HttpMethod m_method;
     QString m_requestUri;
     QUrl m_url;

@@ -32,9 +32,8 @@
 
 namespace tastefulserver {
 
-HttpRequestParser::HttpRequestParser(const Connection * connection)
-: m_connection(connection)
-, m_byteStream(ByteArrayStream::forLinebreak(http::Linebreak))
+HttpRequestParser::HttpRequestParser()
+: m_byteStream(ByteArrayStream::forLinebreak(http::Linebreak))
 , m_state(State::ParseRequestLine)
 {
 }
@@ -42,9 +41,11 @@ HttpRequestParser::HttpRequestParser(const Connection * connection)
 void HttpRequestParser::addData(const QByteArray & data)
 {
     m_byteStream.append(data);
+
+    parse();
 }
 
-bool HttpRequestParser::parse()
+void HttpRequestParser::parse()
 {
     bool continueReading = true;
 
@@ -69,16 +70,14 @@ bool HttpRequestParser::parse()
                 break;
         }
     }
-
-    return hasReadyRequest();
 }
 
-bool HttpRequestParser::hasReadyRequest()
+bool HttpRequestParser::hasReadyRequests() const
 {
     return !m_readyRequests.empty();
 }
 
-HttpRequest HttpRequestParser::getRequest()
+HttpRequest HttpRequestParser::popReadyRequest()
 {
     HttpRequest request = m_readyRequests.front();
     m_readyRequests.pop_front();
@@ -120,9 +119,7 @@ bool HttpRequestParser::parseRequestLine()
 
     QString requestUri = parts[1];
 
-    m_currentRequest = HttpRequest(method, requestUri, httpVersion, m_connection->isSslConnection());
-    m_currentRequest.setAddress(m_connection->socket().peerAddress());
-    m_currentRequest.setPort(m_connection->socket().peerPort());
+    m_currentRequest = HttpRequest(method, requestUri, httpVersion);
 
     m_state = State::ParseHeaderLine;
 
@@ -185,7 +182,7 @@ bool HttpRequestParser::finishRequest()
 
     m_byteStream.flush();
 
-    return false;
+    return true;
 }
 
 bool HttpRequestParser::handleError()

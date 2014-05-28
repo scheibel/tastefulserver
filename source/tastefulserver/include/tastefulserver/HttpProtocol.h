@@ -34,20 +34,22 @@
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpProtocol : public Protocol
+class TASTEFULSERVER_API HttpProtocol : public QObject, public Protocol
 {
+    Q_OBJECT
 public:
-    typedef std::function<bool(const HttpRequest &, HttpProtocol &)> RequestCallback;
+    HttpProtocol();
 
-    HttpProtocol(const RequestCallback & callback);
-    virtual ~HttpProtocol();
+    bool hasRequest() const;
+    HttpRequest getNextRequest();
 
     void sendResponse(const HttpResponse & response);
+signals:
+    void requestsReady(HttpProtocol * protocol);
 protected:
     virtual void receive(const QByteArray & data) override;
 
-    RequestCallback m_callback;
-    HttpRequestParser * m_parser;
+    HttpRequestParser m_parser;
 
     HttpRequest m_request;
 };

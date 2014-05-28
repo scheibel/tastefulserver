@@ -41,12 +41,7 @@ QString WebsocketProtocol::hashKey(const QString & key)
 
 HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
 {
-    HttpResponse response;
-
-    response.clearContent();
-    response.clearHeaders();
-
-    response.setStatusCode(http::SwitchingProtocols);
+    HttpResponse response(http::SwitchingProtocols);
 
     response.setHeader(http::Upgrade, "websocket");
     response.setHeader(http::Connection, http::Upgrade);

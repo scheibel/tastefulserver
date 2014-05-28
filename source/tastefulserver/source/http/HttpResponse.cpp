@@ -33,32 +33,29 @@
 
 namespace tastefulserver {
 
-HttpResponse::HttpResponse()
+HttpResponse::HttpResponse(unsigned statusCode)
+: m_statusCode(statusCode)
 {
-    initialize();
 }
 
-HttpResponse::HttpResponse(const HttpVersion & httpVersion)
+HttpResponse::HttpResponse(unsigned statusCode, const HttpVersion & httpVersion)
 : HttpMessage(httpVersion)
+, m_statusCode(statusCode)
 {
-    initialize();
 }
 
-HttpResponse::HttpResponse(const HttpRequest & httpRequest)
+HttpResponse::HttpResponse(unsigned statusCode, const HttpRequest & httpRequest)
 : HttpMessage(httpRequest.getHttpVersion())
+, m_statusCode(statusCode)
 {
-    initialize();
-
     if ((httpRequest.getHttpVersion() >= HttpVersion(1, 1)) || httpRequest.isKeepAlive())
     {
         keepAlive();
     }
 }
 
-void HttpResponse::initialize()
+void HttpResponse::setDate()
 {
-    setStatusCode(http::NotFound);
-    setHeader(http::ContentLength, "0");
     setDate(QDateTime::currentDateTime());
 }
 

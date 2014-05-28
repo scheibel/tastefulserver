@@ -49,7 +49,7 @@ protected:
 
     virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
 
-    bool handle(const HttpRequest & request, HttpProtocol & protocol);
+    void requestsReady(HttpProtocol * protocol);
 };
 
 } // namespace tastefulserver

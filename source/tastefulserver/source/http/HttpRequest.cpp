@@ -31,22 +31,22 @@
 namespace tastefulserver {
 
 HttpRequest::HttpRequest()
-    : m_port(0)
-    , m_bad(true)
+: m_bad(true)
+, m_port(0)
 {
 }
 
-HttpRequest::HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion, bool isHttps)
-    : HttpMessage(httpVersion)
-    , m_port(0)
-    , m_bad(false)
-    , m_method(method)
-    , m_requestUri(requestUri)
+HttpRequest::HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion)
+: HttpMessage(httpVersion)
+, m_bad(false)
+, m_port(0)
+, m_method(method)
+, m_requestUri(requestUri)
 {
     m_url = QUrl::fromEncoded(requestUri.toLatin1());
     if (m_url.scheme().isEmpty())
     {
-        m_url.setScheme(isHttps ? "https" : "http");
+        m_url.setScheme("http");
     }
     m_requestParams.parseUrl(m_url);
 }
@@ -59,6 +59,11 @@ bool HttpRequest::isBad() const
 void HttpRequest::markBad()
 {
     m_bad = true;
+}
+
+void HttpRequest::setHttps(bool isHttps)
+{
+    m_url.setScheme(isHttps ? "https" : "http");
 }
 
 const QHostAddress &HttpRequest::address() const

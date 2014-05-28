@@ -41,34 +41,36 @@ SocketFactory * HttpServer::createSocketFactory(qintptr socketDescriptor)
 
 Connection * HttpServer::createConnection() const
 {
-    return new Connection(
-        new HttpProtocol([this](const HttpRequest & request, HttpProtocol & protocol) {
-            return handle(request, protocol);
-        })
-    );
+    HttpProtocol * protocol = new HttpProtocol();
+
+    connect(protocol, &HttpProtocol::requestsReady, this, &HttpServer::requestsReady, Qt::DirectConnection);
+
+    return new Connection(protocol);
 }
 
-bool HttpServer::handle(const HttpRequest & request, HttpProtocol & protocol)
+void HttpServer::requestsReady(HttpProtocol * protocol)
 {
-    if (request.isBad())
+    while (protocol->hasRequest())
     {
-        HttpResponse response;
-        response.setStatusCode(http::BadRequest);
+        HttpRequest request = protocol->getNextRequest();
 
-        protocol.sendResponse(response);
-    }
-    else if (request.getHeader(http::Upgrade).getValue() == "websocket")
-    {
-        protocol.sendResponse(WebsocketProtocol::handshake(request));
-        protocol.connection()->setProtocol(new WebsocketProtocol());
-        return false;
-    }
-    else
-    {
-        protocol.sendResponse(m_callback(request));
-    }
+        if (request.isBad())
+        {
+            HttpResponse response(http::BadRequest);
 
-    return true;
+            protocol->sendResponse(response);
+        }
+        else if (request.getHeader(http::Upgrade).getValue() == "websocket")
+        {
+            protocol->sendResponse(WebsocketProtocol::handshake(request));
+            protocol->connection()->setProtocol(new WebsocketProtocol());
+            break;
+        }
+        else
+        {
+            protocol->sendResponse(m_callback(request));
+        }
+    }
 }
 
 } // namespace tastefulserver

@@ -31,15 +31,8 @@
 
 namespace tastefulserver {
 
-HttpProtocol::HttpProtocol(const RequestCallback & callback)
-: m_callback(callback)
-, m_parser(nullptr)
+HttpProtocol::HttpProtocol()
 {
-}
-
-HttpProtocol::~HttpProtocol()
-{
-    delete m_parser;
 }
 
 void HttpProtocol::sendResponse(const HttpResponse & response)
@@ -47,23 +40,35 @@ void HttpProtocol::sendResponse(const HttpResponse & response)
     send(response.toByteArray());
 }
 
+bool HttpProtocol::hasRequest() const
+{
+    return m_parser.hasReadyRequests();
+}
+
+HttpRequest HttpProtocol::getNextRequest()
+{
+    if (!hasRequest())
+        return HttpRequest();
+
+    HttpRequest request = m_parser.popReadyRequest();
+
+    if (m_connection->isSslConnection())
+    {
+        request.setHttps(true);
+    }
+    request.setAddress(m_connection->socket().peerAddress());
+    request.setPort(m_connection->socket().peerPort());
+
+    return request;
+}
+
 void HttpProtocol::receive(const QByteArray & data)
 {
-    if (!m_parser)
+    m_parser.addData(data);
+
+    if (hasRequest())
     {
-        m_parser = new HttpRequestParser(connection());
-    }
-
-    m_parser->addData(data);
-
-    while (m_parser->parse())
-    {
-        HttpRequest request = m_parser->getRequest();
-
-        if (!m_callback(request, *this))
-        {
-            return;
-        }
+        emit(requestsReady(this));
     }
 }
 

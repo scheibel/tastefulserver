@@ -81,9 +81,7 @@ int main(int argc, char ** argv)
 {
     QCoreApplication app(argc, argv);
     HttpServer server([](const HttpRequest & request) {
-            HttpResponse response(request);
-
-            response.setStatusCode(http::OK);
+            HttpResponse response(http::OK, request);
 
             response.setContent(page.toUtf8());
 

@@ -44,12 +44,11 @@ public:
     Connection * connection();
 
     void disconnect();
-private:
+protected:
     Connection * m_connection;
 
     void setConnection(Connection * connection);
 
-protected:
     void send(const QByteArray & data);
 
     virtual void onDisconnect();
