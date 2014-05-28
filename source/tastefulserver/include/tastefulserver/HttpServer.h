@@ -32,6 +32,7 @@
 
 #include <tastefulserver/TcpServer.h>
 #include <tastefulserver/HttpProtocol.h>
+#include <tastefulserver/WebsocketProtocol.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
@@ -50,6 +51,7 @@ protected:
     virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
 
     void requestsReady(HttpProtocol * protocol);
+    void framesReady(WebsocketProtocol * protocol);
 };
 
 } // namespace tastefulserver

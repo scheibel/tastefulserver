@@ -63,13 +63,36 @@ void HttpServer::requestsReady(HttpProtocol * protocol)
         else if (request.getHeader(http::Upgrade).getValue() == "websocket")
         {
             protocol->sendResponse(WebsocketProtocol::handshake(request));
-            protocol->connection()->setProtocol(new WebsocketProtocol());
+            WebsocketProtocol * p = new WebsocketProtocol();
+            connect(p, &WebsocketProtocol::framesReady, this, &HttpServer::framesReady, Qt::DirectConnection);
+            protocol->connection()->setProtocol(p);
             break;
         }
         else
         {
             protocol->sendResponse(m_callback(request));
         }
+    }
+}
+
+void HttpServer::framesReady(WebsocketProtocol * protocol)
+{
+    while (protocol->hasFrame())
+    {
+        WebsocketFrame frame = protocol->getNextFrame();
+        if (frame.isText())
+        {
+            qDebug() << frame.getContent();
+        }
+
+        WebsocketFrame f(WebsocketFrame::OpCode::Text);
+
+        f.setRandomMask();
+        f.setContent("Ping");
+
+        qDebug() << "[ "+f.toByteArray().toHex()+" ]";
+
+        protocol->sendFrame(f);
     }
 }
 

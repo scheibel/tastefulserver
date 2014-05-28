@@ -59,6 +59,31 @@ WebsocketProtocol::WebsocketProtocol()
 void WebsocketProtocol::receive(const QByteArray & data)
 {
     m_parser.addData(data);
+
+    if (hasFrame())
+    {
+        emit(framesReady(this));
+    }
+}
+
+void WebsocketProtocol::sendFrame(const WebsocketFrame & frame)
+{
+    send(frame.toByteArray());
+}
+
+bool WebsocketProtocol::hasFrame() const
+{
+    return m_parser.hasReadyFrames();
+}
+
+WebsocketFrame WebsocketProtocol::getNextFrame()
+{
+    if (!hasFrame())
+    {
+        return WebsocketFrame();
+    }
+
+    return m_parser.popReadyFrame();
 }
 
 

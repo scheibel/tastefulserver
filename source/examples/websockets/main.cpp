@@ -34,46 +34,60 @@ using namespace tastefulserver;
 QString page = R"(
 <html>
 <head>
-</head>
-<body>
-        <h1>hallo</h2>
-        <script>
 
-var connection = new WebSocket('ws://localhost:8080/echo', ['soap', 'xmpp']);
+<script type="text/javascript">
 
-document.writeln("foo");
+output = function(d) {
+    var c = document.getElementById('c');
+    var e = document.createElement('div');
+    e.innerHTML = d;
+    c.appendChild(e);
+};
 
-// When the connection is open, send some data to the server
-connection.onopen = function () {
-  connection.send('Ping'); // Send the message 'Ping' to the server
+window.onload = function() {
+    output("test");
 
+    var connection = new WebSocket('ws://localhost:8080/echo', ['soap', 'xmpp']);
+
+    connection.onopen = function () {
+        connection.send('Ping');
         var arr = "";
         for (var i = 0; i<300; ++i)
         {
             arr += i.toString()+",";
         }
         arr+="300";
-         connection.send(arr);
 
-         var binary = new Uint8Array(8);
-         for (var i = 0; i < 8; i++) {
-           binary[i] = i;
-         }
-         connection.send(binary.buffer);
-};
+        connection.send(arr);
 
-// Log errors
-connection.onerror = function (error) {
-  document.writeln('WebSocket Error ' + error);
+        var binary = new Uint8Array(8);
+
+        for (var i = 0; i < 8; i++) {
+            binary[i] = i;
+        }
+        connection.send(binary.buffer);
+
+        connection.send('Ping2');
+    };
+
+    connection.onerror = function (error) {
         console.log(error);
-};
+        output("error");
+    };
 
-// Log messages from the server
-connection.onmessage = function (e) {
-  document.writeln('Server: ' + e.data);
-};
+    connection.onmessage = function (e) {
+        output("received data");
+        output(e.data);
+    };
+}
+</script>
 
-        </script>
+</head>
+<body>
+    <h1>hallo</h2>
+
+    <div id="c">
+    </div>
 </body>
 </html>
 )";

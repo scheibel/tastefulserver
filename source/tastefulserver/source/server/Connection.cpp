@@ -70,6 +70,7 @@ void Connection::setProtocol(Protocol * protocol)
 {
     delete m_protocol;
     m_protocol = protocol;
+    m_protocol->setConnection(this);
 }
 
 void Connection::startUp()

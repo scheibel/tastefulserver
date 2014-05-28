@@ -31,6 +31,7 @@
 #include <tastefulserver/ByteArrayStream.h>
 #include <tastefulserver/WebsocketFrame.h>
 
+#include <QQueue>
 #include <QByteArray>
 #include <array>
 
@@ -43,24 +44,29 @@ public:
 
     void addData(const QByteArray & data);
 
+    bool hasReadyFrames() const;
+    WebsocketFrame popReadyFrame();
 protected:
     enum class State
     {
-        Wait,
         ParseFrameHeader,
         ParseLengthMask,
         ParseExtendedLength,
         ParseMask,
         ParseContent,
         FinishFrame,
-        HandleError
+        HandleError,
+        ContinueLater
     };
 
     ByteArrayStream m_byteStream;
     WebsocketFrame m_currentFrame;
     State m_state;
+    State m_haltedState;
+    QQueue<WebsocketFrame> m_readyFrames;
 
     void parse();
+    State dispatch(State state);
     State parseFrameHeader();
     State parseLengthMask();
     State parseExtendedLength();
@@ -68,26 +74,14 @@ protected:
     State parseContent();
     State finishFrame();
     State handleError();
-
-    union LengthMask {
-        struct {
-            #ifdef LITTLE_ENDIAN
-            unsigned int len : 7;
-            unsigned int mask : 1;
-            #else
-            unsigned int mask : 1;
-            unsigned int len : 7;
-            #endif
-        } data;
-        char raw;
-    };
+    State continueLater();
 
     qint64 length;
-    LengthMask lengthMask;
+    WebsocketFrame::LengthMask lengthMask;
     std::array<char, 4> mask;
 
-    static const unsigned char Next2Bytes;
-    static const unsigned char Next4Bytes;
+    static const unsigned char Length2Bytes;
+    static const unsigned char Length4Bytes;
 };
 
 } // namespace tastefulserver

@@ -35,7 +35,8 @@ namespace tastefulserver {
 class TASTEFULSERVER_API WebsocketFrame
 {
 public:
-    union Header {
+    union Header
+    {
         struct {
             #ifdef LITTLE_ENDIAN
             unsigned int opcode : 4;
@@ -54,7 +55,21 @@ public:
         char raw;
     };
 
-    enum class OpCode : unsigned char {
+    union LengthMask {
+        struct {
+            #ifdef LITTLE_ENDIAN
+            unsigned int len : 7;
+            unsigned int mask : 1;
+            #else
+            unsigned int mask : 1;
+            unsigned int len : 7;
+            #endif
+        } data;
+        char raw;
+    };
+
+    enum class OpCode : unsigned char
+    {
         Continuation = 0x0,
         Text = 0x1,
         Binary = 0x2,
@@ -65,10 +80,13 @@ public:
         // 0xB-0xF are reserved for further control frames
     };
 
-    static WebsocketFrame fromByteArray(const QByteArray & data);
-
+public:
     WebsocketFrame();
     WebsocketFrame(const Header & header);
+    WebsocketFrame(OpCode opCode, bool isFinal = true);
+
+    bool isBad() const;
+    void markBad();
 
     void setHeader(const Header & header);
     const Header & getHeader() const;
@@ -76,9 +94,23 @@ public:
     void setContent(const QByteArray & content);
     const QByteArray & getContent() const;
 
+    void setMask(const std::array<char, 4> & mask);
+    void setMask(int mask);
+    void setRandomMask();
+
     OpCode getOpCode() const;
+    bool isContinuation() const;
+    bool isText() const;
+    bool isBinary() const;
+    bool isConnectionClose() const;
+    bool isPing() const;
+    bool isPong() const;
+
+    QByteArray toByteArray() const;
 protected:
+    bool m_bad;
     Header m_header;
+    std::array<char, 4> m_mask;
     QByteArray m_content;
 };
 

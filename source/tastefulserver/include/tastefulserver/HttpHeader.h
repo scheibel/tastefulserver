@@ -113,6 +113,7 @@ HeaderName SecWebSocketKey = "Sec-WebSocket-Key";
 HeaderName SecWebSocketAccept = "Sec-WebSocket-Accept";
 HeaderName SecWebSocketVersion = "Sec-WebSocket-Version";
 HeaderName SecWebSocketProtocol = "Sec-WebSocket-Protocol";
+HeaderName SecWebSocketExtensions = "Sec-WebSocket-Extensions";
 HeaderName Origin = "Origin";
 }
 
