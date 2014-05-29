@@ -34,6 +34,9 @@
 
 namespace tastefulserver {
 
+const unsigned char WebsocketFrame::Length2Bytes = 126;
+const unsigned char WebsocketFrame::Length4Bytes = 127;
+
 WebsocketFrame::WebsocketFrame()
 : m_masked(false)
 {
@@ -135,67 +138,64 @@ bool WebsocketFrame::isPong() const
     return getOpCode() == OpCode::Pong;
 }
 
+
 QByteArray WebsocketFrame::toByteArray() const
 {
-    //const_cast<WebsocketFrame*>(this)->m_masked = true;
+    int headerLength = 2;
+    qint64 contentLength = m_content.length();
 
     LengthMask lengthMask;
-    lengthMask.data.mask = m_masked ? 1 : 0;
+    lengthMask.raw = 0;
 
-    qint64 length = m_content.length();
-
-    int headerLength = 2;
-
-    if (length < 126)
+    if (contentLength < Length2Bytes)
     {
-        lengthMask.data.len = length;
+        lengthMask.data.len = contentLength;
     }
-    else if (length < std::numeric_limits<qint16>::max())
+    else if (contentLength < std::numeric_limits<qint16>::max())
     {
-        lengthMask.data.len = 126;
-
+        lengthMask.data.len = Length2Bytes;
         headerLength += 2;
     }
     else
     {
-        lengthMask.data.len = 127;
-
+        lengthMask.data.len = Length4Bytes;
         headerLength += 4;
     }
 
-    qint64 totalLength = headerLength+length;
     if (m_masked)
-        totalLength += 4;
+    {
+        lengthMask.data.mask = 1;
+        headerLength += 4;
+    }
+
+    qint64 totalLength = headerLength + contentLength;
+
+    // write data
 
     QByteArray byteArray(totalLength, 0);
 
     byteArray[0] = m_header.raw;
     byteArray[1] = lengthMask.raw;
 
-    if (lengthMask.data.len == 126)
+    if (lengthMask.data.len == Length2Bytes)
     {
-        qint16 len = qToBigEndian(static_cast<qint16>(length));
-
+        qint16 len = qToBigEndian(static_cast<qint16>(contentLength));
         memcpy(&byteArray.data()[2], &len, sizeof((len)));
     }
-    else if (lengthMask.data.len == 127)
+    else if (lengthMask.data.len == Length4Bytes)
     {
-        qint64 len = qToBigEndian(static_cast<qint64>(length));
+        qint64 len = qToBigEndian(static_cast<qint64>(contentLength));
         memcpy(&byteArray.data()[2], &len, sizeof(len));
     }
 
-    int offset = headerLength;
-
     if (m_masked)
     {
-        memcpy(&byteArray.data()[offset], &m_mask, 4);
-
-        offset += 4;
+        memcpy(&byteArray.data()[headerLength-4], &m_mask, 4);
     }
 
-    for (int i = 0; i < length; ++i)
+    for (int i = 0; i < contentLength; ++i)
     {
-        byteArray[i+offset] = (m_content[i] ^ m_mask[i % 4]);
+        byteArray[headerLength + i] = (m_content[i] ^ m_mask[i % 4]);
     }
 
     return byteArray;

@@ -88,9 +88,6 @@ protected:
     qint64 length;
     WebsocketFrame::LengthMask lengthMask;
     std::array<char, 4> mask;
-
-    static const unsigned char Length2Bytes;
-    static const unsigned char Length4Bytes;
 };
 
 } // namespace tastefulserver

@@ -68,6 +68,9 @@ public:
         char raw;
     };
 
+    static const unsigned char Length2Bytes;
+    static const unsigned char Length4Bytes;
+
     enum class OpCode : unsigned char
     {
         Continuation = 0x0,

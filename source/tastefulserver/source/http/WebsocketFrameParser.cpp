@@ -32,9 +32,6 @@
 
 namespace tastefulserver {
 
-const unsigned char WebsocketFrameParser::Length2Bytes = 126;
-const unsigned char WebsocketFrameParser::Length4Bytes = 127;
-
 WebsocketFrameParser::WebsocketFrameParser()
 : m_state(ParseState::Header)
 , m_interruptedState(ParseState::Header)
@@ -43,7 +40,6 @@ WebsocketFrameParser::WebsocketFrameParser()
 
 void WebsocketFrameParser::addData(const QByteArray & data)
 {
-    //m_byteStream.flush();
     m_byteStream.append(data);
 
     parse();
@@ -127,7 +123,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseLengthMask()
 
     lengthMask.raw = m_byteStream.readByte();
 
-    if (lengthMask.data.len < Length2Bytes)
+    if (lengthMask.data.len < WebsocketFrame::Length2Bytes)
     {
         length = lengthMask.data.len;
 
@@ -141,7 +137,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseLengthMask()
 
 WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
 {
-    if (lengthMask.data.len == Length2Bytes)
+    if (lengthMask.data.len == WebsocketFrame::Length2Bytes)
     {
         if (m_byteStream.availableBytes() < 2)
         {
@@ -152,7 +148,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
 
         length = qFromBigEndian(length2Bytes);
     }
-    else if (lengthMask.data.len == Length4Bytes)
+    else if (lengthMask.data.len == WebsocketFrame::Length4Bytes)
     {
         if (m_byteStream.availableBytes() < 4)
         {
@@ -216,8 +212,6 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseContent()
 WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
 {
     pushFrame();
-
-    //assert(m_byteStream.alreadyRead() == m_currentFrame.toByteArray());
 
     m_byteStream.flush();
 
