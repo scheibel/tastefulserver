@@ -95,17 +95,17 @@ public:
     void setContent(const QByteArray & content);
     const QByteArray & getContent() const;
 
+    void append(const QByteArray & data);
+
     void setMask(const std::array<char, 4> & mask);
     void setMask(int mask);
     void setRandomMask();
 
     OpCode getOpCode() const;
-    bool isContinuation() const;
-    bool isText() const;
-    bool isBinary() const;
-    bool isConnectionClose() const;
-    bool isPing() const;
-    bool isPong() const;
+
+    bool isControlFrame() const;
+    bool isFinal() const;
+    bool isContinuationFrame() const;
 
     QByteArray toByteArray() const;
 

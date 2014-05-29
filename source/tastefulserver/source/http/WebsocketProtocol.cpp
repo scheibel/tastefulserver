@@ -38,6 +38,7 @@ const QString WebsocketProtocol::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC8
 
 WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
 : m_handler(handler)
+, m_inFragmentedMode(false)
 {
     connect(&m_parser, &WebsocketFrameParser::badFrame, this, &WebsocketProtocol::badFrame);
 }
@@ -55,7 +56,7 @@ void WebsocketProtocol::handshake(const HttpRequest & request)
     response.setHeader(http::Connection, http::Upgrade);
     response.setHeader(http::SecWebSocketAccept, hashKey(request.getHeader(http::SecWebSocketKey).getValue()));
 
-    //response.addHeader(request.getHeader(http::SecWebSocketProtocol));
+    //response.addHeader(request.getHeader(http::SecWebSocketProtocol)); // sub protocols
 
     sendData(response.toByteArray());
 
@@ -70,11 +71,49 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
     {
         WebsocketFrame frame = m_parser.popReadyFrame();
 
+        if (!frame.isFinal())
+        {
+            if (frame.isControlFrame())
+            {
+                disconnect();
+                break;
+            }
+
+            if (!m_inFragmentedMode)
+            {
+                m_inFragmentedMode = true;
+                m_fragmentedMessage = frame;
+            }
+            else
+            {
+                if (!frame.isContinuationFrame())
+                {
+                    disconnect();
+                    break;
+                }
+
+                m_fragmentedMessage.append(frame.getContent());
+            }
+
+            continue;
+        }
+
+        if (frame.isContinuationFrame())
+        {
+            if (!m_inFragmentedMode)
+            {
+                disconnect();
+                break;
+            }
+
+            m_fragmentedMessage.append(frame.getContent());
+            m_inFragmentedMode = false;
+
+            frame = m_fragmentedMessage;
+        }
+
         switch (frame.getOpCode())
         {
-            case WebsocketFrame::OpCode::Continuation:
-                // ?
-                break;
             case WebsocketFrame::OpCode::Text:
                 m_handler->handleText(this, frame.getContent());
                 break;

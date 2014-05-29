@@ -84,6 +84,11 @@ const QByteArray & WebsocketFrame::getContent() const
     return m_content;
 }
 
+void WebsocketFrame::append(const QByteArray & data)
+{
+    m_content.append(data);
+}
+
 void WebsocketFrame::setMask(const std::array<char, 4> & mask)
 {
     m_masked = true;
@@ -108,36 +113,20 @@ WebsocketFrame::OpCode WebsocketFrame::getOpCode() const
     return static_cast<OpCode>(m_header.data.opcode);
 }
 
-bool WebsocketFrame::isContinuation() const
+bool WebsocketFrame::isControlFrame() const
+{
+    return getOpCode() >= OpCode::ConnectionClose;
+}
+
+bool WebsocketFrame::isFinal() const
+{
+    return m_header.data.fin == 1;
+}
+
+bool WebsocketFrame::isContinuationFrame() const
 {
     return getOpCode() == OpCode::Continuation;
 }
-
-bool WebsocketFrame::isText() const
-{
-    return getOpCode() == OpCode::Text;
-}
-
-bool WebsocketFrame::isBinary() const
-{
-    return getOpCode() == OpCode::Binary;
-}
-
-bool WebsocketFrame::isConnectionClose() const
-{
-    return getOpCode() == OpCode::ConnectionClose;
-}
-
-bool WebsocketFrame::isPing() const
-{
-    return getOpCode() == OpCode::Ping;
-}
-
-bool WebsocketFrame::isPong() const
-{
-    return getOpCode() == OpCode::Pong;
-}
-
 
 QByteArray WebsocketFrame::toByteArray() const
 {

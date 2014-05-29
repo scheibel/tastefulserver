@@ -53,6 +53,8 @@ public:
 protected:
     WebsocketHandler * m_handler;
     WebsocketFrameParser m_parser;
+    WebsocketFrame m_fragmentedMessage;
+    bool m_inFragmentedMode;
 
     virtual void receiveData(const QByteArray & data) override;
 
