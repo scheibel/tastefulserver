@@ -72,8 +72,13 @@ window.onload = function() {
         output("connection error");
     };
 
+    var i = 0;
+
     connection.onmessage = function (e) {
         output(e.data);
+
+        if (i++ > 10)
+            connection.close();
     };
 }
 </script>

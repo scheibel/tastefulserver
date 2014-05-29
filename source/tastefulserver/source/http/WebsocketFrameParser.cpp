@@ -175,9 +175,6 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseMask()
 {
     if (lengthMask.data.mask == 0)
     {
-        mask = { 0, 0, 0, 0 };
-        m_currentFrame.setMask(mask);
-
         return ParseState::Content;
     }
 

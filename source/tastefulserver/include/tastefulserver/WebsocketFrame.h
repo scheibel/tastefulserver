@@ -108,6 +108,7 @@ public:
 
 protected:
     Header m_header;
+    bool m_masked;
     std::array<char, 4> m_mask;
     QByteArray m_content;
 };

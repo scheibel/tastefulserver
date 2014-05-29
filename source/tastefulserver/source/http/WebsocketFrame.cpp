@@ -35,16 +35,19 @@
 namespace tastefulserver {
 
 WebsocketFrame::WebsocketFrame()
+: m_masked(false)
 {
     m_header.raw = 0;
 }
 
 WebsocketFrame::WebsocketFrame(const Header & header)
 : m_header(header)
+, m_masked(false)
 {
 }
 
 WebsocketFrame::WebsocketFrame(OpCode opCode, bool isFinal)
+: m_masked(false)
 {
     m_header.raw = 0;
     m_header.data.opcode = (unsigned int)opCode;
@@ -80,11 +83,15 @@ const QByteArray & WebsocketFrame::getContent() const
 
 void WebsocketFrame::setMask(const std::array<char, 4> & mask)
 {
+    m_masked = true;
+
     m_mask = mask;
 }
 
 void WebsocketFrame::setMask(int mask)
 {
+    m_masked = true;
+
     m_mask = *reinterpret_cast<decltype(m_mask)*>(&mask);
 }
 
@@ -130,8 +137,10 @@ bool WebsocketFrame::isPong() const
 
 QByteArray WebsocketFrame::toByteArray() const
 {
+    //const_cast<WebsocketFrame*>(this)->m_masked = true;
+
     LengthMask lengthMask;
-    lengthMask.data.mask = (m_mask != std::array<char, 4>{{0,0,0,0}});
+    lengthMask.data.mask = m_masked ? 1 : 0;
 
     qint64 length = m_content.length();
 
@@ -154,7 +163,11 @@ QByteArray WebsocketFrame::toByteArray() const
         headerLength += 4;
     }
 
-    QByteArray byteArray(headerLength+4+length, 0);
+    qint64 totalLength = headerLength+length;
+    if (m_masked)
+        totalLength += 4;
+
+    QByteArray byteArray(totalLength, 0);
 
     byteArray[0] = m_header.raw;
     byteArray[1] = lengthMask.raw;
@@ -173,9 +186,12 @@ QByteArray WebsocketFrame::toByteArray() const
 
     int offset = headerLength;
 
-    memcpy(&byteArray.data()[offset], &m_mask, 4);
+    if (m_masked)
+    {
+        memcpy(&byteArray.data()[offset], &m_mask, 4);
 
-    offset += 4;
+        offset += 4;
+    }
 
     for (int i = 0; i < length; ++i)
     {
