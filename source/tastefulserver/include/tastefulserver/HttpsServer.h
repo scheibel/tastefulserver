@@ -39,12 +39,13 @@ class TASTEFULSERVER_API HttpsServer : public HttpServer
 {
 public:
     HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback);
-
+    ~HttpsServer();
 private:
     QSslCertificate m_certificate;
     QSslKey m_privateKey;
+    SslSocketFactory * m_sslSocketFactory;
 
-    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
+    virtual SocketFactory * getSocketFactory() override;
 };
 
 } // namespace tastefulserver

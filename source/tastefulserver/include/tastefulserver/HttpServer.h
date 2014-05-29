@@ -43,12 +43,14 @@ public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
 
     HttpServer(const RequestCallback & callback);
+    ~HttpServer();
 
 protected:
     RequestCallback m_callback;
-    virtual Connection * createConnection() const override;
+    TcpSocketFactory * m_socketFactory;
 
-    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) override;
+    virtual SocketFactory * getSocketFactory() override;
+    virtual Protocol * createProtocol() override;
 
     void requestsReady(HttpProtocol * protocol);
     void framesReady(WebsocketProtocol * protocol);

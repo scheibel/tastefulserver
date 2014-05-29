@@ -43,11 +43,9 @@ class TASTEFULSERVER_API Connection : public Task
     Q_OBJECT
 
 public:
-    Connection();
-    Connection(Protocol * protocol);
+    Connection(qintptr socketDescriptor, SocketFactory * socketFactory);
     ~Connection();
 
-    void setSocketFactory(SocketFactory * socketFactory);
     void setProtocol(Protocol * protocol);
 
     void startUp();
@@ -61,20 +59,19 @@ public:
 
     void send(const QByteArray & data);
     void disconnect();
-private:
-    SocketFactory * m_socketFactory;
-
-    void createSocket();
 
 protected:
-    Protocol * m_protocol;
+    qintptr m_socketDescriptor;
+    SocketFactory * m_socketFactory;
     QAbstractSocket * m_socket;
+    Protocol * m_protocol;
+
+    void createSocket();
 
 private slots:
     void disconnected();
     void readyRead();
     void error(QAbstractSocket::SocketError e);
-
 };
 
 } // namespace tastefulserver

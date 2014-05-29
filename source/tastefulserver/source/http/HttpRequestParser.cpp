@@ -39,6 +39,10 @@ HttpRequestParser::HttpRequestParser()
 {
 }
 
+HttpRequestParser::~HttpRequestParser()
+{
+}
+
 void HttpRequestParser::addData(const QByteArray & data)
 {
     m_byteStream.flush();
@@ -190,9 +194,7 @@ HttpRequestParser::ParseState HttpRequestParser::finishRequest()
 
 HttpRequestParser::ParseState HttpRequestParser::handleError()
 {
-    m_currentRequest.markBad();
-
-    pushRequest();
+    emit(badRequest());
 
     return ParseState::RequestLine;
 }

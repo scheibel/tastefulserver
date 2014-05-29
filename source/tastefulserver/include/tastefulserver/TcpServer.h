@@ -48,8 +48,9 @@ public:
 
 protected:
     virtual void incomingConnection(qintptr socketDescriptor);
-    virtual Connection * createConnection() const = 0;
-    virtual SocketFactory * createSocketFactory(qintptr socketDescriptor) = 0;
+
+    virtual SocketFactory * getSocketFactory() = 0;
+    virtual Protocol * createProtocol() = 0;
 
     static ThreadPool * s_threadPool;
     static int s_serverCount;

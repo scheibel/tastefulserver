@@ -31,19 +31,25 @@
 #include <tastefulserver/ByteStream.h>
 #include <tastefulserver/HttpRequest.h>
 
+#include <QObject>
 #include <QQueue>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpRequestParser
+class TASTEFULSERVER_API HttpRequestParser : public QObject
 {
+    Q_OBJECT
 public:
     HttpRequestParser();
+    virtual ~HttpRequestParser();
 
     void addData(const QByteArray & data);
 
     bool hasReadyRequests() const;
     HttpRequest popReadyRequest();
+
+signals:
+    void badRequest();
 
 protected:
     enum class ParseState

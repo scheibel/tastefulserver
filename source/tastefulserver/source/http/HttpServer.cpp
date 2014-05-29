@@ -31,21 +31,27 @@ namespace tastefulserver {
 
 HttpServer::HttpServer(const RequestCallback & callback)
 : m_callback(callback)
+, m_socketFactory(new TcpSocketFactory)
 {
 }
 
-SocketFactory * HttpServer::createSocketFactory(qintptr socketDescriptor)
+HttpServer::~HttpServer()
 {
-    return new TcpSocketFactory(socketDescriptor);
+    delete m_socketFactory;
 }
 
-Connection * HttpServer::createConnection() const
+SocketFactory * HttpServer::getSocketFactory()
+{
+    return m_socketFactory;
+}
+
+Protocol * HttpServer::createProtocol()
 {
     HttpProtocol * protocol = new HttpProtocol();
 
     connect(protocol, &HttpProtocol::requestsReady, this, &HttpServer::requestsReady, Qt::DirectConnection);
 
-    return new Connection(protocol);
+    return protocol;
 }
 
 void HttpServer::requestsReady(HttpProtocol * protocol)
@@ -75,17 +81,6 @@ void HttpServer::requestsReady(HttpProtocol * protocol)
     }
 }
 
-QString foo(const QByteArray & arr)
-{
-    QString s;
-    for (char c : arr)
-    {
-        s += QString::number((int)(unsigned char)c)+" ";
-    }
-
-    return s;
-}
-
 void HttpServer::framesReady(WebsocketProtocol * protocol)
 {
     while (protocol->hasFrame())
@@ -101,8 +96,6 @@ void HttpServer::framesReady(WebsocketProtocol * protocol)
         WebsocketFrame f(WebsocketFrame::OpCode::Text);
         f.setRandomMask();
         f.setContent("Hello, this is server");
-
-        //qDebug() << foo(f.toByteArray());
 
         protocol->sendFrame(f);
     }

@@ -44,6 +44,7 @@ public:
     Connection * connection();
 
     void disconnect();
+
 protected:
     Connection * m_connection;
 

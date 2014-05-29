@@ -30,14 +30,18 @@ namespace tastefulserver {
 
 HttpsServer::HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback)
 : HttpServer(callback)
-, m_certificate(certificate)
-, m_privateKey(privateKey)
+, m_sslSocketFactory(new SslSocketFactory(certificate, privateKey))
 {
 }
 
-SocketFactory * HttpsServer::createSocketFactory(qintptr socketDescriptor)
+HttpsServer::~HttpsServer()
 {
-    return new SslSocketFactory(socketDescriptor, m_certificate, m_privateKey);
+    delete m_sslSocketFactory;
+}
+
+SocketFactory * HttpsServer::getSocketFactory()
+{
+    return m_sslSocketFactory;
 }
 
 } // namespace tastefulserver

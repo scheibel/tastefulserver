@@ -31,45 +31,25 @@
 
 namespace tastefulserver {
 
-Connection::Connection()
-: m_socketFactory(nullptr)
+Connection::Connection(qintptr socketDescriptor, SocketFactory * socketFactory)
+: m_socketDescriptor(socketDescriptor)
+, m_socketFactory(socketFactory)
+, m_socket(nullptr)
 , m_protocol(nullptr)
-, m_socket(nullptr)
 {
-}
-
-Connection::Connection(Protocol * protocol)
-: m_socketFactory(nullptr)
-, m_protocol(protocol)
-, m_socket(nullptr)
-{
-    m_protocol->setConnection(this);
 }
 
 Connection::~Connection()
 {
     delete m_protocol;
     delete m_socket;
-    delete m_socketFactory;
-}
-
-void Connection::setSocketFactory(SocketFactory * socketFactory)
-{
-    if (m_socket)
-    {
-        qDebug() << "Connection already has a socket.";
-        delete socketFactory;
-        return;
-    }
-
-    delete m_socketFactory;
-    m_socketFactory = socketFactory;
 }
 
 void Connection::setProtocol(Protocol * protocol)
 {
     delete m_protocol;
     m_protocol = protocol;
+
     m_protocol->setConnection(this);
 }
 
@@ -89,7 +69,9 @@ void Connection::startUp()
 
 void Connection::createSocket()
 {
-    m_socket = (*m_socketFactory)();
+    delete m_socket;
+
+    m_socket = (*m_socketFactory)(m_socketDescriptor);
 }
 
 QAbstractSocket & Connection::socket()

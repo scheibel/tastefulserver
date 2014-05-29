@@ -35,40 +35,41 @@ namespace tastefulserver {
 class SocketFactory
 {
 public:
-    SocketFactory(qintptr socketDescriptor);
+    SocketFactory();
     virtual ~SocketFactory();
 
-    virtual QAbstractSocket * operator()() const = 0;
+    virtual QAbstractSocket * operator()(qintptr socketDescriptor) const = 0;
+
     virtual bool isTcp() const;
     virtual bool isSsl() const;
     virtual bool isUdp() const;
-
-protected:
-    qintptr m_socketDescriptor;
 };
 
 class UdpSocketFactory : public SocketFactory
 {
 public:
-    UdpSocketFactory(qintptr socketDescriptor);
-    virtual QAbstractSocket * operator()() const;
-    virtual bool isUdp() const;
+    UdpSocketFactory();
+
+    virtual QAbstractSocket * operator()(qintptr socketDescriptor) const override;
+    virtual bool isUdp() const override;
 };
 
 class TcpSocketFactory : public SocketFactory
 {
 public:
-    TcpSocketFactory(qintptr socketDescriptor);
-    virtual QAbstractSocket * operator()() const;
-    virtual bool isTcp() const;
+    TcpSocketFactory();
+
+    virtual QAbstractSocket * operator()(qintptr socketDescriptor) const override;
+    virtual bool isTcp() const override;
 };
 
 class SslSocketFactory : public TcpSocketFactory
 {
 public:
-    SslSocketFactory(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey);
-    virtual QAbstractSocket * operator()() const;
-    virtual bool isSsl() const;
+    SslSocketFactory(const QSslCertificate & certificate, const QSslKey & privateKey);
+
+    virtual QAbstractSocket * operator()(qintptr socketDescriptor) const override;
+    virtual bool isSsl() const override;
 
 protected:
     QSslCertificate m_certificate;

@@ -58,8 +58,8 @@ void TcpServer::setNumThreads(int numThreads)
 
 void TcpServer::incomingConnection(qintptr socketDescriptor)
 {
-    Connection * connection = createConnection();
-    connection->setSocketFactory(createSocketFactory(socketDescriptor));
+    Connection * connection = new Connection(socketDescriptor, getSocketFactory());
+    connection->setProtocol(createProtocol());
 
     s_threadPool->addTask(connection);
 }

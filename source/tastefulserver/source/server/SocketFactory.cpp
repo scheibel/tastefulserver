@@ -32,8 +32,7 @@
 
 namespace tastefulserver {
 
-SocketFactory::SocketFactory(qintptr socketDescriptor)
-    : m_socketDescriptor(socketDescriptor)
+SocketFactory::SocketFactory()
 {
 }
 
@@ -56,16 +55,15 @@ bool SocketFactory::isUdp() const
     return false;
 }
 
-UdpSocketFactory::UdpSocketFactory(qintptr socketDescriptor)
-    : SocketFactory(socketDescriptor)
+UdpSocketFactory::UdpSocketFactory()
 {
 }
 
-QAbstractSocket * UdpSocketFactory::operator()() const
+QAbstractSocket * UdpSocketFactory::operator()(qintptr socketDescriptor) const
 {
     QUdpSocket * socket = new QUdpSocket();
 
-    socket->setSocketDescriptor(m_socketDescriptor);
+    socket->setSocketDescriptor(socketDescriptor);
 
     return socket;
 }
@@ -75,16 +73,15 @@ bool UdpSocketFactory::isUdp() const
     return true;
 }
 
-TcpSocketFactory::TcpSocketFactory(qintptr socketDescriptor)
-    : SocketFactory(socketDescriptor)
+TcpSocketFactory::TcpSocketFactory()
 {
 }
 
-QAbstractSocket * TcpSocketFactory::operator()() const
+QAbstractSocket * TcpSocketFactory::operator()(qintptr socketDescriptor) const
 {
     QTcpSocket * socket = new QTcpSocket();
 
-    socket->setSocketDescriptor(m_socketDescriptor);
+    socket->setSocketDescriptor(socketDescriptor);
 
     return socket;
 }
@@ -94,18 +91,17 @@ bool TcpSocketFactory::isTcp() const
     return true;
 }
 
-SslSocketFactory::SslSocketFactory(qintptr socketDescriptor, const QSslCertificate & certificate, const QSslKey & privateKey)
-    : TcpSocketFactory(socketDescriptor)
-    , m_certificate(certificate)
-    , m_privateKey(privateKey)
+SslSocketFactory::SslSocketFactory(const QSslCertificate & certificate, const QSslKey & privateKey)
+: m_certificate(certificate)
+, m_privateKey(privateKey)
 {
 }
 
-QAbstractSocket * SslSocketFactory::operator()() const
+QAbstractSocket * SslSocketFactory::operator()(qintptr socketDescriptor) const
 {
     QSslSocket * socket = new QSslSocket();
 
-    socket->setSocketDescriptor(m_socketDescriptor);
+    socket->setSocketDescriptor(socketDescriptor);
 
     socket->setLocalCertificate(m_certificate);
     socket->setPrivateKey(m_privateKey);
