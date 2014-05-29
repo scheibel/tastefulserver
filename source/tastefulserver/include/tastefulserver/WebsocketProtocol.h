@@ -41,12 +41,9 @@ class TASTEFULSERVER_API WebsocketProtocol : public Protocol
 {
     Q_OBJECT
 public:
-    static const QString MagicString;
-    static QString hashKey(const QString & key);
-    static HttpResponse handshake(const HttpRequest & request);
-
-public:
     WebsocketProtocol(WebsocketHandler * handler);
+
+    void handshake(const HttpRequest & request);
 
     void sendText(const QByteArray & text);
     void sendBinary(const QByteArray & binary);
@@ -61,6 +58,9 @@ protected:
 
     void sendFrame(const WebsocketFrame & frame);
     void sendPong();
+
+    static const QString MagicString;
+    static QString hashKey(const QString & key);
 protected slots:
     void badFrame();
 };

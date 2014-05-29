@@ -35,6 +35,8 @@ namespace tastefulserver {
 class TASTEFULSERVER_API WebsocketHandler
 {
 public:
+    virtual void connectionEstablished(WebsocketProtocol * protocol);
+
     virtual void handleText(WebsocketProtocol * protocol, const QByteArray & text) = 0;
     virtual void handleBinary(WebsocketProtocol * protocol, const QByteArray & binary) = 0;
 };

@@ -54,28 +54,22 @@ Protocol * HttpServer::createProtocol()
 
 void HttpServer::handleRequest(HttpProtocol * protocol, const HttpRequest & request)
 {
-    if (request.getHeader(http::Upgrade).getValue() == "websocket")
-    {
-        protocol->send(WebsocketProtocol::handshake(request));
-
-        protocol->connection()->setProtocol(new WebsocketProtocol(this));
-    }
-    else
-    {
-        HttpResponse response = m_callback(request);
-
-        protocol->send(response);
-
-        if (!response.isKeepAlive())
-        {
-            protocol->disconnect();
-        }
-    }
+    protocol->send(m_callback(request));
 }
 
-void HttpServer::handleBadRequest(HttpProtocol * protocol)
+bool HttpServer::handleUpgrade(HttpProtocol * protocol, const HttpRequest & request)
 {
-    protocol->send(HttpResponse(http::BadRequest));
+    if (request.getHeader(http::Upgrade).getValue() == "websocket")
+    {
+        WebsocketProtocol * upgradedProtocol = new WebsocketProtocol(this);
+        protocol->connection()->setProtocol(upgradedProtocol);
+
+        upgradedProtocol->handshake(request);
+
+        return true;
+    }
+
+    return HttpHandler::handleUpgrade(protocol, request);
 }
 
 void HttpServer::handleText(WebsocketProtocol * protocol, const QByteArray & text)
@@ -88,6 +82,21 @@ void HttpServer::handleText(WebsocketProtocol * protocol, const QByteArray & tex
 void HttpServer::handleBinary(WebsocketProtocol * protocol, const QByteArray & binary)
 {
     protocol->sendBinary(binary);
+}
+
+void HttpServer::connectionEstablished(WebsocketProtocol * protocol)
+{
+    QTimer * timer = new QTimer(protocol);
+    timer->setInterval(1000);
+
+    connect(timer, &QTimer::timeout, [protocol]() {
+        QString text = "hallo "+QString::number(qrand());
+
+        qDebug() << "Send:" << text;
+        protocol->sendText(text.toLatin1());
+    });
+
+    timer->start();
 }
 
 } // namespace tastefulserver

@@ -39,6 +39,11 @@ HttpProtocol::HttpProtocol(HttpHandler * handler)
 void HttpProtocol::send(const HttpResponse & response)
 {
     sendData(response.toByteArray());
+
+    if (!response.isKeepAlive())
+    {
+        disconnect();
+    }
 }
 
 void HttpProtocol::disconnect()
@@ -54,6 +59,12 @@ void HttpProtocol::receiveData(const QByteArray & data)
     {
         HttpRequest request = m_parser.popReadyRequest();
         addConnectionInfo(request);
+
+        if (request.hasHeader(http::Upgrade))
+        {
+            if (m_handler->handleUpgrade(this, request))
+                break;
+        }
 
         m_handler->handleRequest(this, request);
     }

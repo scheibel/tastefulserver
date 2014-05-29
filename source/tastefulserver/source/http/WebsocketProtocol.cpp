@@ -35,12 +35,19 @@ namespace tastefulserver {
 
 const QString WebsocketProtocol::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
+
+WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
+: m_handler(handler)
+{
+    connect(&m_parser, &WebsocketFrameParser::badFrame, this, &WebsocketProtocol::badFrame);
+}
+
 QString WebsocketProtocol::hashKey(const QString & key)
 {
     return QCryptographicHash::hash((key + MagicString).toUtf8(), QCryptographicHash::Sha1).toBase64();
 }
 
-HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
+void WebsocketProtocol::handshake(const HttpRequest & request)
 {
     HttpResponse response(http::SwitchingProtocols);
 
@@ -50,15 +57,9 @@ HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
 
     //response.addHeader(request.getHeader(http::SecWebSocketProtocol));
 
-    return response;
-}
+    sendData(response.toByteArray());
 
-
-
-WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
-: m_handler(handler)
-{
-    connect(&m_parser, &WebsocketFrameParser::badFrame, this, &WebsocketProtocol::badFrame);
+    m_handler->connectionEstablished(this);
 }
 
 void WebsocketProtocol::receiveData(const QByteArray & data)

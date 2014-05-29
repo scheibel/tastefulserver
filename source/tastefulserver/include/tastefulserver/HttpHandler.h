@@ -37,7 +37,8 @@ class TASTEFULSERVER_API HttpHandler
 {
 public:
     virtual void handleRequest(HttpProtocol * protocol, const HttpRequest & request) = 0;
-    virtual void handleBadRequest(HttpProtocol * protocol) = 0;
+    virtual void handleBadRequest(HttpProtocol * protocol);
+    virtual bool handleUpgrade(HttpProtocol * protocol, const HttpRequest & request);
 };
 
 } // namespace tastefulserver

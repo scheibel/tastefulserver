@@ -62,6 +62,7 @@ set(sources
 	${source_path}/http/HttpMessage.cpp
 	${source_path}/http/HttpProtocol.cpp
 	${source_path}/http/HttpResponse.cpp
+	${source_path}/http/HttpHandler.cpp
 	${source_path}/http/httpUtil.cpp
 	${source_path}/http/UploadedFile.cpp
 	${source_path}/http/HttpHeader.cpp
@@ -70,6 +71,7 @@ set(sources
 	${source_path}/http/WebsocketProtocol.cpp
 	${source_path}/http/WebsocketFrame.cpp
 	${source_path}/http/WebsocketFrameParser.cpp
+	${source_path}/http/WebsocketHandler.cpp
 	${source_path}/server/SocketFactory.cpp
 	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp

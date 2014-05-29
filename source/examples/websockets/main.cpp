@@ -66,17 +66,13 @@ window.onload = function() {
             binary[i] = i;
         }
         connection.send(binary.buffer);
-
-        connection.send('Ping2');
     };
 
     connection.onerror = function (error) {
-        console.log(error);
-        output("error");
+        output("connection error");
     };
 
     connection.onmessage = function (e) {
-        output("received data");
         output(e.data);
     };
 }
