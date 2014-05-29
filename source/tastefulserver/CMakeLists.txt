@@ -68,10 +68,10 @@ set(sources
 	${source_path}/http/HttpHeader.cpp
 	${source_path}/http/HttpMethod.cpp
 	${source_path}/http/HttpsServer.cpp
-	${source_path}/http/WebsocketProtocol.cpp
-	${source_path}/http/WebsocketFrame.cpp
-	${source_path}/http/WebsocketFrameParser.cpp
-	${source_path}/http/WebsocketHandler.cpp
+	${source_path}/websocket/WebsocketProtocol.cpp
+	${source_path}/websocket/WebsocketFrame.cpp
+	${source_path}/websocket/WebsocketFrameParser.cpp
+	${source_path}/websocket/WebsocketHandler.cpp
 	${source_path}/server/SocketFactory.cpp
 	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp

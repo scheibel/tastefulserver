@@ -124,7 +124,7 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
                 sendPong();
                 break;
             case WebsocketFrame::OpCode::Pong:
-                // stop some timer to disconnect if this doesn't come after a ping?
+                qDebug() << "received pong";
                 break;
             case WebsocketFrame::OpCode::ConnectionClose:
                 sendFrame(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
