@@ -57,8 +57,8 @@ protected:
     virtual void handleRequest(HttpProtocol * protocol, const HttpRequest & request) override;
     virtual void handleBadRequest(HttpProtocol * protocol) override;
 
-    virtual void handleFrame(WebsocketProtocol * protocol, const WebsocketFrame & frame) override;
-    virtual void handleBadFrame(WebsocketProtocol * protocol) override;
+    virtual void handleText(WebsocketProtocol * protocol, const QByteArray & text) override;
+    virtual void handleBinary(WebsocketProtocol * protocol, const QByteArray & binary) override;
 };
 
 } // namespace tastefulserver

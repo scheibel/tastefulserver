@@ -48,19 +48,19 @@ public:
 public:
     WebsocketProtocol(WebsocketHandler * handler);
 
-    void send(const WebsocketFrame & frame);
-
-    void sendText(const QString & text);
+    void sendText(const QByteArray & text);
     void sendBinary(const QByteArray & binary);
     void sendPing();
-    void sendPong();
-    void sendConnectionClose();
+
+    void closeConnection();
 protected:
     WebsocketHandler * m_handler;
     WebsocketFrameParser m_parser;
 
     virtual void receiveData(const QByteArray & data) override;
 
+    void sendFrame(const WebsocketFrame & frame);
+    void sendPong();
 protected slots:
     void badFrame();
 };

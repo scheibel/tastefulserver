@@ -62,7 +62,14 @@ void HttpServer::handleRequest(HttpProtocol * protocol, const HttpRequest & requ
     }
     else
     {
-        protocol->send(m_callback(request));
+        HttpResponse response = m_callback(request);
+
+        protocol->send(response);
+
+        if (!response.isKeepAlive())
+        {
+            protocol->disconnect();
+        }
     }
 }
 
@@ -71,28 +78,16 @@ void HttpServer::handleBadRequest(HttpProtocol * protocol)
     protocol->send(HttpResponse(http::BadRequest));
 }
 
-void HttpServer::handleFrame(WebsocketProtocol * protocol, const WebsocketFrame & frame)
+void HttpServer::handleText(WebsocketProtocol * protocol, const QByteArray & text)
 {
-    if (frame.isText())
-    {
-        //qDebug() << frame.getContent();
-    }
+    protocol->sendText(text);
 
-    protocol->send(frame);
-
-    WebsocketFrame f(WebsocketFrame::OpCode::Text);
-    f.setRandomMask();
-    f.setContent("Hello, this is server");
-
-    protocol->send(f);
-
-    if (!frame.isPong())
-        protocol->sendPing();
+    protocol->sendPing();
 }
 
-void HttpServer::handleBadFrame(WebsocketProtocol * protocol)
+void HttpServer::handleBinary(WebsocketProtocol * protocol, const QByteArray & binary)
 {
-    protocol->disconnect();
+    protocol->sendBinary(binary);
 }
 
 } // namespace tastefulserver

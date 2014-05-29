@@ -53,6 +53,8 @@ HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
     return response;
 }
 
+
+
 WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
 : m_handler(handler)
 {
@@ -65,43 +67,65 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
 
     while (m_parser.hasReadyFrames())
     {
-        m_handler->handleFrame(this, m_parser.popReadyFrame());
+        WebsocketFrame frame = m_parser.popReadyFrame();
+
+        switch (frame.getOpCode())
+        {
+            case WebsocketFrame::OpCode::Continuation:
+                // ?
+                break;
+            case WebsocketFrame::OpCode::Text:
+                m_handler->handleText(this, frame.getContent());
+                break;
+            case WebsocketFrame::OpCode::Binary:
+                m_handler->handleBinary(this, frame.getContent());
+                break;
+            case WebsocketFrame::OpCode::Ping:
+                sendPong();
+                break;
+            case WebsocketFrame::OpCode::ConnectionClose:
+                disconnect();
+                break;
+            default:
+                break;
+        }
     }
 }
 
 void WebsocketProtocol::badFrame()
 {
-    m_handler->handleBadFrame(this);
+    disconnect();
 }
 
-void WebsocketProtocol::send(const WebsocketFrame & frame)
+void WebsocketProtocol::sendFrame(const WebsocketFrame & frame)
 {
     sendData(frame.toByteArray());
 }
 
-void WebsocketProtocol::sendText(const QString & text)
+void WebsocketProtocol::sendText(const QByteArray & text)
 {
-    send(WebsocketFrame(WebsocketFrame::OpCode::Text, text.toLatin1()));
+    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Text, text));
 }
 
 void WebsocketProtocol::sendBinary(const QByteArray & binary)
 {
-    send(WebsocketFrame(WebsocketFrame::OpCode::Binary, binary));
+    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Binary, binary));
 }
 
 void WebsocketProtocol::sendPing()
 {
-    send(WebsocketFrame(WebsocketFrame::OpCode::Ping));
+    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Ping));
 }
 
 void WebsocketProtocol::sendPong()
 {
-    send(WebsocketFrame(WebsocketFrame::OpCode::Pong));
+    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Pong));
 }
 
-void WebsocketProtocol::sendConnectionClose()
+void WebsocketProtocol::closeConnection()
 {
-    send(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
+    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
+    disconnect();
 }
 
 

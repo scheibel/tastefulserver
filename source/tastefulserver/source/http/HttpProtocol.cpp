@@ -41,6 +41,11 @@ void HttpProtocol::send(const HttpResponse & response)
     sendData(response.toByteArray());
 }
 
+void HttpProtocol::disconnect()
+{
+    Protocol::disconnect();
+}
+
 void HttpProtocol::receiveData(const QByteArray & data)
 {
     m_parser.addData(data);

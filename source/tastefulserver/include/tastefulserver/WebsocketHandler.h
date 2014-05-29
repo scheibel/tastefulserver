@@ -35,8 +35,8 @@ namespace tastefulserver {
 class TASTEFULSERVER_API WebsocketHandler
 {
 public:
-    virtual void handleFrame(WebsocketProtocol * protocol, const WebsocketFrame & frame) = 0;
-    virtual void handleBadFrame(WebsocketProtocol * protocol) = 0;
+    virtual void handleText(WebsocketProtocol * protocol, const QByteArray & text) = 0;
+    virtual void handleBinary(WebsocketProtocol * protocol, const QByteArray & binary) = 0;
 };
 
 } // namespace tastefulserver

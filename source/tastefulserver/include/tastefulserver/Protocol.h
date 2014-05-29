@@ -44,14 +44,13 @@ public:
 
     Connection * connection();
 
-    void disconnect();
-
 protected:
     Connection * m_connection;
 
     void setConnection(Connection * connection);
 
     void sendData(const QByteArray & data);
+    void disconnect();
 
     virtual void onDisconnect();
     virtual void onError(QAbstractSocket::SocketError e);

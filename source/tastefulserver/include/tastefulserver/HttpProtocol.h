@@ -42,6 +42,8 @@ public:
     HttpProtocol(HttpHandler * handler);
 
     void send(const HttpResponse & response);
+
+    void disconnect();
 protected:
     virtual void receiveData(const QByteArray & data) override;
 
