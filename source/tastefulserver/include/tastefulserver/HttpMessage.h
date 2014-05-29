@@ -44,17 +44,21 @@ public:
 
     const HttpVersion & getHttpVersion() const;
     HttpVersion & getHttpVersion();
+
     const Cookies & getCookies() const;
     Cookies & getCookies();
     bool hasCookies() const;
 
     const ContentType & getContentType() const;
     ContentType & getContentType();
+
     bool isMultiPart() const;
     const MultiPart & getMultiPart() const;
     MultiPart & getMultiPart();
+
     void keepAlive();
     bool isKeepAlive() const;
+
     int getContentLength() const;
 
 protected:

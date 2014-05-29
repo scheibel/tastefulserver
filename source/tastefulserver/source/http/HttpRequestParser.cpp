@@ -33,43 +33,18 @@
 namespace tastefulserver {
 
 HttpRequestParser::HttpRequestParser()
-: m_byteStream(ByteArrayStream::forLinebreak(http::Linebreak))
-, m_state(State::ParseRequestLine)
+: m_byteStream(ByteStream::forLinebreak(http::Linebreak))
+, m_state(ParseState::RequestLine)
+, m_interruptedState(ParseState::RequestLine)
 {
 }
 
 void HttpRequestParser::addData(const QByteArray & data)
 {
+    m_byteStream.flush();
     m_byteStream.append(data);
 
     parse();
-}
-
-void HttpRequestParser::parse()
-{
-    bool continueReading = true;
-
-    while (continueReading)
-    {
-        switch (m_state)
-        {
-            case State::ParseRequestLine:
-                continueReading = parseRequestLine();
-                break;
-            case State::ParseHeaderLine:
-                continueReading = parseHeaderLine();
-                break;
-            case State::ParseContent:
-                continueReading = parseContent();
-                break;
-            case State::FinishRequest:
-                continueReading = finishRequest();
-                break;
-            case State::HandleError:
-                continueReading = handleError();
-                break;
-        }
-    }
 }
 
 bool HttpRequestParser::hasReadyRequests() const
@@ -85,26 +60,66 @@ HttpRequest HttpRequestParser::popReadyRequest()
     return request;
 }
 
-bool HttpRequestParser::parseRequestLine()
+void HttpRequestParser::pushRequest()
+{
+    m_readyRequests.push_back(m_currentRequest);
+}
+
+void HttpRequestParser::parse()
+{
+    while (true)
+    {
+        ParseState nextState = dispatch(m_state);
+
+        if (nextState == ParseState::Interrupted)
+        {
+            m_interruptedState = m_state;
+            break;
+        }
+
+        m_state = nextState;
+    }
+}
+
+HttpRequestParser::ParseState HttpRequestParser::dispatch(ParseState state)
+{
+    switch (state)
+    {
+        case ParseState::RequestLine:
+            return parseRequestLine();
+        case ParseState::HeaderLine:
+            return parseHeaderLine();
+        case ParseState::Content:
+            return parseContent();
+        case ParseState::Finish:
+            return finishRequest();
+        case ParseState::Error:
+            return handleError();
+        case ParseState::Interrupted:
+            return m_interruptedState;
+        default: // for compiler, cannot happen
+            return ParseState::Error;
+    }
+}
+
+HttpRequestParser::ParseState HttpRequestParser::parseRequestLine()
 {
     if (!m_byteStream.canReadLine())
     {
-        return false;
+        return ParseState::Interrupted;
     }
 
     QString line = m_byteStream.readLine();
 
     if (line.isEmpty())
     {
-        return true;
+        return ParseState::RequestLine;
     }
 
     QStringList parts = line.split(' ');
     if (parts.size()<3)
     {
-        m_state = State::HandleError;
-
-        return true;
+        return ParseState::Error;
     }
 
     HttpMethod method = HttpMethod::fromString(parts[0]);
@@ -112,93 +127,74 @@ bool HttpRequestParser::parseRequestLine()
 
     if (method.isInvalid() || httpVersion.isInvalid())
     {
-        m_state = State::HandleError;
-
-        return true;
+        return ParseState::Error;
     }
 
     QString requestUri = parts[1];
 
     m_currentRequest = HttpRequest(method, requestUri, httpVersion);
 
-    m_state = State::ParseHeaderLine;
-
-    return true;
+    return ParseState::HeaderLine;
 }
 
-bool HttpRequestParser::parseHeaderLine()
+HttpRequestParser::ParseState HttpRequestParser::parseHeaderLine()
 {
     if (!m_byteStream.canReadLine())
     {
-        return false;
+        return ParseState::Interrupted;
     }
 
     QString line = m_byteStream.readLine();
+
     if (line.isEmpty())
     {
-        m_state = m_currentRequest.hasHeader(http::ContentLength) ? State::ParseContent : State::FinishRequest;
-
-        return true;
+        return m_currentRequest.hasHeader(http::ContentLength) ? ParseState::Content : ParseState::Finish;
     }
-    else
+
+    int pos = line.indexOf(": ");
+    if (pos<0)
     {
-        int pos = line.indexOf(": ");
-        if (pos<0)
-        {
-            m_currentRequest.markBad();
-
-            return true;
-        }
-
-        QString fieldName = line.left(pos);
-        QString fieldValue = line.mid(pos + 2);
-        HttpHeader header(fieldName, fieldValue);
-        m_currentRequest.parseHeader(header);
+        return ParseState::Error;
     }
 
-    return true;
+    QString fieldName = line.left(pos);
+    QString fieldValue = line.mid(pos + 2);
+
+    m_currentRequest.addHeader(HttpHeader(fieldName, fieldValue));
+
+    return ParseState::HeaderLine;
 }
 
-bool HttpRequestParser::parseContent()
+HttpRequestParser::ParseState HttpRequestParser::parseContent()
 {
     int length = m_currentRequest.getContentLength();
 
     if (m_byteStream.availableBytes()<length)
     {
-        return false;
+        return ParseState::Interrupted;
     }
-    QByteArray content = m_byteStream.read(length);
-    m_currentRequest.parseContent(content);
-    m_state = State::FinishRequest;
 
-    return true;
+    m_currentRequest.setContent(m_byteStream.read(length));
+
+    return ParseState::Finish;
 }
 
-bool HttpRequestParser::finishRequest()
+HttpRequestParser::ParseState HttpRequestParser::finishRequest()
 {
+    m_currentRequest.finalize();
+
     pushRequest();
 
-    m_state = State::ParseRequestLine;
-
-    m_byteStream.flush();
-
-    return true;
+    return ParseState::RequestLine;
 }
 
-bool HttpRequestParser::handleError()
+HttpRequestParser::ParseState HttpRequestParser::handleError()
 {
     m_currentRequest.markBad();
 
     pushRequest();
 
-    m_state = State::ParseRequestLine;
-
-    return true;
-}
-
-void HttpRequestParser::pushRequest()
-{
-    m_readyRequests.push_back(m_currentRequest);
+    return ParseState::RequestLine;
 }
 
 } // namespace tastefulserver

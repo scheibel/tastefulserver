@@ -101,43 +101,6 @@ QString HttpRequest::getRequestUri() const
     return m_requestUri;
 }
 
-void HttpRequest::parseHeader(const HttpHeader & header)
-{
-    addHeader(header);
-    QString headerName = header.getName();
-    QString value = header.getValue();
-    if (headerName==http::Host)
-    {
-        m_url.setAuthority(value);
-    }
-    else if (headerName==http::Cookie)
-    {
-        m_cookies.parse(value);
-    }
-    else if (headerName==http::ContentType)
-    {
-        m_contentType.parse(value);
-    }
-}
-
-void HttpRequest::parseContent(const QByteArray & content)
-{
-    setContent(content);
-    if (isMultiPart())
-    {
-        m_multiPart = MultiPart(m_contentType);
-        m_multiPart.parse(content);
-        if (m_multiPart.isFormData())
-        {
-            m_requestParams.parseMultiPart(m_multiPart);
-        }
-    }
-    else if (m_contentType.is(ContentType::Application, ContentType::XWWWFormUrlEncoded))
-    {
-        m_requestParams.parseUrlEncoded(content);
-    }
-}
-
 QUrl HttpRequest::getUrl() const
 {
     return m_url;
@@ -168,6 +131,55 @@ QByteArray HttpRequest::toByteArray() const
     stream << HttpMessage::toByteArray();
 
     return byteArray;
+}
+
+void HttpRequest::finalize()
+{
+    interpretHeaders();
+    interpretContent();
+}
+
+void HttpRequest::interpretHeaders()
+{
+    if (hasHeader(http::Host))
+    {
+        m_url.setAuthority(getHeader(http::Host).getValue());
+    }
+
+    if (hasHeader(http::Cookie))
+    {
+        m_cookies.clear();
+
+        for (const HttpHeader & header : getHeaders(http::Cookie))
+        {
+            m_cookies.parse(header.getValue());
+        }
+    }
+
+    if (hasHeader(http::ContentType))
+    {
+        m_contentType.parse(getHeader(http::ContentType).getValue());
+    }
+}
+
+void HttpRequest::interpretContent()
+{
+    if (isMultiPart())
+    {
+        m_multiPart = MultiPart(m_contentType);
+        m_multiPart.parse(getContent());
+
+        if (m_multiPart.isFormData())
+        {
+            m_requestParams.clear();
+            m_requestParams.parseMultiPart(m_multiPart);
+        }
+    }
+    else if (m_contentType.is(ContentType::Application, ContentType::XWWWFormUrlEncoded))
+    {
+        m_requestParams.clear();
+        m_requestParams.parseUrlEncoded(getContent());
+    }
 }
 
 } // namespace tastefulserver

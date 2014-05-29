@@ -50,9 +50,6 @@ public:
 
     bool isXMLHttpRequest() const;
 
-    void parseHeader(const HttpHeader & header);
-    void parseContent(const QByteArray & content);
-
     const QHostAddress & address() const;
     void setAddress(const QHostAddress & address);
 
@@ -64,9 +61,12 @@ public:
     QString getPath() const;
     QString getRequestUri() const;
 
-    RequestParameters&getParameters();
-    const RequestParameters&getParameters() const;
+    RequestParameters & getParameters();
+    const RequestParameters & getParameters() const;
+
     virtual QByteArray toByteArray() const;
+
+    void finalize();
 
 protected:
     QHostAddress m_address;
@@ -76,6 +76,9 @@ protected:
     QString m_requestUri;
     QUrl m_url;
     RequestParameters m_requestParams;
+
+    void interpretHeaders();
+    void interpretContent();
 };
 
 } // namespace tastefulserver

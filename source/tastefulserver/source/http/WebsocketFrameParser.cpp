@@ -35,14 +35,16 @@ const unsigned char WebsocketFrameParser::Length2Bytes = 126;
 const unsigned char WebsocketFrameParser::Length4Bytes = 127;
 
 WebsocketFrameParser::WebsocketFrameParser()
-: m_state(State::ParseFrameHeader)
-, m_haltedState(State::ParseFrameHeader)
+: m_state(ParseState::Header)
+, m_interruptedState(ParseState::Header)
 {
 }
 
 void WebsocketFrameParser::addData(const QByteArray & data)
 {
+    //m_byteStream.flush();
     m_byteStream.append(data);
+
     parse();
 }
 
@@ -58,54 +60,55 @@ WebsocketFrame WebsocketFrameParser::popReadyFrame()
     return frame;
 }
 
+void WebsocketFrameParser::pushFrame()
+{
+    m_readyFrames.push_back(m_currentFrame);
+}
+
 void WebsocketFrameParser::parse()
 {
-    while (!m_byteStream.atEnd())
+    while (true)
     {
-        m_state = dispatch(m_state);
+        ParseState nextState = dispatch(m_state);
 
-        if (m_state == State::ContinueLater)
+        if (nextState == ParseState::Interrupted)
         {
-            m_state = m_haltedState;
+            m_interruptedState = m_state;
 
             break;
         }
+
+        m_state = nextState;
     }
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::dispatch(State state)
+WebsocketFrameParser::ParseState WebsocketFrameParser::dispatch(ParseState state)
 {
     switch (state)
     {
-        case State::ParseFrameHeader:
+        case ParseState::Header:
             return parseFrameHeader();
-        case State::ParseLengthMask:
+        case ParseState::LengthMask:
             return parseLengthMask();
-        case State::ParseExtendedLength:
+        case ParseState::ExtendedLength:
             return parseExtendedLength();
-        case State::ParseMask:
+        case ParseState::Mask:
             return parseMask();
-        case State::ParseContent:
+        case ParseState::Content:
             return parseContent();
-        case State::FinishFrame:
+        case ParseState::Finish:
             return finishFrame();
-        case State::HandleError:
+        case ParseState::Error:
             return handleError();
         default:
-            return State::ContinueLater;
+            return ParseState::Error;
     }
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::continueLater()
-{
-    m_haltedState = m_state;
-    return State::ContinueLater;
-}
-
-WebsocketFrameParser::State WebsocketFrameParser::parseFrameHeader()
+WebsocketFrameParser::ParseState WebsocketFrameParser::parseFrameHeader()
 {
     if (m_byteStream.atEnd())
-        return continueLater();
+        return ParseState::Interrupted;
 
     length = 0;
     WebsocketFrame::Header header;
@@ -113,13 +116,13 @@ WebsocketFrameParser::State WebsocketFrameParser::parseFrameHeader()
 
     m_currentFrame = WebsocketFrame(header);
 
-    return State::ParseLengthMask;
+    return ParseState::LengthMask;
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::parseLengthMask()
+WebsocketFrameParser::ParseState WebsocketFrameParser::parseLengthMask()
 {
     if (m_byteStream.atEnd())
-        return continueLater();
+        return ParseState::Interrupted;
 
     lengthMask.raw = m_byteStream.readByte();
 
@@ -127,21 +130,21 @@ WebsocketFrameParser::State WebsocketFrameParser::parseLengthMask()
     {
         length = lengthMask.data.len;
 
-        return State::ParseMask;
+        return ParseState::Mask;
     }
     else
     {
-        return State::ParseExtendedLength;
+        return ParseState::ExtendedLength;
     }
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::parseExtendedLength()
+WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
 {
     if (lengthMask.data.len == Length2Bytes)
     {
         if (m_byteStream.availableBytes() < 2)
         {
-            return continueLater();
+            return ParseState::Interrupted;
         }
 
         qint16 length2Bytes = *reinterpret_cast<qint16*>(m_byteStream.read(2).data());
@@ -152,7 +155,7 @@ WebsocketFrameParser::State WebsocketFrameParser::parseExtendedLength()
     {
         if (m_byteStream.availableBytes() < 4)
         {
-            return continueLater();
+            return ParseState::Interrupted;
         }
 
         qint64 length4Bytes = *reinterpret_cast<qint64*>(m_byteStream.read(4).data());
@@ -161,38 +164,38 @@ WebsocketFrameParser::State WebsocketFrameParser::parseExtendedLength()
     }
     else
     {
-        return State::HandleError;
+        return ParseState::Error;
     }
 
-    return State::ParseMask;
+    return ParseState::Mask;
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::parseMask()
+WebsocketFrameParser::ParseState WebsocketFrameParser::parseMask()
 {
     if (lengthMask.data.mask == 0)
     {
         mask = { 0, 0, 0, 0 };
         m_currentFrame.setMask(mask);
 
-        return State::ParseContent;
+        return ParseState::Content;
     }
 
     if (m_byteStream.availableBytes() < 4)
     {
-        return continueLater();
+        return ParseState::Interrupted;
     }
 
     mask = *reinterpret_cast<decltype(mask)*>(m_byteStream.read(4).data());
     m_currentFrame.setMask(mask);
 
-    return State::ParseContent;
+    return ParseState::Content;
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::parseContent()
+WebsocketFrameParser::ParseState WebsocketFrameParser::parseContent()
 {
     if (m_byteStream.availableBytes() < length)
     {
-        return continueLater();
+        return ParseState::Interrupted;
     }
 
     QByteArray content = m_byteStream.read(length);
@@ -207,22 +210,32 @@ WebsocketFrameParser::State WebsocketFrameParser::parseContent()
 
     m_currentFrame.setContent(content);
 
-    return State::FinishFrame;
+    return ParseState::Finish;
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::finishFrame()
+WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
 {
-    m_readyFrames.push_back(m_currentFrame);
+    pushFrame();
 
-    return State::ParseFrameHeader;
+    qDebug() << "---";
+
+    qDebug() << "incoming:     " << m_byteStream.alreadyRead().toHex();
+    qDebug() << "after parsing:" << m_currentFrame.toByteArray().toHex();
+
+    qDebug() << "---";
+
+    m_byteStream.flush();
+
+    return ParseState::Header;
 }
 
-WebsocketFrameParser::State WebsocketFrameParser::handleError()
+WebsocketFrameParser::ParseState WebsocketFrameParser::handleError()
 {
     m_currentFrame.markBad();
-    m_readyFrames.push_back(m_currentFrame);
 
-    return State::ParseFrameHeader;
+    pushFrame();
+
+    return ParseState::Header;
 }
 
 } // namespace tastefulserver

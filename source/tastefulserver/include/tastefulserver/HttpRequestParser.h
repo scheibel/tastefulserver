@@ -28,7 +28,7 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/ByteStream.h>
 #include <tastefulserver/HttpRequest.h>
 
 #include <QQueue>
@@ -46,28 +46,32 @@ public:
     HttpRequest popReadyRequest();
 
 protected:
-    enum class State
+    enum class ParseState
     {
-        ParseRequestLine,
-        ParseHeaderLine,
-        ParseContent,
-        FinishRequest,
-        HandleError
+        RequestLine,
+        HeaderLine,
+        Content,
+        Finish,
+        Error,
+        Interrupted
     };
 
     void parse();
 
-    bool parseRequestLine();
-    bool parseHeaderLine();
-    bool parseContent();
-    bool finishRequest();
-    bool handleError();
+    ParseState dispatch(ParseState state);
+
+    ParseState parseRequestLine();
+    ParseState parseHeaderLine();
+    ParseState parseContent();
+    ParseState finishRequest();
+    ParseState handleError();
 
     void pushRequest();
 
-    ByteArrayStream m_byteStream;
+    ByteStream m_byteStream;
     HttpRequest m_currentRequest;
-    State m_state;
+    ParseState m_state;
+    ParseState m_interruptedState;
     QQueue<HttpRequest> m_readyRequests;
 };
 

@@ -24,50 +24,55 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/ByteStream.h>
 
 namespace tastefulserver {
 
-ByteArrayStream::ByteArrayStream(const QString & linebreak)
+ByteStream::ByteStream(const QString & linebreak)
 : m_linebreak(linebreak)
 , m_pos(0)
 {
 }
 
-ByteArrayStream::ByteArrayStream(const QByteArray & bytes, const QString & linebreak)
+ByteStream::ByteStream(const QByteArray & bytes, const QString & linebreak)
 : m_buffer(bytes)
 , m_linebreak(linebreak)
 , m_pos(0)
 {
 }
 
-ByteArrayStream ByteArrayStream::forLinebreak(const QString & linebreak)
+ByteStream ByteStream::forLinebreak(const QString & linebreak)
 {
-    return ByteArrayStream(QByteArray(), linebreak);
+    return ByteStream(QByteArray(), linebreak);
 }
 
-void ByteArrayStream::append(const QByteArray & bytes)
+void ByteStream::append(const QByteArray & bytes)
 {
     m_buffer.append(bytes);
 }
 
-void ByteArrayStream::flush()
+void ByteStream::flush()
 {
     m_buffer = m_buffer.remove(0, m_pos);
     m_pos = 0;
 }
 
-bool ByteArrayStream::canReadLine() const
+QByteArray ByteStream::alreadyRead() const
+{
+    return m_buffer.mid(0, m_pos);
+}
+
+bool ByteStream::canReadLine() const
 {
     return m_buffer.indexOf(m_linebreak, m_pos)>=0;
 }
 
-int ByteArrayStream::availableBytes() const
+int ByteStream::availableBytes() const
 {
     return m_buffer.size() - m_pos;
 }
 
-char ByteArrayStream::readByte()
+char ByteStream::readByte()
 {
     if (atEnd())
         return 0;
@@ -78,7 +83,7 @@ char ByteArrayStream::readByte()
     return c;
 }
 
-QByteArray ByteArrayStream::read(int length)
+QByteArray ByteStream::read(int length)
 {
     if (availableBytes()<length)
     {
@@ -92,7 +97,7 @@ QByteArray ByteArrayStream::read(int length)
     return bytes;
 }
 
-void ByteArrayStream::skip(int length)
+void ByteStream::skip(int length)
 {
     if (availableBytes()<length)
     {
@@ -103,7 +108,7 @@ void ByteArrayStream::skip(int length)
     m_pos += length;
 }
 
-QString ByteArrayStream::readLine()
+QString ByteStream::readLine()
 {
     int p = m_buffer.indexOf(m_linebreak, m_pos);
 
@@ -117,17 +122,17 @@ QString ByteArrayStream::readLine()
     return line;
 }
 
-bool ByteArrayStream::canReadUpTo(const QString & delimiter) const
+bool ByteStream::canReadUpTo(const QString & delimiter) const
 {
     return m_buffer.indexOf(delimiter, m_pos)>=0;
 }
 
-bool ByteArrayStream::canReadUpTo(const QChar & delimiter) const
+bool ByteStream::canReadUpTo(const QChar & delimiter) const
 {
     return m_buffer.indexOf(delimiter, m_pos)>=0;
 }
 
-void ByteArrayStream::skipUpTo(const QString & delimiter)
+void ByteStream::skipUpTo(const QString & delimiter)
 {
     int p = m_buffer.indexOf(delimiter, m_pos);
 
@@ -141,7 +146,7 @@ void ByteArrayStream::skipUpTo(const QString & delimiter)
     }
 }
 
-void ByteArrayStream::skipUpTo(const QChar & delimiter)
+void ByteStream::skipUpTo(const QChar & delimiter)
 {
     int p = m_buffer.indexOf(delimiter, m_pos);
 
@@ -155,19 +160,19 @@ void ByteArrayStream::skipUpTo(const QChar & delimiter)
     }
 }
 
-void ByteArrayStream::skipBehind(const QString & delimiter)
+void ByteStream::skipBehind(const QString & delimiter)
 {
     skipUpTo(delimiter);
     skip(delimiter.size());
 }
 
-void ByteArrayStream::skipBehind(const QChar & delimiter)
+void ByteStream::skipBehind(const QChar & delimiter)
 {
     skipUpTo(delimiter);
     skip(1);
 }
 
-QByteArray ByteArrayStream::readUpTo(const QString & delimiter, bool skipDelimiter)
+QByteArray ByteStream::readUpTo(const QString & delimiter, bool skipDelimiter)
 {
     int p = m_buffer.indexOf(delimiter, m_pos);
 
@@ -185,7 +190,7 @@ QByteArray ByteArrayStream::readUpTo(const QString & delimiter, bool skipDelimit
     return part;
 }
 
-QByteArray ByteArrayStream::readUpTo(const QChar & delimiter, bool skipDelimiter)
+QByteArray ByteStream::readUpTo(const QChar & delimiter, bool skipDelimiter)
 {
     int p = m_buffer.indexOf(delimiter, m_pos);
 
@@ -203,12 +208,12 @@ QByteArray ByteArrayStream::readUpTo(const QChar & delimiter, bool skipDelimiter
     return part;
 }
 
-void ByteArrayStream::skipAll()
+void ByteStream::skipAll()
 {
     m_pos = m_buffer.size();
 }
 
-QByteArray ByteArrayStream::readAll()
+QByteArray ByteStream::readAll()
 {
     QByteArray bytes = m_buffer.mid(m_pos);
 
@@ -217,7 +222,7 @@ QByteArray ByteArrayStream::readAll()
     return bytes;
 }
 
-bool ByteArrayStream::atEnd() const
+bool ByteStream::atEnd() const
 {
     return m_pos == m_buffer.size();
 }

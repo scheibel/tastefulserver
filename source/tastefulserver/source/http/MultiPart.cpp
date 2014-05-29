@@ -28,7 +28,7 @@
 
 #include <tastefulserver/HttpEntity.h>
 #include <tastefulserver/HttpHeader.h>
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/ByteStream.h>
 
 namespace tastefulserver {
 
@@ -97,7 +97,7 @@ void MultiPart::parse(const QByteArray & content)
         return;
     }
     boundary = "--" + boundary;
-    ByteArrayStream stream(content, http::Linebreak);
+    ByteStream stream(content, http::Linebreak);
 
     stream.skipBehind(boundary);
     stream.skip(2);

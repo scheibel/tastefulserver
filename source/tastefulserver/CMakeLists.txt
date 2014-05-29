@@ -49,7 +49,7 @@ set(sources
 	${source_path}/core/ThreadPool.cpp
 	${source_path}/core/ThreadPool.h
 	${source_path}/core/Task.cpp
-	${source_path}/core/ByteArrayStream.cpp
+	${source_path}/core/ByteStream.cpp
 	${source_path}/core/QVariantTree.cpp
 	${source_path}/http/Cookie.cpp
 	${source_path}/http/ContentType.cpp
@@ -78,7 +78,7 @@ set(sources
 )
 
 set(api_includes
-	${include_path}/ByteArrayStream.h
+	${include_path}/ByteStream.h
 	${include_path}/Connection.h
 	${include_path}/ContentType.h
 	${include_path}/Cookie.h

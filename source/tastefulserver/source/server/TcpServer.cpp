@@ -32,6 +32,7 @@ namespace tastefulserver {
 
 ThreadPool * TcpServer::s_threadPool = new ThreadPool();
 int TcpServer::s_serverCount = 0;
+
 TcpServer::TcpServer()
 {
     s_serverCount++;

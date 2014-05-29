@@ -82,7 +82,7 @@ void HttpServer::framesReady(WebsocketProtocol * protocol)
         WebsocketFrame frame = protocol->getNextFrame();
         if (frame.isText())
         {
-            qDebug() << frame.getContent();
+            //qDebug() << frame.getContent();
         }
 
         WebsocketFrame f(WebsocketFrame::OpCode::Text);
@@ -90,7 +90,7 @@ void HttpServer::framesReady(WebsocketProtocol * protocol)
         f.setRandomMask();
         f.setContent("Ping");
 
-        qDebug() << "[ "+f.toByteArray().toHex()+" ]";
+        //qDebug() << "[ "+f.toByteArray().toHex()+" ]";
 
         protocol->sendFrame(f);
     }

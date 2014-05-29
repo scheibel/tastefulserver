@@ -44,6 +44,8 @@ class TASTEFULSERVER_API RequestParameters
 public:
     RequestParameters();
 
+    void clear();
+
     bool contains(const QString & key) const;
     bool containsPath(const QString & path) const;
 

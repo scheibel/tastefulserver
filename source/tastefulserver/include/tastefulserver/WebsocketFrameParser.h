@@ -28,7 +28,7 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/ByteStream.h>
 #include <tastefulserver/WebsocketFrame.h>
 
 #include <QQueue>
@@ -47,34 +47,37 @@ public:
     bool hasReadyFrames() const;
     WebsocketFrame popReadyFrame();
 protected:
-    enum class State
+    enum class ParseState
     {
-        ParseFrameHeader,
-        ParseLengthMask,
-        ParseExtendedLength,
-        ParseMask,
-        ParseContent,
-        FinishFrame,
-        HandleError,
-        ContinueLater
+        Header,
+        LengthMask,
+        ExtendedLength,
+        Mask,
+        Content,
+        Finish,
+        Error,
+        Interrupted
     };
 
-    ByteArrayStream m_byteStream;
+    ByteStream m_byteStream;
     WebsocketFrame m_currentFrame;
-    State m_state;
-    State m_haltedState;
+    ParseState m_state;
+    ParseState m_interruptedState;
     QQueue<WebsocketFrame> m_readyFrames;
 
     void parse();
-    State dispatch(State state);
-    State parseFrameHeader();
-    State parseLengthMask();
-    State parseExtendedLength();
-    State parseMask();
-    State parseContent();
-    State finishFrame();
-    State handleError();
-    State continueLater();
+
+    ParseState dispatch(ParseState state);
+
+    ParseState parseFrameHeader();
+    ParseState parseLengthMask();
+    ParseState parseExtendedLength();
+    ParseState parseMask();
+    ParseState parseContent();
+    ParseState finishFrame();
+    ParseState handleError();
+
+    void pushFrame();
 
     qint64 length;
     WebsocketFrame::LengthMask lengthMask;
