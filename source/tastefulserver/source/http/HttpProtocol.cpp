@@ -33,6 +33,7 @@ namespace tastefulserver {
 HttpProtocol::HttpProtocol(HttpHandler * handler)
 : m_handler(handler)
 {
+    connect(&m_parser, &HttpRequestParser::badRequest, this, &HttpProtocol::badRequest);
 }
 
 void HttpProtocol::send(const HttpResponse & response)
@@ -62,6 +63,11 @@ void HttpProtocol::addConnectionInfo(HttpRequest & request)
 
     request.setAddress(m_connection->socket().peerAddress());
     request.setPort(m_connection->socket().peerPort());
+}
+
+void HttpProtocol::badRequest()
+{
+    m_handler->handleBadRequest(this);
 }
 
 } // namespace tastefulserver

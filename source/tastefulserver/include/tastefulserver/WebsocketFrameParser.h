@@ -31,14 +31,16 @@
 #include <tastefulserver/ByteStream.h>
 #include <tastefulserver/WebsocketFrame.h>
 
+#include <QObject>
 #include <QQueue>
 #include <QByteArray>
 #include <array>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API WebsocketFrameParser
+class TASTEFULSERVER_API WebsocketFrameParser : public QObject
 {
+    Q_OBJECT
 public:
     WebsocketFrameParser();
 
@@ -46,6 +48,10 @@ public:
 
     bool hasReadyFrames() const;
     WebsocketFrame popReadyFrame();
+
+signals:
+    void badFrame();
+
 protected:
     enum class ParseState
     {

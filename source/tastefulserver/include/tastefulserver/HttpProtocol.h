@@ -50,6 +50,9 @@ protected:
     HttpRequest m_request;
 
     void addConnectionInfo(HttpRequest & request);
+
+protected slots:
+    void badRequest();
 };
 
 } // namespace tastefulserver

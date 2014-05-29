@@ -216,19 +216,11 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseContent()
     return ParseState::Finish;
 }
 
-QString readableBytes(const QByteArray & array)
-{
-    QString s;
-    for (char c : array)
-        s+=QString::number((int)(unsigned char)c)+" ";
-    return s;
-}
-
 WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
 {
     pushFrame();
 
-    assert(m_byteStream.alreadyRead() == m_currentFrame.toByteArray());
+    //assert(m_byteStream.alreadyRead() == m_currentFrame.toByteArray());
 
     m_byteStream.flush();
 
@@ -237,7 +229,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
 
 WebsocketFrameParser::ParseState WebsocketFrameParser::handleError()
 {
-    // TODO
+    emit(badFrame());
 
     return ParseState::Header;
 }

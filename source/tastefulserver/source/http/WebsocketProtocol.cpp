@@ -56,6 +56,7 @@ HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
 WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
 : m_handler(handler)
 {
+    connect(&m_parser, &WebsocketFrameParser::badFrame, this, &WebsocketProtocol::badFrame);
 }
 
 void WebsocketProtocol::receiveData(const QByteArray & data)
@@ -66,6 +67,11 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
     {
         m_handler->handleFrame(this, m_parser.popReadyFrame());
     }
+}
+
+void WebsocketProtocol::badFrame()
+{
+    m_handler->handleBadFrame(this);
 }
 
 void WebsocketProtocol::send(const WebsocketFrame & frame)

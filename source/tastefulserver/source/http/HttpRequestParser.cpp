@@ -45,7 +45,6 @@ HttpRequestParser::~HttpRequestParser()
 
 void HttpRequestParser::addData(const QByteArray & data)
 {
-    m_byteStream.flush();
     m_byteStream.append(data);
 
     parse();
@@ -188,6 +187,8 @@ HttpRequestParser::ParseState HttpRequestParser::finishRequest()
     m_currentRequest.finalize();
 
     pushRequest();
+
+    m_byteStream.flush();
 
     return ParseState::RequestLine;
 }

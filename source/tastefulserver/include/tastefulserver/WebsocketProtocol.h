@@ -39,6 +39,7 @@ class WebsocketHandler;
 
 class TASTEFULSERVER_API WebsocketProtocol : public Protocol
 {
+    Q_OBJECT
 public:
     static const QString MagicString;
     static QString hashKey(const QString & key);
@@ -59,6 +60,9 @@ protected:
     WebsocketFrameParser m_parser;
 
     virtual void receiveData(const QByteArray & data) override;
+
+protected slots:
+    void badFrame();
 };
 
 } // namespace tastefulserver
