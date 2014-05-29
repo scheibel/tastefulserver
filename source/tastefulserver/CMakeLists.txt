@@ -85,6 +85,7 @@ set(api_includes
 	${include_path}/HttpEntity.h
 	${include_path}/http.h
 	${include_path}/HttpProtocol.h
+	${include_path}/HttpHandler.h
 	${include_path}/HttpHeader.h
 	${include_path}/HttpMessage.h
 	${include_path}/HttpMethod.h
@@ -104,6 +105,7 @@ set(api_includes
 	${include_path}/TcpServer.h
 	${include_path}/UploadedFile.h
 	${include_path}/WebsocketProtocol.h
+	${include_path}/WebsocketHandler.h
 	${include_path}/WebsocketFrame.h
 	${include_path}/WebsocketFrameParser.h
 	${include_path}/Protocol.h

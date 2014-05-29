@@ -50,7 +50,7 @@ Connection * Protocol::connection()
     return m_connection;
 }
 
-void Protocol::send(const QByteArray & data)
+void Protocol::sendData(const QByteArray & data)
 {
     m_connection->send(data);
 }

@@ -28,7 +28,8 @@
 
 #include <QCryptographicHash>
 
-#include <tastefulserver/HttpHeader.h>
+#include <tastefulserver/WebsocketHandler.h>
+
 
 namespace tastefulserver {
 
@@ -52,38 +53,24 @@ HttpResponse WebsocketProtocol::handshake(const HttpRequest & request)
     return response;
 }
 
-WebsocketProtocol::WebsocketProtocol()
+WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
+: m_handler(handler)
 {
 }
 
-void WebsocketProtocol::receive(const QByteArray & data)
+void WebsocketProtocol::receiveData(const QByteArray & data)
 {
     m_parser.addData(data);
 
-    if (hasFrame())
+    while (m_parser.hasReadyFrames())
     {
-        emit(framesReady(this));
+        m_handler->handleFrame(this, m_parser.popReadyFrame());
     }
 }
 
-void WebsocketProtocol::sendFrame(const WebsocketFrame & frame)
+void WebsocketProtocol::send(const WebsocketFrame & frame)
 {
-    send(frame.toByteArray());
-}
-
-bool WebsocketProtocol::hasFrame() const
-{
-    return m_parser.hasReadyFrames();
-}
-
-WebsocketFrame WebsocketProtocol::getNextFrame()
-{
-    if (!hasFrame())
-    {
-        return WebsocketFrame();
-    }
-
-    return m_parser.popReadyFrame();
+    sendData(frame.toByteArray());
 }
 
 

@@ -35,27 +35,25 @@
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API WebsocketProtocol : public QObject, public Protocol
-{
-    Q_OBJECT
-public:
-    WebsocketProtocol();
+class WebsocketHandler;
 
+class TASTEFULSERVER_API WebsocketProtocol : public Protocol
+{
+public:
     static const QString MagicString;
     static QString hashKey(const QString & key);
     static HttpResponse handshake(const HttpRequest & request);
 
-    bool hasFrame() const;
-    WebsocketFrame getNextFrame();
+public:
+    WebsocketProtocol(WebsocketHandler * handler);
 
-    void sendFrame(const WebsocketFrame & frame);
-signals:
-    void framesReady(WebsocketProtocol * protocol);
+    void send(const WebsocketFrame & frame);
 
 protected:
+    WebsocketHandler * m_handler;
     WebsocketFrameParser m_parser;
 
-    virtual void receive(const QByteArray & data) override;
+    virtual void receiveData(const QByteArray & data) override;
 };
 
 } // namespace tastefulserver

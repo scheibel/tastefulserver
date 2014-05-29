@@ -31,13 +31,13 @@
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
-#include <tastefulserver/HttpProtocol.h>
-#include <tastefulserver/WebsocketProtocol.h>
-#include <tastefulserver/http.h>
+#include <tastefulserver/Protocol.h>
+#include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/WebsocketHandler.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpServer : public TcpServer
+class TASTEFULSERVER_API HttpServer : public TcpServer, public HttpHandler, public WebsocketHandler
 {
 public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
@@ -52,8 +52,13 @@ protected:
     virtual SocketFactory * getSocketFactory() override;
     virtual Protocol * createProtocol() override;
 
-    void requestsReady(HttpProtocol * protocol);
-    void framesReady(WebsocketProtocol * protocol);
+    // --- handling ---
+
+    virtual void handleRequest(HttpProtocol * protocol, const HttpRequest & request) override;
+    virtual void handleBadRequest(HttpProtocol * protocol) override;
+
+    virtual void handleFrame(WebsocketProtocol * protocol, const WebsocketFrame & frame) override;
+    virtual void handleBadFrame(WebsocketProtocol * protocol) override;
 };
 
 } // namespace tastefulserver

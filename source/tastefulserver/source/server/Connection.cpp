@@ -47,9 +47,12 @@ Connection::~Connection()
 
 void Connection::setProtocol(Protocol * protocol)
 {
-    delete m_protocol;
-    m_protocol = protocol;
+    if (m_protocol)
+    {
+        m_protocol->deleteLater();
+    }
 
+    m_protocol = protocol;
     m_protocol->setConnection(this);
 }
 
@@ -113,7 +116,7 @@ void Connection::readyRead()
 {
     if (m_protocol)
     {
-        m_protocol->receive(m_socket->readAll());
+        m_protocol->receiveData(m_socket->readAll());
     }
 }
 

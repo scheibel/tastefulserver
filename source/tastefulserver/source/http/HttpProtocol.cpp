@@ -26,50 +26,42 @@
 
 #include <tastefulserver/HttpProtocol.h>
 #include <tastefulserver/Connection.h>
-
-#include <tastefulserver/HttpHeader.h>
+#include <tastefulserver/HttpHandler.h>
 
 namespace tastefulserver {
 
-HttpProtocol::HttpProtocol()
+HttpProtocol::HttpProtocol(HttpHandler * handler)
+: m_handler(handler)
 {
 }
 
-void HttpProtocol::sendResponse(const HttpResponse & response)
+void HttpProtocol::send(const HttpResponse & response)
 {
-    send(response.toByteArray());
+    sendData(response.toByteArray());
 }
 
-bool HttpProtocol::hasRequest() const
+void HttpProtocol::receiveData(const QByteArray & data)
 {
-    return m_parser.hasReadyRequests();
+    m_parser.addData(data);
+
+    while (m_parser.hasReadyRequests())
+    {
+        HttpRequest request = m_parser.popReadyRequest();
+        addConnectionInfo(request);
+
+        m_handler->handleRequest(this, request);
+    }
 }
 
-HttpRequest HttpProtocol::getNextRequest()
+void HttpProtocol::addConnectionInfo(HttpRequest & request)
 {
-    if (!hasRequest())
-        return HttpRequest();
-
-    HttpRequest request = m_parser.popReadyRequest();
-
     if (m_connection->isSslConnection())
     {
         request.setHttps(true);
     }
+
     request.setAddress(m_connection->socket().peerAddress());
     request.setPort(m_connection->socket().peerPort());
-
-    return request;
-}
-
-void HttpProtocol::receive(const QByteArray & data)
-{
-    m_parser.addData(data);
-
-    if (hasRequest())
-    {
-        emit(requestsReady(this));
-    }
 }
 
 } // namespace tastefulserver

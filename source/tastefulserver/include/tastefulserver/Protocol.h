@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QAbstractSocket>
 
 #include <tastefulserver/tastefulserver_api.h>
@@ -34,7 +35,7 @@ namespace tastefulserver {
 
 class Connection;
 
-class TASTEFULSERVER_API Protocol
+class TASTEFULSERVER_API Protocol : public QObject
 {
     friend class Connection;
 public:
@@ -50,11 +51,11 @@ protected:
 
     void setConnection(Connection * connection);
 
-    void send(const QByteArray & data);
+    void sendData(const QByteArray & data);
 
     virtual void onDisconnect();
     virtual void onError(QAbstractSocket::SocketError e);
-    virtual void receive(const QByteArray & data) = 0;
+    virtual void receiveData(const QByteArray & data) = 0;
 };
 
 } // namespace tastefulserver

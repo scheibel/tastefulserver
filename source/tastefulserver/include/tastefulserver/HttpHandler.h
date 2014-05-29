@@ -28,28 +28,16 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/Protocol.h>
-#include <tastefulserver/HttpRequestParser.h>
+#include <tastefulserver/HttpProtocol.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-class HttpHandler;
-
-class TASTEFULSERVER_API HttpProtocol : public Protocol
+class TASTEFULSERVER_API HttpHandler
 {
 public:
-    HttpProtocol(HttpHandler * handler);
-
-    void send(const HttpResponse & response);
-protected:
-    virtual void receiveData(const QByteArray & data) override;
-
-    HttpHandler * m_handler;
-    HttpRequestParser m_parser;
-    HttpRequest m_request;
-
-    void addConnectionInfo(HttpRequest & request);
+    virtual void handleRequest(HttpProtocol * protocol, const HttpRequest & request) = 0;
+    virtual void handleBadRequest(HttpProtocol * protocol) = 0;
 };
 
 } // namespace tastefulserver

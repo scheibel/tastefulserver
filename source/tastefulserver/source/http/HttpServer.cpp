@@ -47,58 +47,47 @@ SocketFactory * HttpServer::getSocketFactory()
 
 Protocol * HttpServer::createProtocol()
 {
-    HttpProtocol * protocol = new HttpProtocol();
-
-    connect(protocol, &HttpProtocol::requestsReady, this, &HttpServer::requestsReady, Qt::DirectConnection);
-
-    return protocol;
+    return new HttpProtocol(this);
 }
 
-void HttpServer::requestsReady(HttpProtocol * protocol)
+void HttpServer::handleRequest(HttpProtocol * protocol, const HttpRequest & request)
 {
-    while (protocol->hasRequest())
+    if (request.getHeader(http::Upgrade).getValue() == "websocket")
     {
-        HttpRequest request = protocol->getNextRequest();
+        protocol->send(WebsocketProtocol::handshake(request));
 
-        if (request.isBad())
-        {
-            HttpResponse response(http::BadRequest);
-
-            protocol->sendResponse(response);
-        }
-        else if (request.getHeader(http::Upgrade).getValue() == "websocket")
-        {
-            protocol->sendResponse(WebsocketProtocol::handshake(request));
-            WebsocketProtocol * p = new WebsocketProtocol();
-            connect(p, &WebsocketProtocol::framesReady, this, &HttpServer::framesReady, Qt::DirectConnection);
-            protocol->connection()->setProtocol(p);
-            break;
-        }
-        else
-        {
-            protocol->sendResponse(m_callback(request));
-        }
+        protocol->connection()->setProtocol(new WebsocketProtocol(this));
+    }
+    else
+    {
+        protocol->send(m_callback(request));
     }
 }
 
-void HttpServer::framesReady(WebsocketProtocol * protocol)
+void HttpServer::handleBadRequest(HttpProtocol * protocol)
 {
-    while (protocol->hasFrame())
+    protocol->send(HttpResponse(http::BadRequest));
+}
+
+void HttpServer::handleFrame(WebsocketProtocol * protocol, const WebsocketFrame & frame)
+{
+    if (frame.isText())
     {
-        WebsocketFrame frame = protocol->getNextFrame();
-        if (frame.isText())
-        {
-            //qDebug() << frame.getContent();
-        }
-
-        protocol->sendFrame(frame);
-
-        WebsocketFrame f(WebsocketFrame::OpCode::Text);
-        f.setRandomMask();
-        f.setContent("Hello, this is server");
-
-        protocol->sendFrame(f);
+        //qDebug() << frame.getContent();
     }
+
+    protocol->send(frame);
+
+    WebsocketFrame f(WebsocketFrame::OpCode::Text);
+    f.setRandomMask();
+    f.setContent("Hello, this is server");
+
+    protocol->send(f);
+}
+
+void HttpServer::handleBadFrame(WebsocketProtocol * protocol)
+{
+    protocol->disconnect();
 }
 
 } // namespace tastefulserver
