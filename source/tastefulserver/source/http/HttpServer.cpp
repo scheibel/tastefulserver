@@ -75,6 +75,17 @@ void HttpServer::requestsReady(HttpProtocol * protocol)
     }
 }
 
+QString foo(const QByteArray & arr)
+{
+    QString s;
+    for (char c : arr)
+    {
+        s += QString::number((int)(unsigned char)c)+" ";
+    }
+
+    return s;
+}
+
 void HttpServer::framesReady(WebsocketProtocol * protocol)
 {
     while (protocol->hasFrame())
@@ -85,12 +96,13 @@ void HttpServer::framesReady(WebsocketProtocol * protocol)
             //qDebug() << frame.getContent();
         }
 
+        protocol->sendFrame(frame);
+
         WebsocketFrame f(WebsocketFrame::OpCode::Text);
-
         f.setRandomMask();
-        f.setContent("Ping");
+        f.setContent("Hello, this is server");
 
-        //qDebug() << "[ "+f.toByteArray().toHex()+" ]";
+        //qDebug() << foo(f.toByteArray());
 
         protocol->sendFrame(f);
     }

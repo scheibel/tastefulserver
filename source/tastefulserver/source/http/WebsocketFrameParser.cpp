@@ -28,6 +28,7 @@
 
 #include <QtEndian>
 #include <QDebug>
+#include <cassert>
 
 namespace tastefulserver {
 
@@ -185,7 +186,9 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseMask()
         return ParseState::Interrupted;
     }
 
-    mask = *reinterpret_cast<decltype(mask)*>(m_byteStream.read(4).data());
+    QByteArray raw_mask = m_byteStream.read(4);
+
+    mask = *reinterpret_cast<decltype(mask)*>(raw_mask.data());
     m_currentFrame.setMask(mask);
 
     return ParseState::Content;
@@ -217,12 +220,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
 {
     pushFrame();
 
-    qDebug() << "---";
-
-    qDebug() << "incoming:     " << m_byteStream.alreadyRead().toHex();
-    qDebug() << "after parsing:" << m_currentFrame.toByteArray().toHex();
-
-    qDebug() << "---";
+    assert(m_byteStream.alreadyRead() == m_currentFrame.toByteArray());
 
     m_byteStream.flush();
 

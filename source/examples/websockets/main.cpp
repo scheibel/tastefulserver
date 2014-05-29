@@ -51,7 +51,7 @@ window.onload = function() {
 
     connection.onopen = function () {
         connection.send('Ping');
-        /*var arr = "";
+        var arr = "";
         for (var i = 0; i<300; ++i)
         {
             arr += i.toString()+",";
@@ -67,7 +67,7 @@ window.onload = function() {
         }
         connection.send(binary.buffer);
 
-        connection.send('Ping2');*/
+        connection.send('Ping2');
     };
 
     connection.onerror = function (error) {

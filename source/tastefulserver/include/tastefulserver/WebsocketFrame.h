@@ -40,10 +40,10 @@ public:
         struct {
             #ifdef LITTLE_ENDIAN
             unsigned int opcode : 4;
-            unsigned int fin : 1;
-            unsigned int reserved1 : 1;
-            unsigned int reserved2 : 1;
             unsigned int reserved3 : 1;
+            unsigned int reserved2 : 1;
+            unsigned int reserved1 : 1;
+            unsigned int fin : 1;
             #else
             unsigned int fin : 1;
             unsigned int reserved1 : 1;
@@ -107,7 +107,8 @@ public:
     bool isPong() const;
 
     QByteArray toByteArray() const;
-protected:
+
+//protected:
     bool m_bad;
     Header m_header;
     std::array<char, 4> m_mask;

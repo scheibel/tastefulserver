@@ -26,10 +26,11 @@
 
 #include <tastefulserver/WebsocketFrame.h>
 
-#include <QTextStream>
+#include <QDataStream>
 #include <QtEndian>
 
 #include <limits>
+#include <cstring>
 
 namespace tastefulserver {
 
@@ -135,37 +136,56 @@ bool WebsocketFrame::isPong() const
 
 QByteArray WebsocketFrame::toByteArray() const
 {
-    QByteArray byteArray;
-    QTextStream stream(&byteArray);
-
-    stream << m_header.raw;
-
     LengthMask lengthMask;
     lengthMask.data.mask = 1;
 
     qint64 length = m_content.length();
 
+    int headerLength = 2;
+
     if (length < 126)
     {
         lengthMask.data.len = length;
-        stream << lengthMask.raw;
     }
     else if (length < std::numeric_limits<qint16>::max())
     {
         lengthMask.data.len = 126;
-        stream << lengthMask.raw << qToBigEndian(static_cast<qint16>(length));
+
+        headerLength += 2;
     }
     else
     {
         lengthMask.data.len = 127;
-        stream << lengthMask.raw << qToBigEndian(static_cast<qint64>(length));
+
+        headerLength += 4;
     }
 
-    stream << m_mask[0] << m_mask[1] << m_mask[2] << m_mask[3];
+    QByteArray byteArray(headerLength+length, 0);
+
+    byteArray[0] = m_header.raw;
+    byteArray[1] = lengthMask.raw;
+
+    if (lengthMask.data.len == 126)
+    {
+        qint16 len = qToBigEndian(static_cast<qint16>(length));
+
+        memcpy(&byteArray.data()[2], &len, sizeof((len)));
+    }
+    else if (lengthMask.data.len == 127)
+    {
+        qint64 len = qToBigEndian(static_cast<qint64>(length));
+        memcpy(&byteArray.data()[2], &len, sizeof(len));
+    }
+
+    int offset = headerLength;
+
+    memcpy(&byteArray.data()[offset], &m_mask, 4);
+
+    offset += 4;
 
     for (int i = 0; i < length; ++i)
     {
-        stream << (m_content[i] ^ m_mask[i % 4]);
+        byteArray[i+offset] = (m_content[i] ^ m_mask[i % 4]);
     }
 
     return byteArray;
