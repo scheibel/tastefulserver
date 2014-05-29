@@ -73,5 +73,30 @@ void WebsocketProtocol::send(const WebsocketFrame & frame)
     sendData(frame.toByteArray());
 }
 
+void WebsocketProtocol::sendText(const QString & text)
+{
+    send(WebsocketFrame(WebsocketFrame::OpCode::Text, text.toLatin1()));
+}
+
+void WebsocketProtocol::sendBinary(const QByteArray & binary)
+{
+    send(WebsocketFrame(WebsocketFrame::OpCode::Binary, binary));
+}
+
+void WebsocketProtocol::sendPing()
+{
+    send(WebsocketFrame(WebsocketFrame::OpCode::Ping));
+}
+
+void WebsocketProtocol::sendPong()
+{
+    send(WebsocketFrame(WebsocketFrame::OpCode::Pong));
+}
+
+void WebsocketProtocol::sendConnectionClose()
+{
+    send(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
+}
+
 
 } // namespace tastefulserver

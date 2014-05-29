@@ -31,14 +31,12 @@
 namespace tastefulserver {
 
 HttpRequest::HttpRequest()
-: m_bad(true)
-, m_port(0)
+: m_port(0)
 {
 }
 
 HttpRequest::HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion)
 : HttpMessage(httpVersion)
-, m_bad(false)
 , m_port(0)
 , m_method(method)
 , m_requestUri(requestUri)
@@ -49,16 +47,6 @@ HttpRequest::HttpRequest(const HttpMethod & method, const QString & requestUri, 
         m_url.setScheme("http");
     }
     m_requestParams.parseUrl(m_url);
-}
-
-bool HttpRequest::isBad() const
-{
-    return m_bad;
-}
-
-void HttpRequest::markBad()
-{
-    m_bad = true;
 }
 
 void HttpRequest::setHttps(bool isHttps)

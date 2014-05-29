@@ -49,6 +49,11 @@ public:
 
     void send(const WebsocketFrame & frame);
 
+    void sendText(const QString & text);
+    void sendBinary(const QByteArray & binary);
+    void sendPing();
+    void sendPong();
+    void sendConnectionClose();
 protected:
     WebsocketHandler * m_handler;
     WebsocketFrameParser m_parser;

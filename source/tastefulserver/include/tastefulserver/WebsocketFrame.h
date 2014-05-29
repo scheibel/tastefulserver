@@ -84,9 +84,7 @@ public:
     WebsocketFrame();
     WebsocketFrame(const Header & header);
     WebsocketFrame(OpCode opCode, bool isFinal = true);
-
-    bool isBad() const;
-    void markBad();
+    WebsocketFrame(OpCode opCode, const QByteArray & content);
 
     void setHeader(const Header & header);
     const Header & getHeader() const;
@@ -108,8 +106,7 @@ public:
 
     QByteArray toByteArray() const;
 
-//protected:
-    bool m_bad;
+protected:
     Header m_header;
     std::array<char, 4> m_mask;
     QByteArray m_content;

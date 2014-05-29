@@ -35,33 +35,27 @@
 namespace tastefulserver {
 
 WebsocketFrame::WebsocketFrame()
-: m_bad(true)
 {
     m_header.raw = 0;
 }
 
 WebsocketFrame::WebsocketFrame(const Header & header)
-: m_bad(false)
-, m_header(header)
+: m_header(header)
 {
 }
 
 WebsocketFrame::WebsocketFrame(OpCode opCode, bool isFinal)
-: m_bad(false)
 {
     m_header.raw = 0;
     m_header.data.opcode = (unsigned int)opCode;
     m_header.data.fin = isFinal ? 1 : 0;
 }
 
-bool WebsocketFrame::isBad() const
+WebsocketFrame::WebsocketFrame(OpCode opCode, const QByteArray & content)
+: WebsocketFrame(opCode, true)
 {
-    return m_bad;
-}
-
-void WebsocketFrame::markBad()
-{
-    m_bad = true;
+    setContent(content);
+    setRandomMask();
 }
 
 void WebsocketFrame::setHeader(const Header & header)
@@ -137,7 +131,7 @@ bool WebsocketFrame::isPong() const
 QByteArray WebsocketFrame::toByteArray() const
 {
     LengthMask lengthMask;
-    lengthMask.data.mask = 1;
+    lengthMask.data.mask = (m_mask != std::array<char, 4>{{0,0,0,0}});
 
     qint64 length = m_content.length();
 
@@ -160,7 +154,7 @@ QByteArray WebsocketFrame::toByteArray() const
         headerLength += 4;
     }
 
-    QByteArray byteArray(headerLength+length, 0);
+    QByteArray byteArray(headerLength+4+length, 0);
 
     byteArray[0] = m_header.raw;
     byteArray[1] = lengthMask.raw;

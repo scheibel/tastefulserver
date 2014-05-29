@@ -27,6 +27,8 @@
 #include <tastefulserver/HttpServer.h>
 #include <tastefulserver/WebsocketProtocol.h>
 
+#include <QTimer>
+
 namespace tastefulserver {
 
 HttpServer::HttpServer(const RequestCallback & callback)
@@ -83,6 +85,9 @@ void HttpServer::handleFrame(WebsocketProtocol * protocol, const WebsocketFrame 
     f.setContent("Hello, this is server");
 
     protocol->send(f);
+
+    if (!frame.isPong())
+        protocol->sendPing();
 }
 
 void HttpServer::handleBadFrame(WebsocketProtocol * protocol)

@@ -43,9 +43,6 @@ public:
     HttpRequest();
     HttpRequest(const HttpMethod & method, const QString & requestUri, const HttpVersion & httpVersion);
 
-    bool isBad() const;
-    void markBad();
-
     void setHttps(bool isHttps);
 
     bool isXMLHttpRequest() const;
@@ -70,7 +67,6 @@ public:
 
 protected:
     QHostAddress m_address;
-    bool m_bad;
     unsigned m_port;
     HttpMethod m_method;
     QString m_requestUri;
