@@ -134,7 +134,6 @@ QByteArray WebSocketFrame::toByteArray() const
     qint64 contentLength = m_content.length();
 
     LengthMask lengthMask;
-    lengthMask.raw = 0;
 
     if (contentLength < Length2Bytes)
     {
@@ -155,6 +154,10 @@ QByteArray WebSocketFrame::toByteArray() const
     {
         lengthMask.data.mask = 1;
         headerLength += 4;
+    }
+    else
+    {
+        lengthMask.data.mask = 0;
     }
 
     qint64 totalLength = headerLength + contentLength;
@@ -180,11 +183,18 @@ QByteArray WebSocketFrame::toByteArray() const
     if (m_masked)
     {
         memcpy(&byteArray.data()[headerLength-4], &m_mask, 4);
-    }
 
-    for (int i = 0; i < contentLength; ++i)
+        for (int i = 0; i < contentLength; ++i)
+        {
+            byteArray[headerLength + i] = (m_content[i] ^ m_mask[i % 4]);
+        }
+    }
+    else
     {
-        byteArray[headerLength + i] = (m_content[i] ^ m_mask[i % 4]);
+        for (int i = 0; i < contentLength; ++i)
+        {
+            byteArray[headerLength + i] = m_content[i];
+        }
     }
 
     return byteArray;
