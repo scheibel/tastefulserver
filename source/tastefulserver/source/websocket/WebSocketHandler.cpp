@@ -24,21 +24,13 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/WebSocketHandler.h>
 
-#include <tastefulserver/tastefulserver_api.h>
-
-#include <tastefulserver/WebsocketProtocol.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API WebsocketHandler
+void WebSocketHandler::connectionEstablished(WebSocket * )
 {
-public:
-    virtual void connectionEstablished(WebsocketProtocol * protocol);
-
-    virtual void handleText(WebsocketProtocol * protocol, const QByteArray & text) = 0;
-    virtual void handleBinary(WebsocketProtocol * protocol, const QByteArray & binary) = 0;
-};
+}
 
 } // namespace tastefulserver

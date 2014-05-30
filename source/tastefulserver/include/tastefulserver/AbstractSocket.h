@@ -35,12 +35,12 @@ namespace tastefulserver {
 
 class Connection;
 
-class TASTEFULSERVER_API Protocol : public QObject
+class TASTEFULSERVER_API AbstractSocket : public QObject
 {
     friend class Connection;
 public:
-    Protocol();
-    virtual ~Protocol();
+    AbstractSocket();
+    virtual ~AbstractSocket();
 
     Connection * connection();
 

@@ -32,7 +32,7 @@
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API WebsocketFrame
+class TASTEFULSERVER_API WebSocketFrame
 {
 public:
     union Header
@@ -84,10 +84,10 @@ public:
     };
 
 public:
-    WebsocketFrame();
-    WebsocketFrame(const Header & header);
-    WebsocketFrame(OpCode opCode, bool isFinal = true);
-    WebsocketFrame(OpCode opCode, const QByteArray & content);
+    WebSocketFrame();
+    WebSocketFrame(const Header & header);
+    WebSocketFrame(OpCode opCode, bool isFinal = true);
+    WebSocketFrame(OpCode opCode, const QByteArray & content);
 
     void setHeader(const Header & header);
     const Header & getHeader() const;

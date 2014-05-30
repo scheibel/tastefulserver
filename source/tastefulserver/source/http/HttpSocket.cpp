@@ -24,19 +24,19 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/HttpProtocol.h>
+#include <tastefulserver/HttpSocket.h>
 #include <tastefulserver/Connection.h>
-#include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/HttpSocketHandler.h>
 
 namespace tastefulserver {
 
-HttpProtocol::HttpProtocol(HttpHandler * handler)
+HttpSocket::HttpSocket(HttpSocketHandler * handler)
 : m_handler(handler)
 {
-    connect(&m_parser, &HttpRequestParser::badRequest, this, &HttpProtocol::badRequest);
+    connect(&m_parser, &HttpRequestParser::badRequest, this, &HttpSocket::badRequest);
 }
 
-void HttpProtocol::send(const HttpResponse & response)
+void HttpSocket::send(const HttpResponse & response)
 {
     sendData(response.toByteArray());
 
@@ -46,12 +46,12 @@ void HttpProtocol::send(const HttpResponse & response)
     }
 }
 
-void HttpProtocol::disconnect()
+void HttpSocket::disconnect()
 {
-    Protocol::disconnect();
+    AbstractSocket::disconnect();
 }
 
-void HttpProtocol::receiveData(const QByteArray & data)
+void HttpSocket::receiveData(const QByteArray & data)
 {
     m_parser.addData(data);
 
@@ -70,7 +70,7 @@ void HttpProtocol::receiveData(const QByteArray & data)
     }
 }
 
-void HttpProtocol::addConnectionInfo(HttpRequest & request)
+void HttpSocket::addConnectionInfo(HttpRequest & request)
 {
     if (m_connection->isSslConnection())
     {
@@ -81,7 +81,7 @@ void HttpProtocol::addConnectionInfo(HttpRequest & request)
     request.setPort(m_connection->socket().peerPort());
 }
 
-void HttpProtocol::badRequest()
+void HttpSocket::badRequest()
 {
     m_handler->handleBadRequest(this);
 }

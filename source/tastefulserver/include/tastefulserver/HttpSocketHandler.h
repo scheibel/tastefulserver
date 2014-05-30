@@ -28,43 +28,17 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/Protocol.h>
-#include <tastefulserver/WebsocketFrame.h>
-#include <tastefulserver/WebsocketFrameParser.h>
+#include <tastefulserver/HttpSocket.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-class WebsocketHandler;
-
-class TASTEFULSERVER_API WebsocketProtocol : public Protocol
+class TASTEFULSERVER_API HttpSocketHandler
 {
-    Q_OBJECT
 public:
-    WebsocketProtocol(WebsocketHandler * handler);
-
-    void handshake(const HttpRequest & request);
-
-    void sendText(const QByteArray & text);
-    void sendBinary(const QByteArray & binary);
-    void sendPing();
-
-    void closeConnection();
-protected:
-    WebsocketHandler * m_handler;
-    WebsocketFrameParser m_parser;
-    WebsocketFrame m_fragmentedMessage;
-    bool m_inFragmentedMode;
-
-    virtual void receiveData(const QByteArray & data) override;
-
-    void sendFrame(const WebsocketFrame & frame);
-    void sendPong();
-
-    static const QString MagicString;
-    static QString hashKey(const QString & key);
-protected slots:
-    void badFrame();
+    virtual void handleRequest(HttpSocket * socket, const HttpRequest & request) = 0;
+    virtual void handleBadRequest(HttpSocket * socket);
+    virtual bool handleUpgrade(HttpSocket * socket, const HttpRequest & request);
 };
 
 } // namespace tastefulserver

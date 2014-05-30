@@ -24,23 +24,52 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/AbstractSocket.h>
+#include <tastefulserver/Connection.h>
 
-#include <tastefulserver/HttpProtocol.h>
-#include <tastefulserver/http.h>
+#include <QDebug>
 
 namespace tastefulserver {
 
-
-void HttpHandler::handleBadRequest(HttpProtocol * protocol)
+AbstractSocket::AbstractSocket()
+: m_connection(nullptr)
 {
-    protocol->send(HttpResponse(http::BadRequest));
 }
 
-bool HttpHandler::handleUpgrade(HttpProtocol * protocol, const HttpRequest &)
+AbstractSocket::~AbstractSocket()
 {
-    protocol->send(HttpResponse(http::NotImplemented));
-    return false;
+}
+
+void AbstractSocket::setConnection(Connection * connection)
+{
+    m_connection = connection;
+}
+
+Connection * AbstractSocket::connection()
+{
+    return m_connection;
+}
+
+void AbstractSocket::sendData(const QByteArray & data)
+{
+    m_connection->send(data);
+}
+
+void AbstractSocket::onError(QAbstractSocket::SocketError e)
+{
+    if (e != QAbstractSocket::RemoteHostClosedError)
+    {
+        qDebug() << "Socket error: " << m_connection->socket().errorString();
+    }
+}
+
+void AbstractSocket::disconnect()
+{
+    m_connection->disconnect();
+}
+
+void AbstractSocket::onDisconnect()
+{
 }
 
 } // namespace tastefulserver

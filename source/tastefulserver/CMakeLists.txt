@@ -60,22 +60,22 @@ set(sources
 	${source_path}/http/HttpEntity.cpp
 	${source_path}/http/HttpServer.cpp
 	${source_path}/http/HttpMessage.cpp
-	${source_path}/http/HttpProtocol.cpp
+	${source_path}/http/HttpSocket.cpp
 	${source_path}/http/HttpResponse.cpp
-	${source_path}/http/HttpHandler.cpp
+	${source_path}/http/HttpSocketHandler.cpp
 	${source_path}/http/httpUtil.cpp
 	${source_path}/http/UploadedFile.cpp
 	${source_path}/http/HttpHeader.cpp
 	${source_path}/http/HttpMethod.cpp
 	${source_path}/http/HttpsServer.cpp
-	${source_path}/websocket/WebsocketProtocol.cpp
-	${source_path}/websocket/WebsocketFrame.cpp
-	${source_path}/websocket/WebsocketFrameParser.cpp
-	${source_path}/websocket/WebsocketHandler.cpp
+	${source_path}/websocket/WebSocket.cpp
+	${source_path}/websocket/WebSocketFrame.cpp
+	${source_path}/websocket/WebSocketFrameParser.cpp
+	${source_path}/websocket/WebSocketHandler.cpp
 	${source_path}/server/SocketFactory.cpp
 	${source_path}/server/Connection.cpp
 	${source_path}/server/TcpServer.cpp
-	${source_path}/server/Protocol.cpp
+	${source_path}/server/AbstractSocket.cpp
 	${source_path}/http/HttpRequestParser.cpp
 )
 
@@ -86,8 +86,8 @@ set(api_includes
 	${include_path}/Cookie.h
 	${include_path}/HttpEntity.h
 	${include_path}/http.h
-	${include_path}/HttpProtocol.h
-	${include_path}/HttpHandler.h
+	${include_path}/HttpSocket.h
+	${include_path}/HttpSocketHandler.h
 	${include_path}/HttpHeader.h
 	${include_path}/HttpMessage.h
 	${include_path}/HttpMethod.h
@@ -106,11 +106,11 @@ set(api_includes
 	${include_path}/Task.h
 	${include_path}/TcpServer.h
 	${include_path}/UploadedFile.h
-	${include_path}/WebsocketProtocol.h
-	${include_path}/WebsocketHandler.h
-	${include_path}/WebsocketFrame.h
-	${include_path}/WebsocketFrameParser.h
-	${include_path}/Protocol.h
+	${include_path}/WebSocket.h
+	${include_path}/WebSocketHandler.h
+	${include_path}/WebSocketFrame.h
+	${include_path}/WebSocketFrameParser.h
+	${include_path}/AbstractSocket.h
 	${include_path}/SocketFactory.h
 )
 

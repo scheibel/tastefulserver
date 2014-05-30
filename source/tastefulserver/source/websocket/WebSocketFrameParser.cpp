@@ -24,7 +24,7 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/WebsocketFrameParser.h>
+#include <tastefulserver/WebSocketFrameParser.h>
 
 #include <QtEndian>
 #include <QDebug>
@@ -32,37 +32,37 @@
 
 namespace tastefulserver {
 
-WebsocketFrameParser::WebsocketFrameParser()
+WebSocketFrameParser::WebSocketFrameParser()
 : m_state(ParseState::Header)
 , m_interruptedState(ParseState::Header)
 {
 }
 
-void WebsocketFrameParser::addData(const QByteArray & data)
+void WebSocketFrameParser::addData(const QByteArray & data)
 {
     m_byteStream.append(data);
 
     parse();
 }
 
-bool WebsocketFrameParser::hasReadyFrames() const
+bool WebSocketFrameParser::hasReadyFrames() const
 {
     return !m_readyFrames.empty();
 }
 
-WebsocketFrame WebsocketFrameParser::popReadyFrame()
+WebSocketFrame WebSocketFrameParser::popReadyFrame()
 {
-    WebsocketFrame frame = m_readyFrames.back();
+    WebSocketFrame frame = m_readyFrames.back();
     m_readyFrames.pop_back();
     return frame;
 }
 
-void WebsocketFrameParser::pushFrame()
+void WebSocketFrameParser::pushFrame()
 {
     m_readyFrames.push_back(m_currentFrame);
 }
 
-void WebsocketFrameParser::parse()
+void WebSocketFrameParser::parse()
 {
     while (true)
     {
@@ -79,7 +79,7 @@ void WebsocketFrameParser::parse()
     }
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::dispatch(ParseState state)
+WebSocketFrameParser::ParseState WebSocketFrameParser::dispatch(ParseState state)
 {
     switch (state)
     {
@@ -102,28 +102,28 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::dispatch(ParseState state
     }
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::parseFrameHeader()
+WebSocketFrameParser::ParseState WebSocketFrameParser::parseFrameHeader()
 {
     if (m_byteStream.atEnd())
         return ParseState::Interrupted;
 
     length = 0;
-    WebsocketFrame::Header header;
+    WebSocketFrame::Header header;
     header.raw = m_byteStream.readByte();
 
-    m_currentFrame = WebsocketFrame(header);
+    m_currentFrame = WebSocketFrame(header);
 
     return ParseState::LengthMask;
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::parseLengthMask()
+WebSocketFrameParser::ParseState WebSocketFrameParser::parseLengthMask()
 {
     if (m_byteStream.atEnd())
         return ParseState::Interrupted;
 
     lengthMask.raw = m_byteStream.readByte();
 
-    if (lengthMask.data.len < WebsocketFrame::Length2Bytes)
+    if (lengthMask.data.len < WebSocketFrame::Length2Bytes)
     {
         length = lengthMask.data.len;
 
@@ -135,9 +135,9 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseLengthMask()
     }
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
+WebSocketFrameParser::ParseState WebSocketFrameParser::parseExtendedLength()
 {
-    if (lengthMask.data.len == WebsocketFrame::Length2Bytes)
+    if (lengthMask.data.len == WebSocketFrame::Length2Bytes)
     {
         if (m_byteStream.availableBytes() < 2)
         {
@@ -148,7 +148,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
 
         length = qFromBigEndian(length2Bytes);
     }
-    else if (lengthMask.data.len == WebsocketFrame::Length4Bytes)
+    else if (lengthMask.data.len == WebSocketFrame::Length4Bytes)
     {
         if (m_byteStream.availableBytes() < 4)
         {
@@ -167,7 +167,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseExtendedLength()
     return ParseState::Mask;
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::parseMask()
+WebSocketFrameParser::ParseState WebSocketFrameParser::parseMask()
 {
     if (lengthMask.data.mask == 0)
     {
@@ -187,7 +187,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseMask()
     return ParseState::Content;
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::parseContent()
+WebSocketFrameParser::ParseState WebSocketFrameParser::parseContent()
 {
     if (m_byteStream.availableBytes() < length)
     {
@@ -209,7 +209,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::parseContent()
     return ParseState::Finish;
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
+WebSocketFrameParser::ParseState WebSocketFrameParser::finishFrame()
 {
     pushFrame();
 
@@ -218,7 +218,7 @@ WebsocketFrameParser::ParseState WebsocketFrameParser::finishFrame()
     return ParseState::Header;
 }
 
-WebsocketFrameParser::ParseState WebsocketFrameParser::handleError()
+WebSocketFrameParser::ParseState WebSocketFrameParser::handleError()
 {
     emit(badFrame());
 

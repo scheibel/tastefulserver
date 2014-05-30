@@ -36,7 +36,7 @@
 namespace tastefulserver {
 
 class SocketFactory;
-class Protocol;
+class AbstractSocket;
 
 class TASTEFULSERVER_API Connection : public Task
 {
@@ -46,7 +46,7 @@ public:
     Connection(qintptr socketDescriptor, SocketFactory * socketFactory);
     ~Connection();
 
-    void setProtocol(Protocol * protocol);
+    void setProtocol(AbstractSocket * protocol);
 
     void startUp();
 
@@ -64,7 +64,7 @@ protected:
     qintptr m_socketDescriptor;
     SocketFactory * m_socketFactory;
     QAbstractSocket * m_socket;
-    Protocol * m_protocol;
+    AbstractSocket * m_protocol;
 
     void createSocket();
 

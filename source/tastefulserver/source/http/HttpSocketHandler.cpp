@@ -24,37 +24,23 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/HttpSocketHandler.h>
 
-#include <tastefulserver/tastefulserver_api.h>
-
-#include <tastefulserver/Protocol.h>
-#include <tastefulserver/HttpRequestParser.h>
+#include <tastefulserver/HttpSocket.h>
 #include <tastefulserver/http.h>
 
 namespace tastefulserver {
 
-class HttpHandler;
 
-class TASTEFULSERVER_API HttpProtocol : public Protocol
+void HttpSocketHandler::handleBadRequest(HttpSocket * socket)
 {
-public:
-    HttpProtocol(HttpHandler * handler);
+    socket->send(HttpResponse(http::BadRequest));
+}
 
-    void send(const HttpResponse & response);
-
-    void disconnect();
-protected:
-    virtual void receiveData(const QByteArray & data) override;
-
-    HttpHandler * m_handler;
-    HttpRequestParser m_parser;
-    HttpRequest m_request;
-
-    void addConnectionInfo(HttpRequest & request);
-
-protected slots:
-    void badRequest();
-};
+bool HttpSocketHandler::handleUpgrade(HttpSocket * socket, const HttpRequest &)
+{
+    socket->send(HttpResponse(http::NotImplemented));
+    return false;
+}
 
 } // namespace tastefulserver

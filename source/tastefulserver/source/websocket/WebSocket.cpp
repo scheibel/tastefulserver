@@ -24,31 +24,31 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/WebsocketProtocol.h>
+#include <tastefulserver/WebSocket.h>
 
 #include <QCryptographicHash>
 
-#include <tastefulserver/WebsocketHandler.h>
+#include <tastefulserver/WebSocketHandler.h>
 
 
 namespace tastefulserver {
 
-const QString WebsocketProtocol::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+const QString WebSocket::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
 
-WebsocketProtocol::WebsocketProtocol(WebsocketHandler * handler)
+WebSocket::WebSocket(WebSocketHandler * handler)
 : m_handler(handler)
 , m_inFragmentedMode(false)
 {
-    connect(&m_parser, &WebsocketFrameParser::badFrame, this, &WebsocketProtocol::badFrame);
+    connect(&m_parser, &WebSocketFrameParser::badFrame, this, &WebSocket::badFrame);
 }
 
-QString WebsocketProtocol::hashKey(const QString & key)
+QString WebSocket::hashKey(const QString & key)
 {
     return QCryptographicHash::hash((key + MagicString).toUtf8(), QCryptographicHash::Sha1).toBase64();
 }
 
-void WebsocketProtocol::handshake(const HttpRequest & request)
+void WebSocket::handshake(const HttpRequest & request)
 {
     HttpResponse response(http::SwitchingProtocols);
 
@@ -56,20 +56,20 @@ void WebsocketProtocol::handshake(const HttpRequest & request)
     response.setHeader(http::Connection, http::Upgrade);
     response.setHeader(http::SecWebSocketAccept, hashKey(request.getHeader(http::SecWebSocketKey).getValue()));
 
-    //response.addHeader(request.getHeader(http::SecWebSocketProtocol)); // sub protocols
+    //response.addHeader(request.getHeader(http::SecWebSocket)); // sub protocols
 
     sendData(response.toByteArray());
 
     m_handler->connectionEstablished(this);
 }
 
-void WebsocketProtocol::receiveData(const QByteArray & data)
+void WebSocket::receiveData(const QByteArray & data)
 {
     m_parser.addData(data);
 
     while (m_parser.hasReadyFrames())
     {
-        WebsocketFrame frame = m_parser.popReadyFrame();
+        WebSocketFrame frame = m_parser.popReadyFrame();
 
         if (!frame.isFinal())
         {
@@ -114,20 +114,20 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
 
         switch (frame.getOpCode())
         {
-            case WebsocketFrame::OpCode::Text:
+            case WebSocketFrame::OpCode::Text:
                 m_handler->handleText(this, frame.getContent());
                 break;
-            case WebsocketFrame::OpCode::Binary:
+            case WebSocketFrame::OpCode::Binary:
                 m_handler->handleBinary(this, frame.getContent());
                 break;
-            case WebsocketFrame::OpCode::Ping:
+            case WebSocketFrame::OpCode::Ping:
                 sendPong();
                 break;
-            case WebsocketFrame::OpCode::Pong:
+            case WebSocketFrame::OpCode::Pong:
                 qDebug() << "received pong";
                 break;
-            case WebsocketFrame::OpCode::ConnectionClose:
-                sendFrame(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
+            case WebSocketFrame::OpCode::ConnectionClose:
+                sendFrame(WebSocketFrame(WebSocketFrame::OpCode::ConnectionClose));
                 disconnect();
                 break;
             default:
@@ -136,39 +136,39 @@ void WebsocketProtocol::receiveData(const QByteArray & data)
     }
 }
 
-void WebsocketProtocol::badFrame()
+void WebSocket::badFrame()
 {
     disconnect();
 }
 
-void WebsocketProtocol::sendFrame(const WebsocketFrame & frame)
+void WebSocket::sendFrame(const WebSocketFrame & frame)
 {
     sendData(frame.toByteArray());
 }
 
-void WebsocketProtocol::sendText(const QByteArray & text)
+void WebSocket::sendText(const QByteArray & text)
 {
-    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Text, text));
+    sendFrame(WebSocketFrame(WebSocketFrame::OpCode::Text, text));
 }
 
-void WebsocketProtocol::sendBinary(const QByteArray & binary)
+void WebSocket::sendBinary(const QByteArray & binary)
 {
-    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Binary, binary));
+    sendFrame(WebSocketFrame(WebSocketFrame::OpCode::Binary, binary));
 }
 
-void WebsocketProtocol::sendPing()
+void WebSocket::sendPing()
 {
-    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Ping));
+    sendFrame(WebSocketFrame(WebSocketFrame::OpCode::Ping));
 }
 
-void WebsocketProtocol::sendPong()
+void WebSocket::sendPong()
 {
-    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::Pong));
+    sendFrame(WebSocketFrame(WebSocketFrame::OpCode::Pong));
 }
 
-void WebsocketProtocol::closeConnection()
+void WebSocket::closeConnection()
 {
-    sendFrame(WebsocketFrame(WebsocketFrame::OpCode::ConnectionClose));
+    sendFrame(WebSocketFrame(WebSocketFrame::OpCode::ConnectionClose));
     disconnect();
 }
 

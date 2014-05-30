@@ -24,52 +24,21 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/Protocol.h>
-#include <tastefulserver/Connection.h>
+#pragma once
 
-#include <QDebug>
+#include <tastefulserver/tastefulserver_api.h>
+
+#include <tastefulserver/WebSocket.h>
 
 namespace tastefulserver {
 
-Protocol::Protocol()
-: m_connection(nullptr)
+class TASTEFULSERVER_API WebSocketHandler
 {
-}
+public:
+    virtual void connectionEstablished(WebSocket * socket);
 
-Protocol::~Protocol()
-{
-}
-
-void Protocol::setConnection(Connection * connection)
-{
-    m_connection = connection;
-}
-
-Connection * Protocol::connection()
-{
-    return m_connection;
-}
-
-void Protocol::sendData(const QByteArray & data)
-{
-    m_connection->send(data);
-}
-
-void Protocol::onError(QAbstractSocket::SocketError e)
-{
-    if (e != QAbstractSocket::RemoteHostClosedError)
-    {
-        qDebug() << "Socket error: " << m_connection->socket().errorString();
-    }
-}
-
-void Protocol::disconnect()
-{
-    m_connection->disconnect();
-}
-
-void Protocol::onDisconnect()
-{
-}
+    virtual void handleText(WebSocket * socket, const QByteArray & text) = 0;
+    virtual void handleBinary(WebSocket * socket, const QByteArray & binary) = 0;
+};
 
 } // namespace tastefulserver

@@ -50,7 +50,7 @@ protected:
     virtual void incomingConnection(qintptr socketDescriptor);
 
     virtual SocketFactory * getSocketFactory() = 0;
-    virtual Protocol * createProtocol() = 0;
+    virtual AbstractSocket * createProtocol() = 0;
 
     static ThreadPool * s_threadPool;
     static int s_serverCount;

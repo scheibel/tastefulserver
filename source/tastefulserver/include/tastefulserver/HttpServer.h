@@ -31,13 +31,13 @@
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
-#include <tastefulserver/Protocol.h>
-#include <tastefulserver/HttpHandler.h>
-#include <tastefulserver/WebsocketHandler.h>
+#include <tastefulserver/AbstractSocket.h>
+#include <tastefulserver/HttpSocketHandler.h>
+#include <tastefulserver/WebSocketHandler.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpServer : public TcpServer, public HttpHandler, public WebsocketHandler
+class TASTEFULSERVER_API HttpServer : public TcpServer, public HttpSocketHandler, public WebSocketHandler
 {
 public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
@@ -50,16 +50,16 @@ protected:
     TcpSocketFactory * m_socketFactory;
 
     virtual SocketFactory * getSocketFactory() override;
-    virtual Protocol * createProtocol() override;
+    virtual AbstractSocket * createProtocol() override;
 
     // --- handling ---
 
-    virtual void handleRequest(HttpProtocol * protocol, const HttpRequest & request) override;
-    virtual bool handleUpgrade(HttpProtocol * protocol, const HttpRequest & request) override;
+    virtual void handleRequest(HttpSocket * socket, const HttpRequest & request) override;
+    virtual bool handleUpgrade(HttpSocket * socket, const HttpRequest & request) override;
 
-    virtual void handleText(WebsocketProtocol * protocol, const QByteArray & text) override;
-    virtual void handleBinary(WebsocketProtocol * protocol, const QByteArray & binary) override;
-    virtual void connectionEstablished(WebsocketProtocol * protocol) override;
+    virtual void handleText(WebSocket * socket, const QByteArray & text) override;
+    virtual void handleBinary(WebSocket * socket, const QByteArray & binary) override;
+    virtual void connectionEstablished(WebSocket * socket) override;
 };
 
 } // namespace tastefulserver

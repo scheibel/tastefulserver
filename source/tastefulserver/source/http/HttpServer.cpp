@@ -25,7 +25,7 @@
  **/
 
 #include <tastefulserver/HttpServer.h>
-#include <tastefulserver/WebsocketProtocol.h>
+#include <tastefulserver/WebSocket.h>
 
 #include <QTimer>
 
@@ -47,53 +47,53 @@ SocketFactory * HttpServer::getSocketFactory()
     return m_socketFactory;
 }
 
-Protocol * HttpServer::createProtocol()
+AbstractSocket * HttpServer::createProtocol()
 {
-    return new HttpProtocol(this);
+    return new HttpSocket(this);
 }
 
-void HttpServer::handleRequest(HttpProtocol * protocol, const HttpRequest & request)
+void HttpServer::handleRequest(HttpSocket * socket, const HttpRequest & request)
 {
-    protocol->send(m_callback(request));
+    socket->send(m_callback(request));
 }
 
-bool HttpServer::handleUpgrade(HttpProtocol * protocol, const HttpRequest & request)
+bool HttpServer::handleUpgrade(HttpSocket * socket, const HttpRequest & request)
 {
     if (request.getHeader(http::Upgrade).getValue() == "websocket")
     {
-        WebsocketProtocol * upgradedProtocol = new WebsocketProtocol(this);
-        protocol->connection()->setProtocol(upgradedProtocol);
+        WebSocket * upgradedsocket = new WebSocket(this);
+        socket->connection()->setProtocol(upgradedsocket);
 
-        upgradedProtocol->handshake(request);
+        upgradedsocket->handshake(request);
 
         return true;
     }
 
-    return HttpHandler::handleUpgrade(protocol, request);
+    return HttpSocketHandler::handleUpgrade(socket, request);
 }
 
-void HttpServer::handleText(WebsocketProtocol * protocol, const QByteArray & text)
+void HttpServer::handleText(WebSocket * socket, const QByteArray & text)
 {
-    protocol->sendText(text);
+    socket->sendText(text);
 
-    protocol->sendPing();
+    socket->sendPing();
 }
 
-void HttpServer::handleBinary(WebsocketProtocol * protocol, const QByteArray & binary)
+void HttpServer::handleBinary(WebSocket * socket, const QByteArray & binary)
 {
-    protocol->sendBinary(binary);
+    socket->sendBinary(binary);
 }
 
-void HttpServer::connectionEstablished(WebsocketProtocol * protocol)
+void HttpServer::connectionEstablished(WebSocket * socket)
 {
-    QTimer * timer = new QTimer(protocol);
+    QTimer * timer = new QTimer(socket);
     timer->setInterval(1000);
 
-    connect(timer, &QTimer::timeout, [protocol]() {
+    connect(timer, &QTimer::timeout, [socket]() {
         QString text = "hallo "+QString::number(qrand());
 
         qDebug() << "Send:" << text;
-        protocol->sendText(text.toLatin1());
+        socket->sendText(text.toLatin1());
     });
 
     timer->start();

@@ -24,7 +24,7 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#include <tastefulserver/WebsocketFrame.h>
+#include <tastefulserver/WebSocketFrame.h>
 
 #include <QDataStream>
 #include <QtEndian>
@@ -34,22 +34,22 @@
 
 namespace tastefulserver {
 
-const unsigned char WebsocketFrame::Length2Bytes = 126;
-const unsigned char WebsocketFrame::Length4Bytes = 127;
+const unsigned char WebSocketFrame::Length2Bytes = 126;
+const unsigned char WebSocketFrame::Length4Bytes = 127;
 
-WebsocketFrame::WebsocketFrame()
+WebSocketFrame::WebSocketFrame()
 : m_masked(false)
 {
     m_header.raw = 0;
 }
 
-WebsocketFrame::WebsocketFrame(const Header & header)
+WebSocketFrame::WebSocketFrame(const Header & header)
 : m_header(header)
 , m_masked(false)
 {
 }
 
-WebsocketFrame::WebsocketFrame(OpCode opCode, bool isFinal)
+WebSocketFrame::WebSocketFrame(OpCode opCode, bool isFinal)
 : m_masked(false)
 {
     m_header.raw = 0;
@@ -57,78 +57,78 @@ WebsocketFrame::WebsocketFrame(OpCode opCode, bool isFinal)
     m_header.data.fin = isFinal ? 1 : 0;
 }
 
-WebsocketFrame::WebsocketFrame(OpCode opCode, const QByteArray & content)
-: WebsocketFrame(opCode, true)
+WebSocketFrame::WebSocketFrame(OpCode opCode, const QByteArray & content)
+: WebSocketFrame(opCode, true)
 {
     setContent(content);
     setRandomMask();
 }
 
-void WebsocketFrame::setHeader(const Header & header)
+void WebSocketFrame::setHeader(const Header & header)
 {
     m_header = header;
 }
 
-const WebsocketFrame::Header & WebsocketFrame::getHeader() const
+const WebSocketFrame::Header & WebSocketFrame::getHeader() const
 {
     return m_header;
 }
 
-void WebsocketFrame::setContent(const QByteArray & content)
+void WebSocketFrame::setContent(const QByteArray & content)
 {
     m_content = content;
 }
 
-const QByteArray & WebsocketFrame::getContent() const
+const QByteArray & WebSocketFrame::getContent() const
 {
     return m_content;
 }
 
-void WebsocketFrame::append(const QByteArray & data)
+void WebSocketFrame::append(const QByteArray & data)
 {
     m_content.append(data);
 }
 
-void WebsocketFrame::setMask(const std::array<char, 4> & mask)
+void WebSocketFrame::setMask(const std::array<char, 4> & mask)
 {
     m_masked = true;
 
     m_mask = mask;
 }
 
-void WebsocketFrame::setMask(int mask)
+void WebSocketFrame::setMask(int mask)
 {
     m_masked = true;
 
     m_mask = *reinterpret_cast<decltype(m_mask)*>(&mask);
 }
 
-void WebsocketFrame::setRandomMask()
+void WebSocketFrame::setRandomMask()
 {
     setMask(qrand());
 }
 
-WebsocketFrame::OpCode WebsocketFrame::getOpCode() const
+WebSocketFrame::OpCode WebSocketFrame::getOpCode() const
 {
     return static_cast<OpCode>(m_header.data.opcode);
 }
 
-bool WebsocketFrame::isControlFrame() const
+bool WebSocketFrame::isControlFrame() const
 {
     return getOpCode() >= OpCode::ConnectionClose;
 }
 
-bool WebsocketFrame::isFinal() const
+bool WebSocketFrame::isFinal() const
 {
     return m_header.data.fin == 1;
 }
 
-bool WebsocketFrame::isContinuationFrame() const
+bool WebSocketFrame::isContinuationFrame() const
 {
     return getOpCode() == OpCode::Continuation;
 }
 
-QByteArray WebsocketFrame::toByteArray() const
+QByteArray WebSocketFrame::toByteArray() const
 {
     int headerLength = 2;
     qint64 contentLength = m_content.length();

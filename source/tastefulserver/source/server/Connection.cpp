@@ -25,7 +25,7 @@
  **/
 
 #include <tastefulserver/Connection.h>
-#include <tastefulserver/Protocol.h>
+#include <tastefulserver/AbstractSocket.h>
 
 #include <QDebug>
 
@@ -45,7 +45,7 @@ Connection::~Connection()
     delete m_socket;
 }
 
-void Connection::setProtocol(Protocol * protocol)
+void Connection::setProtocol(AbstractSocket * protocol)
 {
     if (m_protocol)
     {
