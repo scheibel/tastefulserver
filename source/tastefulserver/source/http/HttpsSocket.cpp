@@ -24,39 +24,39 @@
  * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#pragma once
+#include <tastefulserver/HttpsSocket.h>
 
-#include <tastefulserver/tastefulserver_api.h>
-
-#include <tastefulserver/AbstractSocket.h>
-#include <tastefulserver/HttpRequestParser.h>
-#include <tastefulserver/http.h>
+#include <QSslSocket>
 
 namespace tastefulserver {
 
-class HttpSocketHandler;
-
-class TASTEFULSERVER_API HttpSocket : public AbstractSocket
+HttpsSocket::HttpsSocket(HttpSocketHandler * handler, const QSslCertificate & certificate, const QSslKey & privateKey)
+: HttpSocket(handler)
+, m_certificate(certificate)
+, m_privateKey(privateKey)
 {
-public:
-    HttpSocket(HttpSocketHandler * handler);
+}
 
-    void send(const HttpResponse & response);
 
-    void disconnect();
-protected:
-    virtual void receiveData(const QByteArray & data) override;
+QAbstractSocket * HttpsSocket::createSocket(qintptr socketDescriptor)
+{
+    QSslSocket * socket = new QSslSocket();
 
-    HttpSocketHandler * m_handler;
-    HttpRequestParser m_parser;
-    HttpRequest m_request;
+    socket->setSocketDescriptor(socketDescriptor);
 
-    virtual void addConnectionInfo(HttpRequest & request);
+    socket->setLocalCertificate(m_certificate);
+    socket->setPrivateKey(m_privateKey);
 
-    virtual QAbstractSocket * createSocket(qintptr socketDescriptor) override;
+    socket->startServerEncryption();
 
-protected slots:
-    void badRequest();
-};
+    return socket;
+}
+
+void HttpsSocket::addConnectionInfo(HttpRequest & request)
+{
+    HttpSocket::addConnectionInfo(request);
+    request.setHttps(true);
+}
+
 
 } // namespace tastefulserver

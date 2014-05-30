@@ -61,6 +61,7 @@ set(sources
 	${source_path}/http/HttpServer.cpp
 	${source_path}/http/HttpMessage.cpp
 	${source_path}/http/HttpSocket.cpp
+	${source_path}/http/HttpsSocket.cpp
 	${source_path}/http/HttpResponse.cpp
 	${source_path}/http/HttpSocketHandler.cpp
 	${source_path}/http/httpUtil.cpp
@@ -87,6 +88,7 @@ set(api_includes
 	${include_path}/HttpEntity.h
 	${include_path}/http.h
 	${include_path}/HttpSocket.h
+	${include_path}/HttpsSocket.h
 	${include_path}/HttpSocketHandler.h
 	${include_path}/HttpHeader.h
 	${include_path}/HttpMessage.h

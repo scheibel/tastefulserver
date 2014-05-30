@@ -31,111 +31,43 @@
 
 namespace tastefulserver {
 
-Connection::Connection(qintptr socketDescriptor, SocketFactory * socketFactory)
+Connection::Connection(qintptr socketDescriptor)
 : m_socketDescriptor(socketDescriptor)
-, m_socketFactory(socketFactory)
 , m_socket(nullptr)
-, m_protocol(nullptr)
 {
 }
 
 Connection::~Connection()
 {
-    delete m_protocol;
     delete m_socket;
 }
 
-void Connection::setProtocol(AbstractSocket * protocol)
+void Connection::setSocket(AbstractSocket * socket)
 {
-    if (m_protocol)
+    if (m_socket)
     {
-        m_protocol->deleteLater();
+        disconnect(m_socket, &AbstractSocket::disconnected, this, &Connection::disconnected);
+        m_socket->deleteLater();
+        m_socket->setConnection(nullptr);
+        m_socket->setParent(nullptr);
     }
 
-    m_protocol = protocol;
-    m_protocol->setConnection(this);
+
+    m_socket = socket;
+    m_socket->setConnection(this);
+    m_socket->setParent(this); // so that socket will be moved to the same thread as this
+    connect(m_socket, &AbstractSocket::disconnected, this, &Connection::disconnected);
 }
 
 void Connection::startUp()
 {
-    if (m_socket)
-    {
-        return;
-    }
-
-    createSocket();
-
-    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
-    connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
-}
-
-void Connection::createSocket()
-{
-    delete m_socket;
-
-    m_socket = (*m_socketFactory)(m_socketDescriptor);
-}
-
-QAbstractSocket & Connection::socket()
-{
-    return *m_socket;
-}
-
-const QAbstractSocket & Connection::socket() const
-{
-    return *m_socket;
-}
-
-bool Connection::isUdpConnection() const
-{
-    return m_socketFactory->isUdp();
-}
-
-bool Connection::isTcpConnection() const
-{
-    return m_socketFactory->isTcp();
-}
-
-bool Connection::isSslConnection() const
-{
-    return m_socketFactory->isSsl();
+    m_socket->create(m_socketDescriptor);
 }
 
 void Connection::disconnected()
 {
-    if (m_protocol)
-    {
-        m_protocol->onDisconnect();
-    }
-
     finish();
 }
 
-void Connection::readyRead()
-{
-    if (m_protocol)
-    {
-        m_protocol->receiveData(m_socket->readAll());
-    }
-}
-
-void Connection::send(const QByteArray & data)
-{
-    m_socket->write(data);
-}
-
-void Connection::error(QAbstractSocket::SocketError e)
-{
-    if (m_protocol)
-    {
-        m_protocol->onError(e);
-    }
-}
-
-void Connection::disconnect()
-{
-    m_socket->disconnectFromHost();
-}
 
 } // namespace tastefulserver

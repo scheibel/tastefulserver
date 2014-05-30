@@ -28,12 +28,23 @@
 #include <tastefulserver/Connection.h>
 #include <tastefulserver/HttpSocketHandler.h>
 
+#include <QTcpSocket>
+
 namespace tastefulserver {
 
 HttpSocket::HttpSocket(HttpSocketHandler * handler)
 : m_handler(handler)
 {
     connect(&m_parser, &HttpRequestParser::badRequest, this, &HttpSocket::badRequest);
+}
+
+QAbstractSocket * HttpSocket::createSocket(qintptr socketDescriptor)
+{
+    QTcpSocket * socket = new QTcpSocket();
+
+    socket->setSocketDescriptor(socketDescriptor);
+
+    return socket;
 }
 
 void HttpSocket::send(const HttpResponse & response)
@@ -72,13 +83,8 @@ void HttpSocket::receiveData(const QByteArray & data)
 
 void HttpSocket::addConnectionInfo(HttpRequest & request)
 {
-    if (m_connection->isSslConnection())
-    {
-        request.setHttps(true);
-    }
-
-    request.setAddress(m_connection->socket().peerAddress());
-    request.setPort(m_connection->socket().peerPort());
+    request.setAddress(m_socket->peerAddress());
+    request.setPort(m_socket->peerPort());
 }
 
 void HttpSocket::badRequest()

@@ -56,6 +56,8 @@ protected:
     WebSocketFrame m_fragmentedMessage;
     bool m_inFragmentedMode;
 
+    QAbstractSocket * createSocket(qintptr socketDescriptor);
+
     virtual void receiveData(const QByteArray & data) override;
 
     void sendFrame(const WebSocketFrame & frame);

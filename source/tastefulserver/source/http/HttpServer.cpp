@@ -33,21 +33,14 @@ namespace tastefulserver {
 
 HttpServer::HttpServer(const RequestCallback & callback)
 : m_callback(callback)
-, m_socketFactory(new TcpSocketFactory)
 {
 }
 
 HttpServer::~HttpServer()
 {
-    delete m_socketFactory;
 }
 
-SocketFactory * HttpServer::getSocketFactory()
-{
-    return m_socketFactory;
-}
-
-AbstractSocket * HttpServer::createProtocol()
+AbstractSocket * HttpServer::createSocket()
 {
     return new HttpSocket(this);
 }
@@ -62,7 +55,9 @@ bool HttpServer::handleUpgrade(HttpSocket * socket, const HttpRequest & request)
     if (request.getHeader(http::Upgrade).getValue() == "websocket")
     {
         WebSocket * upgradedsocket = new WebSocket(this);
-        socket->connection()->setProtocol(upgradedsocket);
+
+        upgradedsocket->takeOver(socket);
+        socket->connection()->setSocket(upgradedsocket);
 
         upgradedsocket->handshake(request);
 

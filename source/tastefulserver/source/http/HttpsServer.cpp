@@ -25,23 +25,24 @@
  **/
 
 #include <tastefulserver/HttpsServer.h>
+#include <tastefulserver/HttpsSocket.h>
 
 namespace tastefulserver {
 
 HttpsServer::HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback)
 : HttpServer(callback)
-, m_sslSocketFactory(new SslSocketFactory(certificate, privateKey))
+, m_certificate(certificate)
+, m_privateKey(privateKey)
 {
 }
 
 HttpsServer::~HttpsServer()
 {
-    delete m_sslSocketFactory;
 }
 
-SocketFactory * HttpsServer::getSocketFactory()
+AbstractSocket * HttpsServer::createSocket()
 {
-    return m_sslSocketFactory;
+    return new HttpsSocket(this, m_certificate, m_privateKey);
 }
 
 } // namespace tastefulserver

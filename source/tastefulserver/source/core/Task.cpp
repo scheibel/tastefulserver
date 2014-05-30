@@ -52,7 +52,7 @@ void TaskThread::endTask(Task * task)
 
 void TaskThread::startTask(Task * task)
 {
-    connect(task, SIGNAL(finished(Task *)), this, SLOT(endTask(Task *)));
+    connect(task, &Task::finished, this, &TaskThread::endTask);
     QMetaObject::invokeMethod(task, "startUp", Qt::QueuedConnection);
 }
 

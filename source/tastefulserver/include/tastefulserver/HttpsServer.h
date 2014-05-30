@@ -43,9 +43,8 @@ public:
 private:
     QSslCertificate m_certificate;
     QSslKey m_privateKey;
-    SslSocketFactory * m_sslSocketFactory;
 
-    virtual SocketFactory * getSocketFactory() override;
+    virtual AbstractSocket * createSocket() override;
 };
 
 } // namespace tastefulserver

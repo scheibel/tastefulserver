@@ -26,9 +26,11 @@
 
 #include <tastefulserver/WebSocket.h>
 
-#include <QCryptographicHash>
-
 #include <tastefulserver/WebSocketHandler.h>
+
+#include <QCryptographicHash>
+#include <QTcpSocket>
+
 
 
 namespace tastefulserver {
@@ -41,6 +43,15 @@ WebSocket::WebSocket(WebSocketHandler * handler)
 , m_inFragmentedMode(false)
 {
     connect(&m_parser, &WebSocketFrameParser::badFrame, this, &WebSocket::badFrame);
+}
+
+QAbstractSocket * WebSocket::createSocket(qintptr socketDescriptor)
+{
+    QTcpSocket * socket = new QTcpSocket();
+
+    socket->setSocketDescriptor(socketDescriptor);
+
+    return socket;
 }
 
 QString WebSocket::hashKey(const QString & key)

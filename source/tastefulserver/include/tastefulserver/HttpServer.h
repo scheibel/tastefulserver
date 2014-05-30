@@ -47,10 +47,8 @@ public:
 
 protected:
     RequestCallback m_callback;
-    TcpSocketFactory * m_socketFactory;
 
-    virtual SocketFactory * getSocketFactory() override;
-    virtual AbstractSocket * createProtocol() override;
+    virtual AbstractSocket * createSocket() override;
 
     // --- handling ---
 

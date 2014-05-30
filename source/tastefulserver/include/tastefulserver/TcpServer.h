@@ -30,7 +30,6 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 #include <tastefulserver/Connection.h>
-#include <tastefulserver/SocketFactory.h>
 
 namespace tastefulserver {
 
@@ -49,8 +48,7 @@ public:
 protected:
     virtual void incomingConnection(qintptr socketDescriptor);
 
-    virtual SocketFactory * getSocketFactory() = 0;
-    virtual AbstractSocket * createProtocol() = 0;
+    virtual AbstractSocket * createSocket() = 0;
 
     static ThreadPool * s_threadPool;
     static int s_serverCount;
