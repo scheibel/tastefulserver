@@ -46,58 +46,58 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(sources
-	${source_path}/core/ThreadPool.cpp
-	${source_path}/core/ThreadPool.h
-	${source_path}/core/Task.cpp
 	${source_path}/core/ByteStream.cpp
 	${source_path}/core/QVariantTree.cpp
-	${source_path}/http/Cookie.cpp
+	${source_path}/core/Task.cpp
+	${source_path}/core/ThreadPool.cpp
+	${source_path}/core/ThreadPool.h
 	${source_path}/http/ContentType.cpp
+	${source_path}/http/Cookie.cpp
+	${source_path}/http/HttpEntity.cpp
+	${source_path}/http/HttpHeader.cpp
+	${source_path}/http/HttpMessage.cpp
+	${source_path}/http/HttpMethod.cpp
+	${source_path}/http/HttpRequest.cpp
+	${source_path}/http/HttpRequestParser.cpp
+	${source_path}/http/HttpResponse.cpp
+	${source_path}/http/HttpServer.cpp
+	${source_path}/http/HttpSocket.cpp
+	${source_path}/http/HttpSocketHandler.cpp
+	${source_path}/http/HttpsServer.cpp
+	${source_path}/http/HttpsSocket.cpp
+	${source_path}/http/httpUtil.cpp
 	${source_path}/http/HttpVersion.cpp
 	${source_path}/http/MultiPart.cpp
 	${source_path}/http/RequestParameters.cpp
-	${source_path}/http/HttpRequest.cpp
-	${source_path}/http/HttpEntity.cpp
-	${source_path}/http/HttpServer.cpp
-	${source_path}/http/HttpMessage.cpp
-	${source_path}/http/HttpSocket.cpp
-	${source_path}/http/HttpsSocket.cpp
-	${source_path}/http/HttpResponse.cpp
-	${source_path}/http/HttpSocketHandler.cpp
-	${source_path}/http/httpUtil.cpp
 	${source_path}/http/UploadedFile.cpp
-	${source_path}/http/HttpHeader.cpp
-	${source_path}/http/HttpMethod.cpp
-	${source_path}/http/HttpsServer.cpp
+	${source_path}/server/AbstractSocket.cpp
+	${source_path}/server/Connection.cpp
+	${source_path}/server/TcpServer.cpp
 	${source_path}/websocket/WebSocket.cpp
 	${source_path}/websocket/WebSocketFrame.cpp
 	${source_path}/websocket/WebSocketFrameParser.cpp
 	${source_path}/websocket/WebSocketHandler.cpp
-	${source_path}/server/SocketFactory.cpp
-	${source_path}/server/Connection.cpp
-	${source_path}/server/TcpServer.cpp
-	${source_path}/server/AbstractSocket.cpp
-	${source_path}/http/HttpRequestParser.cpp
 )
 
 set(api_includes
+	${include_path}/AbstractSocket.h
 	${include_path}/ByteStream.h
 	${include_path}/Connection.h
 	${include_path}/ContentType.h
 	${include_path}/Cookie.h
 	${include_path}/HttpEntity.h
 	${include_path}/http.h
-	${include_path}/HttpSocket.h
-	${include_path}/HttpsSocket.h
-	${include_path}/HttpSocketHandler.h
 	${include_path}/HttpHeader.h
 	${include_path}/HttpMessage.h
 	${include_path}/HttpMethod.h
 	${include_path}/HttpRequest.h
-	${include_path}/HttpResponse.h
 	${include_path}/HttpRequestParser.h
+	${include_path}/HttpResponse.h
 	${include_path}/HttpServer.h
+	${include_path}/HttpSocket.h
+	${include_path}/HttpSocketHandler.h
 	${include_path}/HttpsServer.h
+	${include_path}/HttpsSocket.h
 	${include_path}/httpStatusCodes.h
 	${include_path}/httpUtil.h
 	${include_path}/HttpVersion.h
@@ -108,12 +108,10 @@ set(api_includes
 	${include_path}/Task.h
 	${include_path}/TcpServer.h
 	${include_path}/UploadedFile.h
-	${include_path}/WebSocket.h
-	${include_path}/WebSocketHandler.h
 	${include_path}/WebSocketFrame.h
 	${include_path}/WebSocketFrameParser.h
-	${include_path}/AbstractSocket.h
-	${include_path}/SocketFactory.h
+	${include_path}/WebSocket.h
+	${include_path}/WebSocketHandler.h
 )
 
 # Group source files

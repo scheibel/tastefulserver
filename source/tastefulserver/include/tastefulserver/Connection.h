@@ -30,12 +30,10 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/SocketFactory.h>
 #include <tastefulserver/Task.h>
 
 namespace tastefulserver {
 
-class SocketFactory;
 class AbstractSocket;
 
 class TASTEFULSERVER_API Connection : public Task
