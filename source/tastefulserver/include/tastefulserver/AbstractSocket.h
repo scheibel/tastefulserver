@@ -49,7 +49,7 @@ public:
 
     void create(qintptr socketDescriptor);
 
-    void takeOver(AbstractSocket * socket);
+    void takeOverFrom(AbstractSocket * socket);
 
 signals:
     void disconnected();

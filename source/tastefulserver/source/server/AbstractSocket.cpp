@@ -70,7 +70,7 @@ void AbstractSocket::disconnectSocket()
     QObject::disconnect(m_socket, static_cast<ErrorSignal>(&QAbstractSocket::error), this, &AbstractSocket::socketError);
 }
 
-void AbstractSocket::takeOver(AbstractSocket * socket)
+void AbstractSocket::takeOverFrom(AbstractSocket * socket)
 {
     if (!socket->m_socket)
     {
@@ -90,6 +90,8 @@ void AbstractSocket::takeOver(AbstractSocket * socket)
     socket->m_socket = nullptr;
 
     connectSocket();
+
+    socket->connection()->setSocket(this);
 }
 
 void AbstractSocket::socketDisconnected()

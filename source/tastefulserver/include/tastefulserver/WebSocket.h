@@ -36,6 +36,7 @@
 namespace tastefulserver {
 
 class WebSocketHandler;
+class HttpSocket;
 
 class TASTEFULSERVER_API WebSocket : public AbstractSocket
 {
@@ -43,7 +44,9 @@ class TASTEFULSERVER_API WebSocket : public AbstractSocket
 public:
     WebSocket(WebSocketHandler * handler);
 
-    void handshake(const HttpRequest & request);
+    void upgrade(HttpSocket * socket, const HttpRequest & request);
+
+    void performHandshake(const HttpRequest & request);
 
     void sendText(const QByteArray & text);
     void sendBinary(const QByteArray & binary);

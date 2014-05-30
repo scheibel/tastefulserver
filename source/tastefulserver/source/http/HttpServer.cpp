@@ -54,12 +54,9 @@ bool HttpServer::handleUpgrade(HttpSocket * socket, const HttpRequest & request)
 {
     if (request.getHeader(http::Upgrade).getValue() == "websocket")
     {
-        WebSocket * upgradedsocket = new WebSocket(this);
+        WebSocket * websocket = new WebSocket(this);
 
-        upgradedsocket->takeOver(socket);
-        socket->connection()->setSocket(upgradedsocket);
-
-        upgradedsocket->handshake(request);
+        websocket->upgrade(socket, request);
 
         return true;
     }

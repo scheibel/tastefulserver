@@ -27,11 +27,10 @@
 #include <tastefulserver/WebSocket.h>
 
 #include <tastefulserver/WebSocketHandler.h>
+#include <tastefulserver/HttpSocket.h>
 
 #include <QCryptographicHash>
 #include <QTcpSocket>
-
-
 
 namespace tastefulserver {
 
@@ -59,7 +58,7 @@ QString WebSocket::hashKey(const QString & key)
     return QCryptographicHash::hash((key + MagicString).toUtf8(), QCryptographicHash::Sha1).toBase64();
 }
 
-void WebSocket::handshake(const HttpRequest & request)
+void WebSocket::performHandshake(const HttpRequest & request)
 {
     HttpResponse response(http::SwitchingProtocols);
 
@@ -72,6 +71,12 @@ void WebSocket::handshake(const HttpRequest & request)
     sendData(response.toByteArray());
 
     m_handler->connectionEstablished(this);
+}
+
+void WebSocket::upgrade(HttpSocket * socket, const HttpRequest & request)
+{
+    takeOverFrom(socket);
+    performHandshake(request);
 }
 
 void WebSocket::receiveData(const QByteArray & data)
