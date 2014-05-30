@@ -77,7 +77,7 @@ window.onload = function() {
     connection.onmessage = function (e) {
         output(e.data);
 
-        if (i++ > 10)
+        if (i++ > 11)
             connection.close();
     };
 }
