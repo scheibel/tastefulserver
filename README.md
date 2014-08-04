@@ -41,8 +41,3 @@ Known Projects Using Tasteful Server
 --------------------------------------------------------
 
  * [Tasteful Framework](https://github.com/scheibel/tasteful-framework)
-
-License
------------
-
-Tasteful Server is licensed under the LPGL-3.
