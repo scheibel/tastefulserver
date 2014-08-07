@@ -1,6 +1,5 @@
 #include <tastefulserver/HttpResponse.h>
 
-#include <QTextStream>
 #include <QDateTime>
 
 #include <tastefulserver/httpUtil.h>
@@ -62,33 +61,32 @@ Cookie &HttpResponse::setCookie(const QString & key, const QString & value)
     return m_cookies[key];
 }
 
-void HttpResponse::writeHeadersOn(QTextStream & stream) const
+void HttpResponse::writeHeadersOn(QByteArray & byteArray) const
 {
-    HttpMessage::writeHeadersOn(stream);
+    HttpMessage::writeHeadersOn(byteArray);
 
     for (const Cookie & cookie : m_cookies)
     {
         HttpHeader header(http::SetCookie, cookie.toString());
-        writeHeaderOn(header, stream);
+        writeHeaderOn(header, byteArray);
     }
     HttpHeader header(http::ContentType, m_contentType.toString());
-    writeHeaderOn(header, stream);
+    writeHeaderOn(header, byteArray);
 }
 
 QByteArray HttpResponse::toByteArray() const
 {
     QByteArray byteArray;
-    QTextStream stream(&byteArray);
 
-    stream << m_httpVersion.toString() << " " << m_statusCode;
+    byteArray.append(m_httpVersion.toString() + " " + QString::number(m_statusCode));
     QString reason = http::reason(m_statusCode);
     if (!reason.isNull())
     {
-        stream << " " << reason;
+        byteArray.append(" " + reason);
     }
-    stream << http::Linebreak;
+    byteArray.append(http::Linebreak);
 
-    stream << HttpMessage::toByteArray();
+    byteArray.append(HttpMessage::toByteArray());
 
     return byteArray;
 }

@@ -1,6 +1,7 @@
 #include <tastefulserver/HttpEntity.h>
 
 #include <QTextStream>
+#include <QDataStream>
 
 namespace tastefulserver {
 
@@ -73,7 +74,7 @@ void HttpEntity::removeHeader(const http::HeaderName & headerName)
     m_headers.remove(headerName);
 }
 
-QByteArray HttpEntity::getContent() const
+const QByteArray & HttpEntity::getContent() const
 {
     return m_content;
 }
@@ -90,15 +91,15 @@ void HttpEntity::setContent(const QByteArray & content)
     setHeader(http::ContentLength, QString::number(content.size()));
 }
 
-void HttpEntity::writeHeaderOn(const HttpHeader & header, QTextStream & stream) const
+void HttpEntity::writeHeaderOn(const HttpHeader & header, QByteArray & byteArray) const
 {
     if (header.isValid())
     {
-        stream << header.toString() << http::Linebreak;
+        byteArray.append(header.toString() + http::Linebreak);
     }
 }
 
-void HttpEntity::writeHeadersOn(QTextStream & stream) const
+void HttpEntity::writeHeadersOn(QByteArray & stream) const
 {
     for (const QList<HttpHeader> & list : m_headers)
     {
@@ -112,15 +113,14 @@ void HttpEntity::writeHeadersOn(QTextStream & stream) const
 QByteArray HttpEntity::toByteArray() const
 {
     QByteArray byteArray;
-    QTextStream stream(&byteArray);
 
-    writeHeadersOn(stream);
+    writeHeadersOn(byteArray);
 
-    stream << http::Linebreak;
+    byteArray.append(http::Linebreak);
 
     if (!m_content.isNull())
     {
-        stream << m_content;
+        byteArray.append(m_content);
     }
 
     return byteArray;

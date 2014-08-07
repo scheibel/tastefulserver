@@ -29,7 +29,7 @@ protected:
 
     void initialize();
 
-    virtual void writeHeadersOn(QTextStream & stream) const;
+    virtual void writeHeadersOn(QByteArray & byteArray) const;
 };
 
 } // namespace tastefulserver

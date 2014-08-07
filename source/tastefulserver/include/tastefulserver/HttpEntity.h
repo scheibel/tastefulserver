@@ -8,6 +8,7 @@
 #include <tastefulserver/HttpHeader.h>
 
 class QTextStream;
+class QDataStream;
 template <typename T>
 class QList;
 class QString;
@@ -36,7 +37,7 @@ public:
     void removeHeader(const http::HeaderName & headerName);
 
     void setContent(const QByteArray & content);
-    QByteArray getContent() const;
+    const QByteArray & getContent() const;
     void clearContent();
 
     virtual QByteArray toByteArray() const;
@@ -45,8 +46,8 @@ protected:
     QHash<QString, QList<HttpHeader >> m_headers;
     QByteArray m_content;
 
-    void writeHeaderOn(const HttpHeader & header, QTextStream & stream) const;
-    virtual void writeHeadersOn(QTextStream & stream) const;
+    void writeHeaderOn(const HttpHeader & header, QByteArray & byteArray) const;
+    virtual void writeHeadersOn(QByteArray & stream) const;
 };
 
 } // namespace tastefulserver
