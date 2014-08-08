@@ -18,6 +18,9 @@ class TASTEFULSERVER_API RequestParameters
 public:
     RequestParameters();
 
+    QVariantTree & tree();
+    const QVariantTree & tree() const;
+
     bool contains(const QString & key) const;
     bool containsPath(const QString & path) const;
 

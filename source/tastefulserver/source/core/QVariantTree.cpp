@@ -88,6 +88,11 @@ bool QVariantTree::isTree()
     return true;
 }
 
+QList<QString> QVariantTree::keys() const
+{
+    return m_children.keys();
+}
+
 int QVariantTree::size()
 {
     return m_children.size();

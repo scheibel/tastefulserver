@@ -46,6 +46,8 @@ public:
 
     bool isTree();
 
+    QList<QString> keys() const;
+
     int size();
     void insert(const QString & key, QVariantAbstractTree * value);
     void insert(const QString & key, QVariant value);
