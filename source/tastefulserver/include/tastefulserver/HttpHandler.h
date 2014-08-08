@@ -33,6 +33,8 @@ private:
     bool handleRequest();
     bool handleError();
 
+    void send(const HttpResponse & response);
+
     RequestCallback m_callback;
     RequestCallback m_badRequestCallback;
     bool m_hasBadRequestCallback;

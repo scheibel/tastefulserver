@@ -168,11 +168,16 @@ bool HttpHandler::readContent()
     return true;
 }
 
+void HttpHandler::send(const HttpResponse & response)
+{
+    response.writeTo(*m_socket);
+}
+
 bool HttpHandler::handleRequest()
 {
     HttpResponse response = m_hasBadRequestCallback && m_request.isBad() ? m_badRequestCallback(m_request) : m_callback(m_request);
 
-    send(response.toByteArray());
+    send(response);
     m_buffer.flush();
     m_state = READ_REQUEST_LINE;
 
@@ -190,7 +195,8 @@ bool HttpHandler::handleError()
 
     HttpResponse response;
     response.setStatusCode(http::BadRequest);
-    send(response.toByteArray());
+
+    send(response);
 
     m_state = READ_REQUEST_LINE;
 

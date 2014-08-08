@@ -1,5 +1,7 @@
 #include <QCoreApplication>
 
+#include <QBuffer>
+
 #include <tastefulserver/HttpServer.h>
 
 using namespace tastefulserver;
@@ -12,7 +14,10 @@ int main(int argc, char ** argv)
 
             response.setStatusCode(http::OK);
 
-            QByteArray content = request.toByteArray();
+            QByteArray content;
+            QBuffer buffer(&content);
+
+            request.writeTo(buffer);
             content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
 
             response.setContent(content);

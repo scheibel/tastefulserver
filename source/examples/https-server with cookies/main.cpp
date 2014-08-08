@@ -1,5 +1,7 @@
 #include <QCoreApplication>
 
+#include <QBuffer>
+
 #include <tastefulserver/HttpsServer.h>
 
 QSslCertificate getCertificate()
@@ -53,7 +55,11 @@ int main(int argc, char ** argv)
     HttpsServer server(getCertificate(), getPrivateKey(), [](const HttpRequest & request) {
             HttpResponse response(request);
 
-            QByteArray content = request.toByteArray();
+            QByteArray content;
+            QBuffer buffer(&content);
+
+            request.writeTo(buffer);
+
             content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
             if (request.hasCookies())
             {

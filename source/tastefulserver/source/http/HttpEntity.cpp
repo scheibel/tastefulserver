@@ -2,6 +2,7 @@
 
 #include <QTextStream>
 #include <QDataStream>
+#include <QIODevice>
 
 namespace tastefulserver {
 
@@ -91,39 +92,35 @@ void HttpEntity::setContent(const QByteArray & content)
     setHeader(http::ContentLength, QString::number(content.size()));
 }
 
-void HttpEntity::writeHeaderOn(const HttpHeader & header, QByteArray & byteArray) const
+void HttpEntity::writeHeaderOn(const HttpHeader & header, QIODevice & device) const
 {
     if (header.isValid())
     {
-        byteArray.append(header.toString() + http::Linebreak);
+        device.write((header.toString() + http::Linebreak).toLocal8Bit());
     }
 }
 
-void HttpEntity::writeHeadersOn(QByteArray & stream) const
+void HttpEntity::writeHeadersOn(QIODevice & device) const
 {
     for (const QList<HttpHeader> & list : m_headers)
     {
         for (const HttpHeader & header : list)
         {
-            writeHeaderOn(header, stream);
+            writeHeaderOn(header, device);
         }
     }
 }
 
-QByteArray HttpEntity::toByteArray() const
+void HttpEntity::writeTo(QIODevice & device) const
 {
-    QByteArray byteArray;
+    writeHeadersOn(device);
 
-    writeHeadersOn(byteArray);
-
-    byteArray.append(http::Linebreak);
+    device.write(http::Linebreak.toLocal8Bit());
 
     if (!m_content.isNull())
     {
-        byteArray.append(m_content);
+        device.write(m_content);
     }
-
-    return byteArray;
 }
 
 } // namespace tastefulserver

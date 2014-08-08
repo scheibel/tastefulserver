@@ -38,7 +38,7 @@ public:
 
     RequestParameters&getParameters();
     const RequestParameters&getParameters() const;
-    virtual QByteArray toByteArray() const;
+    virtual void writeTo(QIODevice & device) const;
 
 protected:
     QHostAddress m_address;

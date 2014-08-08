@@ -22,14 +22,14 @@ public:
 
     void setCookie(const Cookie & cookie);
     Cookie & setCookie(const QString & key, const QString & value);
-    virtual QByteArray toByteArray() const;
 
+    virtual void writeTo(QIODevice & device) const;
 protected:
     unsigned m_statusCode;
 
     void initialize();
 
-    virtual void writeHeadersOn(QByteArray & byteArray) const;
+    virtual void writeHeadersOn(QIODevice & device) const;
 };
 
 } // namespace tastefulserver

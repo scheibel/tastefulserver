@@ -1,6 +1,6 @@
 #include <tastefulserver/HttpRequest.h>
 
-#include <QTextStream>
+#include <QIODevice>
 
 namespace tastefulserver {
 
@@ -127,16 +127,11 @@ const RequestParameters &HttpRequest::getParameters() const
     return m_requestParams;
 }
 
-QByteArray HttpRequest::toByteArray() const
+void HttpRequest::writeTo(QIODevice & device) const
 {
-    QByteArray byteArray;
-    QTextStream stream(&byteArray);
+    device.write((m_method.toString() + " " + m_requestUri + " " + m_httpVersion.toString() + http::Linebreak).toLocal8Bit());
 
-    stream << m_method.toString() << " " << m_requestUri << " " << m_httpVersion.toString() << http::Linebreak;
-
-    stream << HttpMessage::toByteArray();
-
-    return byteArray;
+    HttpMessage::writeTo(device);
 }
 
 } // namespace tastefulserver

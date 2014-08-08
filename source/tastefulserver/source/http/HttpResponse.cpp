@@ -61,34 +61,32 @@ Cookie &HttpResponse::setCookie(const QString & key, const QString & value)
     return m_cookies[key];
 }
 
-void HttpResponse::writeHeadersOn(QByteArray & byteArray) const
+void HttpResponse::writeHeadersOn(QIODevice & device) const
 {
-    HttpMessage::writeHeadersOn(byteArray);
+    HttpMessage::writeHeadersOn(device);
 
     for (const Cookie & cookie : m_cookies)
     {
         HttpHeader header(http::SetCookie, cookie.toString());
-        writeHeaderOn(header, byteArray);
+        writeHeaderOn(header, device);
     }
     HttpHeader header(http::ContentType, m_contentType.toString());
-    writeHeaderOn(header, byteArray);
+    writeHeaderOn(header, device);
 }
 
-QByteArray HttpResponse::toByteArray() const
+void HttpResponse::writeTo(QIODevice & device) const
 {
-    QByteArray byteArray;
+    device.write((m_httpVersion.toString() + " " + QString::number(m_statusCode)).toLocal8Bit());
 
-    byteArray.append(m_httpVersion.toString() + " " + QString::number(m_statusCode));
     QString reason = http::reason(m_statusCode);
     if (!reason.isNull())
     {
-        byteArray.append(" " + reason);
+        device.write((" " + reason).toLocal8Bit());
     }
-    byteArray.append(http::Linebreak);
 
-    byteArray.append(HttpMessage::toByteArray());
+    device.write(http::Linebreak.toLocal8Bit());
 
-    return byteArray;
+    HttpMessage::writeTo(device);
 }
 
 } // namespace tastefulserver
