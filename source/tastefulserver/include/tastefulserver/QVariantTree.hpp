@@ -5,7 +5,7 @@
 namespace tastefulserver {
 
 template <class T>
-T QVariantAbstractTree::value()
+T QVariantAbstractTree::value() const
 {
     return asQVariant().value<T>();
 }

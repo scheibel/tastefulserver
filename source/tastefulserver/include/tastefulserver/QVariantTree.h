@@ -17,25 +17,30 @@ class TASTEFULSERVER_API QVariantAbstractTree
 public:
     virtual ~QVariantAbstractTree();
 
-    virtual bool isTree();
-    virtual bool isLeaf();
-    virtual bool isNull();
+    virtual bool isTree() const;
+    virtual bool isLeaf() const;
+    virtual bool isNull() const;
+    const QVariantTree* asTree() const;
     QVariantTree* asTree();
+    const QVariantLeaf* asLeaf() const;
     QVariantLeaf* asLeaf();
-    QVariantAbstractTree &operator[](const QString & key);
-    QVariantAbstractTree&get(const QString & key);
-    QVariantAbstractTree&getByPath(const QString & path);
+    const QVariantAbstractTree & operator[](const QString & key) const;
+    QVariantAbstractTree & operator[](const QString & key);
+    const QVariantAbstractTree & get(const QString & key) const;
+    QVariantAbstractTree & get(const QString & key);
+    const QVariantAbstractTree & getByPath(const QString & path) const;
+    QVariantAbstractTree & getByPath(const QString & path);
     template <class T>
-    T value();
+    T value() const;
 
-    bool contains(const QString & key);
-    bool containsPath(const QString & path);
+    bool contains(const QString & key) const;
+    bool containsPath(const QString & path) const;
 
-    virtual QVariant asQVariant() = 0;
-    virtual QString printString(unsigned indent = 0) = 0;
+    virtual QVariant asQVariant() const = 0;
+    virtual QString printString(unsigned indent = 0) const = 0;
 
 protected:
-    virtual QVariantAbstractTree* basicGet(const QString & key) = 0;
+    virtual QVariantAbstractTree* basicGet(const QString & key) const = 0;
     static QVariantNullTree s_nullValue;
 };
 
@@ -44,21 +49,21 @@ class TASTEFULSERVER_API QVariantTree : public QVariantAbstractTree
 public:
     ~QVariantTree();
 
-    bool isTree();
+    virtual bool isTree() const override;
 
     QList<QString> keys() const;
 
-    int size();
+    int size() const;
     void insert(const QString & key, QVariantAbstractTree * value);
-    void insert(const QString & key, QVariant value);
-    QVariantTree&createSubtree(const QString & key);
-    QVariantTree&obtainSubtree(const QString & key);
+    void insert(const QString & key, const QVariant & value);
+    QVariantTree & createSubtree(const QString & key);
+    QVariantTree & obtainSubtree(const QString & key);
 
-    QVariant asQVariant();
-    QString printString(unsigned indent = 0);
+    virtual QVariant asQVariant() const override;
+    virtual QString printString(unsigned indent = 0) const override;
 
 protected:
-    QVariantAbstractTree* basicGet(const QString & key);
+    virtual QVariantAbstractTree* basicGet(const QString & key) const override;
 
     QHash<QString, QVariantAbstractTree *> m_children;
 };
@@ -66,29 +71,29 @@ protected:
 class TASTEFULSERVER_API QVariantLeaf : public QVariantAbstractTree
 {
 public:
-    QVariantLeaf(QVariant value);
+    QVariantLeaf(const QVariant & value);
 
-    bool isLeaf();
+    virtual bool isLeaf() const override;
 
-    QVariant asQVariant();
-    QString printString(unsigned indent = 0);
+    virtual QVariant asQVariant() const override;
+    virtual QString printString(unsigned indent = 0) const override;
     void setElement(const QVariant & newElement);
 
 protected:
-    QVariantAbstractTree* basicGet(const QString & key);
+    virtual QVariantAbstractTree* basicGet(const QString & key) const override;
     QVariant m_element;
 };
 
 class TASTEFULSERVER_API QVariantNullTree : public QVariantAbstractTree
 {
 public:
-    bool isNull();
+    virtual bool isNull() const override;
 
-    QVariant asQVariant();
-    QString printString(unsigned indent = 0);
+    virtual QVariant asQVariant() const override;
+    virtual QString printString(unsigned indent = 0) const override;
 
 protected:
-    QVariantAbstractTree* basicGet(const QString & key);
+    virtual QVariantAbstractTree* basicGet(const QString & key) const override;
 };
 
 } // namespace tastefulserver
