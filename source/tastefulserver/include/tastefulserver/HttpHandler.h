@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/ConnectionHandler.h>
