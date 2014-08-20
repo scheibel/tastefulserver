@@ -29,7 +29,7 @@ HttpHeader HttpEntity::getHeader(const http::HeaderName & headerName) const
         return HttpHeader::forName(headerName);
     }
 
-    return list.last();
+    return list.first();
 }
 
 QList<HttpHeader> HttpEntity::getHeaders(const http::HeaderName & headerName) const
@@ -66,7 +66,7 @@ void HttpEntity::setHeader(const HttpHeader & header, bool merge)
     {
         if (merge)
         {
-            list.last().merge(header);
+            list.first().merge(header);
         }
         else
         {
@@ -85,7 +85,7 @@ void HttpEntity::clearHeaders()
     m_headers.clear();
 }
 
-QByteArray HttpEntity::getContent() const
+const QByteArray & HttpEntity::getContent() const
 {
     return m_content;
 }

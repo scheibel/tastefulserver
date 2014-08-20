@@ -39,7 +39,7 @@ public:
     void clearHeaders();
 
     void setContent(const QByteArray & content);
-    QByteArray getContent() const;
+    const QByteArray & getContent() const;
     void clearContent();
 
     virtual void writeTo(QIODevice & device) const;

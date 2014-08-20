@@ -141,6 +141,16 @@ void RequestParameters::parseList(const QList<QPair<QString, QVariant >> & param
     }
 }
 
+QVariantTree & RequestParameters::tree()
+{
+    return *m_params.data();
+}
+
+const QVariantTree & RequestParameters::tree() const
+{
+    return *m_params.data();
+}
+
 QVariantAbstractTree &RequestParameters::operator[](const QString & key) const
 {
     return get(key);
