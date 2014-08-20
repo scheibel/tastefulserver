@@ -1,5 +1,5 @@
 # Generate meta-header
-configure_file(tastefulserver-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/tastefulserver-version.h)
+configure_file(tasteful-server-version.h.in ${CMAKE_CURRENT_BINARY_DIR}/tasteful-server-version.h)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -31,7 +31,7 @@ set_property(GLOBAL PROPERTY AUTOMOC_FOLDER CMakeAutomocTargets)
 
 # Libraries
 set(IDE_FOLDER "")
-add_subdirectory(tastefulserver)
+add_subdirectory(tasteful-server)
 
 # Examples
 set(IDE_FOLDER "Examples")

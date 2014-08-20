@@ -2,7 +2,7 @@
 
 #include <QBuffer>
 
-#include <tastefulserver/HttpsCallbackServer.h>
+#include <tasteful-server/HttpsCallbackServer.h>
 
 QSslCertificate getCertificate()
 {

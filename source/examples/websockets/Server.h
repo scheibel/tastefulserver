@@ -1,10 +1,10 @@
 #pragma once
 
-#include <tastefulserver/tastefulserver_api.h>
+#include <tasteful-server/tasteful-server_api.h>
 
-#include <tastefulserver/HttpWebSocketServer.h>
+#include <tasteful-server/HttpWebSocketServer.h>
 
-class TASTEFULSERVER_API Server : public tastefulserver::HttpWebSocketServer
+class TASTEFUL_SERVER_API Server : public tastefulserver::HttpWebSocketServer
 {
 public:
     Server();

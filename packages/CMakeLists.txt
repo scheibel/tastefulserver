@@ -6,4 +6,4 @@ add_custom_target(pack)
 set_target_properties(pack PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD 1)
 
 # Packages
-include(pack-tastefulserver.cmake)
+include(pack-tasteful-server.cmake)

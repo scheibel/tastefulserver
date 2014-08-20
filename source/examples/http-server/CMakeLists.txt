@@ -17,7 +17,7 @@ include_directories(
 
 include_directories(
     BEFORE
-    ${CMAKE_SOURCE_DIR}/source/tastefulserver/include
+    ${CMAKE_SOURCE_DIR}/source/tasteful-server/include
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -26,7 +26,7 @@ include_directories(
 #
 
 set(libs
-	tastefulserver
+	tasteful-server
 )
 
 #
