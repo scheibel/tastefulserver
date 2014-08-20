@@ -1,29 +1,3 @@
-/**
- * (C) LGPL-3
- *
- * Tasteful Server <https://github.com/scheibel/tasteful-server>
- *
- * Copyright: 2012-2014 Lux, Scheibel
- * Authors:
- *     Roland Lux <rollux2000@googlemail.com>
- *     Willy Scheibel <willyscheibel@gmx.de>
- *
- * This file is part of Tasteful Server.
- *
- * Tasteful Server is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Tasteful Server is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
 #include <tastefulserver/QVariantTree.h>
 
 #include <QStringList>
@@ -36,34 +10,56 @@ QVariantAbstractTree::~QVariantAbstractTree()
 {
 }
 
-bool QVariantAbstractTree::isTree()
+bool QVariantAbstractTree::isTree() const
 {
     return false;
 }
 
-bool QVariantAbstractTree::isLeaf()
+bool QVariantAbstractTree::isLeaf() const
 {
     return false;
 }
 
-bool QVariantAbstractTree::isNull()
+bool QVariantAbstractTree::isNull() const
 {
     return false;
+}
+
+const QVariantTree * QVariantAbstractTree::asTree() const
+{
+    return isTree() ? static_cast<const QVariantTree *>(this) : nullptr;
 }
 
 QVariantTree * QVariantAbstractTree::asTree()
 {
-    return isTree() ? (QVariantTree *)this : nullptr;
+    return isTree() ? static_cast<QVariantTree *>(this) : nullptr;
+}
+
+const QVariantLeaf * QVariantAbstractTree::asLeaf() const
+{
+    return isLeaf() ? static_cast<const QVariantLeaf *>(this) : nullptr;
 }
 
 QVariantLeaf * QVariantAbstractTree::asLeaf()
 {
-    return isLeaf() ? (QVariantLeaf *)this : nullptr;
+    return isLeaf() ? static_cast<QVariantLeaf *>(this) : nullptr;
 }
 
-QVariantAbstractTree &QVariantAbstractTree::operator[](const QString & key)
+const QVariantAbstractTree & QVariantAbstractTree::operator[](const QString & key) const
 {
     return get(key);
+}
+
+QVariantAbstractTree & QVariantAbstractTree::operator[](const QString & key)
+{
+    return get(key);
+}
+
+const QVariantAbstractTree & QVariantAbstractTree::get(const QString & key) const
+{
+    const QVariantAbstractTree * tree = basicGet(key);
+
+    return tree ? *tree : s_nullValue;
 }
 
 QVariantAbstractTree &QVariantAbstractTree::get(const QString & key)
@@ -73,7 +69,25 @@ QVariantAbstractTree &QVariantAbstractTree::get(const QString & key)
     return tree ? *tree : s_nullValue;
 }
 
-QVariantAbstractTree &QVariantAbstractTree::getByPath(const QString & path)
+const QVariantAbstractTree & QVariantAbstractTree::getByPath(const QString & path) const
+{
+    QStringList parts = path.split(QRegExp("(\\/|\\.)."));
+    const QVariantAbstractTree * tree = this;
+
+    for (QString part : parts)
+    {
+        tree = tree->basicGet(part);
+
+        if (!tree)
+        {
+            return s_nullValue;
+        }
+    }
+
+    return *tree;
+}
+
+QVariantAbstractTree & QVariantAbstractTree::getByPath(const QString & path)
 {
     QStringList parts = path.split(QRegExp("(\\/|\\.)."));
     QVariantAbstractTree * tree = this;
@@ -91,12 +105,12 @@ QVariantAbstractTree &QVariantAbstractTree::getByPath(const QString & path)
     return *tree;
 }
 
-bool QVariantAbstractTree::contains(const QString & key)
+bool QVariantAbstractTree::contains(const QString & key) const
 {
     return !get(key).isNull();
 }
 
-bool QVariantAbstractTree::containsPath(const QString & path)
+bool QVariantAbstractTree::containsPath(const QString & path) const
 {
     return !getByPath(path).isNull();
 }
@@ -109,12 +123,17 @@ QVariantTree::~QVariantTree()
     }
 }
 
-bool QVariantTree::isTree()
+bool QVariantTree::isTree() const
 {
     return true;
 }
 
-int QVariantTree::size()
+QList<QString> QVariantTree::keys() const
+{
+    return m_children.keys();
+}
+
+int QVariantTree::size() const
 {
     return m_children.size();
 }
@@ -128,7 +147,7 @@ void QVariantTree::insert(const QString & key, QVariantAbstractTree * value)
     m_children.insert(key, value);
 }
 
-void QVariantTree::insert(const QString & key, QVariant value)
+void QVariantTree::insert(const QString & key, const QVariant & value)
 {
     insert(key, new QVariantLeaf(value));
 }
@@ -147,12 +166,12 @@ QVariantTree &QVariantTree::obtainSubtree(const QString & key)
     return get(key).isTree() ? *get(key).asTree() : createSubtree(key);
 }
 
-QVariantAbstractTree * QVariantTree::basicGet(const QString & key)
+QVariantAbstractTree * QVariantTree::basicGet(const QString & key) const
 {
     return m_children.value(key, nullptr);
 }
 
-QVariant QVariantTree::asQVariant()
+QVariant QVariantTree::asQVariant() const
 {
     QVariantMap map;
 
@@ -164,7 +183,7 @@ QVariant QVariantTree::asQVariant()
     return map;
 }
 
-QString QVariantTree::printString(unsigned indent)
+QString QVariantTree::printString(unsigned indent) const
 {
     QString string;
     QTextStream stream(&string);
@@ -187,27 +206,27 @@ QString QVariantTree::printString(unsigned indent)
     return string;
 }
 
-QVariantLeaf::QVariantLeaf(QVariant value)
+QVariantLeaf::QVariantLeaf(const QVariant & value)
     : m_element(value)
 {
 }
 
-bool QVariantLeaf::isLeaf()
+bool QVariantLeaf::isLeaf() const
 {
     return true;
 }
 
-QVariantAbstractTree * QVariantLeaf::basicGet(const QString & /*key*/)
+QVariantAbstractTree * QVariantLeaf::basicGet(const QString & /*key*/) const
 {
     return nullptr;
 }
 
-QVariant QVariantLeaf::asQVariant()
+QVariant QVariantLeaf::asQVariant() const
 {
     return m_element;
 }
 
-QString QVariantLeaf::printString(unsigned /*indent*/)
+QString QVariantLeaf::printString(unsigned /*indent*/) const
 {
     if (m_element.type()==QVariant::UserType)
     {
@@ -222,22 +241,22 @@ void QVariantLeaf::setElement(const QVariant & newElement)
     m_element = newElement;
 }
 
-bool QVariantNullTree::isNull()
+bool QVariantNullTree::isNull() const
 {
     return true;
 }
 
-QVariantAbstractTree * QVariantNullTree::basicGet(const QString & /*key*/)
+QVariantAbstractTree * QVariantNullTree::basicGet(const QString & /*key*/) const
 {
     return nullptr;
 }
 
-QVariant QVariantNullTree::asQVariant()
+QVariant QVariantNullTree::asQVariant() const
 {
     return QVariant();
 }
 
-QString QVariantNullTree::printString(unsigned /*indent*/)
+QString QVariantNullTree::printString(unsigned /*indent*/) const
 {
     return "NULL";
 }

@@ -1,32 +1,6 @@
-/**
- * (C) LGPL-3
- *
- * Tasteful Server <https://github.com/scheibel/tasteful-server>
- *
- * Copyright: 2012-2014 Lux, Scheibel
- * Authors:
- *     Roland Lux <rollux2000@googlemail.com>
- *     Willy Scheibel <willyscheibel@gmx.de>
- *
- * This file is part of Tasteful Server.
- *
- * Tasteful Server is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Tasteful Server is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with Tasteful Server.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
 #include <tastefulserver/HttpResponse.h>
 
-#include <QTextStream>
+#include <QIODevice>
 #include <QDateTime>
 
 #include <tastefulserver/httpUtil.h>
@@ -86,35 +60,32 @@ Cookie &HttpResponse::setCookie(const QString & key, const QString & value)
     return m_cookies[key];
 }
 
-void HttpResponse::writeHeadersOn(QTextStream & stream) const
+void HttpResponse::writeHeadersOn(QIODevice & device) const
 {
-    HttpMessage::writeHeadersOn(stream);
+    HttpMessage::writeHeadersOn(device);
 
     for (const Cookie & cookie : m_cookies)
     {
         HttpHeader header(http::SetCookie, cookie.toString());
-        writeHeaderOn(header, stream);
+        writeHeaderOn(header, device);
     }
     HttpHeader header(http::ContentType, m_contentType.toString());
-    writeHeaderOn(header, stream);
+    writeHeaderOn(header, device);
 }
 
-QByteArray HttpResponse::toByteArray() const
+void HttpResponse::writeTo(QIODevice & device) const
 {
-    QByteArray byteArray;
-    QTextStream stream(&byteArray);
+    device.write((m_httpVersion.toString() + " " + QString::number(m_statusCode)).toLocal8Bit());
 
-    stream << m_httpVersion.toString() << " " << m_statusCode;
     QString reason = http::reason(m_statusCode);
     if (!reason.isNull())
     {
-        stream << " " << reason;
+        device.write((" " + reason).toLocal8Bit());
     }
-    stream << http::Linebreak;
 
-    stream << HttpMessage::toByteArray();
+    device.write(http::Linebreak.toLocal8Bit());
 
-    return byteArray;
+    HttpMessage::writeTo(device);
 }
 
 } // namespace tastefulserver

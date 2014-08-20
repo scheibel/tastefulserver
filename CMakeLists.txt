@@ -128,9 +128,7 @@ endif()
 # Project meta files
 install(FILES tastefulserver-config.cmake DESTINATION ${INSTALL_ROOT})
 install(FILES AUTHORS           DESTINATION ${INSTALL_ROOT})
-install(FILES COPYING           DESTINATION ${INSTALL_ROOT})
-install(FILES GPL           DESTINATION ${INSTALL_ROOT})
-install(FILES LGPL           DESTINATION ${INSTALL_ROOT})
+install(FILES LICENSE           DESTINATION ${INSTALL_ROOT})
 
 # Add a revision file containing the git-head tag for cpack and install
 create_revision_file(${CMAKE_BINARY_DIR}/revision ${INSTALL_ROOT})
