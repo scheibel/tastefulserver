@@ -11,24 +11,23 @@ namespace tastefulserver {
 class TASTEFULSERVER_API HttpResponse : public HttpMessage
 {
 public:
-    HttpResponse();
-    HttpResponse(const HttpVersion & httpVersion);
-    HttpResponse(const HttpRequest & httpRequest);
+    HttpResponse(unsigned statusCode);
+    HttpResponse(unsigned statusCode, const HttpVersion & httpVersion);
+    HttpResponse(unsigned statusCode, const HttpRequest & httpRequest);
 
     void setStatusCode(unsigned statusCode);
     unsigned getStatusCode() const;
 
     void setContentType(const QString & contentType);
+    void setDate();
     void setDate(const QDateTime & date);
 
     void setCookie(const Cookie & cookie);
     Cookie & setCookie(const QString & key, const QString & value);
-
+   
     virtual void writeTo(QIODevice & device) const;
 protected:
     unsigned m_statusCode;
-
-    void initialize();
 
     virtual void writeHeadersOn(QIODevice & device) const;
 };

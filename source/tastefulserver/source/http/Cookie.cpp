@@ -16,17 +16,18 @@ const QString Cookie::Version = "Version";
 const QString Cookie::Expires = "Expires";
 const QString Cookie::Secure = "Secure";
 const QString Cookie::HttpOnly = "HttpOnly";
+
 Cookie::Cookie()
-    : m_secure(false)
-    , m_httpOnly(false)
+: m_secure(false)
+, m_httpOnly(false)
 {
 }
 
 Cookie::Cookie(const QString & name, const QString & value)
-    : m_name(name)
-    , m_value(value)
-    , m_secure(false)
-    , m_httpOnly(false)
+: m_name(name)
+, m_value(value)
+, m_secure(false)
+, m_httpOnly(false)
 {
 }
 
@@ -171,6 +172,11 @@ void Cookies::clear(Cookie & cookie)
     cookie.setValue("deleted");
     cookie.setExpires(QDateTime::fromTime_t(0));
     m_cookies[cookie.getName()] = cookie;
+}
+
+void Cookies::clear()
+{
+    m_cookies.clear();
 }
 
 Cookies Cookies::fromString(const QString & cookiesString)

@@ -22,6 +22,7 @@ class TASTEFULSERVER_API HttpEntity
 {
 public:
     HttpEntity();
+    virtual ~HttpEntity();
 
     bool hasHeader(const http::HeaderName & headerName) const;
     HttpHeader getHeader(const http::HeaderName & headerName) const;
@@ -35,13 +36,15 @@ public:
 
     void removeHeader(const http::HeaderName & headerName);
 
+    void clearHeaders();
+
     void setContent(const QByteArray & content);
     const QByteArray & getContent() const;
     void clearContent();
 
     virtual void writeTo(QIODevice & device) const;
 protected:
-    QHash<QString, QList<HttpHeader >> m_headers;
+    QHash<QString, QList<HttpHeader>> m_headers;
     QByteArray m_content;
 
     void writeHeaderOn(const HttpHeader & header, QIODevice & device) const;

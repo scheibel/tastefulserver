@@ -2,20 +2,21 @@
 
 #include <QBuffer>
 
-#include <tastefulserver/HttpServer.h>
+#include <tastefulserver/HttpCallbackServer.h>
 
 using namespace tastefulserver;
 
 int main(int argc, char ** argv)
 {
     QCoreApplication app(argc, argv);
-    HttpServer server([](const HttpRequest & request) {
-            HttpResponse response(request);
+    HttpCallbackServer server([](const HttpRequest & request) {
+            HttpResponse response(http::OK, request);
 
             response.setStatusCode(http::OK);
 
             QByteArray content;
             QBuffer buffer(&content);
+            buffer.open(QIODevice::ReadWrite);
 
             request.writeTo(buffer);
             content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");

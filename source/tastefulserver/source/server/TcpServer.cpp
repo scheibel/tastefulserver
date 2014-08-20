@@ -1,11 +1,12 @@
 #include <tastefulserver/TcpServer.h>
 #include "../core/ThreadPool.h"
-#include <tastefulserver/ConnectionHandler.h>
+#include <tastefulserver/Connection.h>
 
 namespace tastefulserver {
 
 ThreadPool * TcpServer::s_threadPool = new ThreadPool();
 int TcpServer::s_serverCount = 0;
+
 TcpServer::TcpServer()
 {
     s_serverCount++;
@@ -31,7 +32,10 @@ void TcpServer::setNumThreads(int numThreads)
 
 void TcpServer::incomingConnection(qintptr socketDescriptor)
 {
-    s_threadPool->addTask(createConnectionHandler(socketDescriptor));
+    Connection * connection = new Connection(socketDescriptor);
+    connection->setSocket(createSocket());
+
+    s_threadPool->addTask(connection);
 }
 
 } // namespace tastefulserver

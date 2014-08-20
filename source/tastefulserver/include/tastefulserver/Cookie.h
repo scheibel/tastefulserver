@@ -62,6 +62,8 @@ public:
     const Cookie operator[](const QString & name) const;
     void clear(Cookie & cookie);
 
+    void clear();
+
     QHash<QString, Cookie>::iterator begin();
     QHash<QString, Cookie>::const_iterator begin() const;
     QHash<QString, Cookie>::iterator end();

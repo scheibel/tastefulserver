@@ -1,22 +1,24 @@
 #pragma once
 
-#include <functional>
-
 #include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
-#include <tastefulserver/HttpHandler.h>
+#include <tastefulserver/HttpSocketHandler.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpServer : public TcpServer
+class TASTEFULSERVER_API HttpServer : public TcpServer, public HttpSocketHandler
 {
 public:
-    HttpServer(const HttpHandler::RequestCallback & callback);
+    HttpServer();
+    ~HttpServer();
 
 protected:
-    HttpHandler::RequestCallback m_callback;
-    virtual ConnectionHandler* createConnectionHandler(qintptr socketDescriptor) const;
+    virtual AbstractSocket * createSocket() override;
+
+    // --- handling ---
+
+    //virtual void handleRequest(HttpSocket * socket, const HttpRequest & request) override;
 };
 
 } // namespace tastefulserver

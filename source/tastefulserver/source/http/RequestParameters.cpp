@@ -6,14 +6,19 @@
 
 #include <tastefulserver/MultiPart.h>
 #include <tastefulserver/UploadedFile.h>
-#include <tastefulserver/ByteArrayStream.h>
+#include <tastefulserver/ByteStream.h>
 #include <tastefulserver/QVariantTree.h>
 
 namespace tastefulserver {
 
 RequestParameters::RequestParameters()
-    : m_params(new QVariantTree())
+: m_params(new QVariantTree())
 {
+}
+
+void RequestParameters::clear()
+{
+    m_params.clear();
 }
 
 RequestParameters RequestParameters::fromUrl(const QUrl & url)
@@ -178,7 +183,7 @@ bool RequestParameters::containsPath(const QString & path) const
 
 QList<QString> RequestParameters::extractIndices(const QString & key) const
 {
-    ByteArrayStream stream(key.toUtf8());
+    ByteStream stream(key.toUtf8());
     QString name = stream.readUpTo('[');
 
     if (name.isEmpty())

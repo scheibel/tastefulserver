@@ -1,42 +1,36 @@
 #include <tastefulserver/HttpResponse.h>
 
+#include <QIODevice>
 #include <QDateTime>
 
 #include <tastefulserver/httpUtil.h>
 
 namespace tastefulserver {
 
-HttpResponse::HttpResponse()
+HttpResponse::HttpResponse(unsigned statusCode)
+: m_statusCode(statusCode)
 {
-    initialize();
 }
 
-HttpResponse::HttpResponse(const HttpVersion & httpVersion)
-    : HttpMessage(httpVersion)
+HttpResponse::HttpResponse(unsigned statusCode, const HttpVersion & httpVersion)
+: HttpMessage(httpVersion)
+, m_statusCode(statusCode)
 {
-    initialize();
 }
 
-HttpResponse::HttpResponse(const HttpRequest & httpRequest)
-    : HttpMessage(httpRequest.getHttpVersion())
+HttpResponse::HttpResponse(unsigned statusCode, const HttpRequest & httpRequest)
+: HttpMessage(httpRequest.getHttpVersion())
+, m_statusCode(statusCode)
 {
-    initialize();
-    if ((httpRequest.getHttpVersion()>=HttpVersion(1, 1)) || httpRequest.isKeepAlive())
+    if ((httpRequest.getHttpVersion() >= HttpVersion(1, 1)) || httpRequest.isKeepAlive())
     {
         keepAlive();
     }
 }
 
-void HttpResponse::initialize()
+void HttpResponse::setDate()
 {
-    setStatusCode(http::NotFound);
-    setHeader(http::ContentLength, "0");
     setDate(QDateTime::currentDateTime());
-}
-
-void HttpResponse::setContentType(const QString & contentType)
-{
-    m_contentType.setTypeAndSubtype(contentType);
 }
 
 void HttpResponse::setDate(const QDateTime & date)

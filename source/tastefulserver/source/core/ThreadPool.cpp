@@ -5,9 +5,9 @@
 namespace tastefulserver {
 
 ThreadPool::ThreadPool(int numThreads)
-    : m_started(false)
-    , m_threadCount(0)
-    , m_next(0)
+: m_started(false)
+, m_threadCount(0)
+, m_next(0)
 {
     setNumThreads(numThreads);
 }
@@ -53,7 +53,7 @@ void ThreadPool::start()
 
 void ThreadPool::stop()
 {
-    if (m_started)
+    if (!m_started)
     {
         return;
     }

@@ -18,6 +18,8 @@ class TASTEFULSERVER_API RequestParameters
 public:
     RequestParameters();
 
+    void clear();
+
     QVariantTree & tree();
     const QVariantTree & tree() const;
 
@@ -41,7 +43,7 @@ public:
     static RequestParameters fromMultiPart(const MultiPart & multiPart);
 
 protected:
-    void parseList(const QList<QPair<QString, QVariant >> &parameters);
+    void parseList(const QList<QPair<QString, QVariant>> &parameters);
     QList<QString> extractIndices(const QString & key) const;
 
     QSharedPointer<QVariantTree> m_params;

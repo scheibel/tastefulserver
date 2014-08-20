@@ -8,6 +8,7 @@ const QString ContentType::Multipart = "multipart";
 const QString ContentType::Application = "application";
 const QString ContentType::FormData = "form-data";
 const QString ContentType::XWWWFormUrlEncoded = "x-www-form-urlencoded";
+
 ContentType::ContentType()
 {
 }

@@ -1,12 +1,17 @@
 #include <tastefulserver/HttpEntity.h>
 
 #include <QTextStream>
+
 #include <QDataStream>
 #include <QIODevice>
 
 namespace tastefulserver {
 
 HttpEntity::HttpEntity()
+{
+}
+
+HttpEntity::~HttpEntity()
 {
 }
 
@@ -73,6 +78,11 @@ void HttpEntity::setHeader(const HttpHeader & header, bool merge)
 void HttpEntity::removeHeader(const http::HeaderName & headerName)
 {
     m_headers.remove(headerName);
+}
+
+void HttpEntity::clearHeaders()
+{
+    m_headers.clear();
 }
 
 const QByteArray & HttpEntity::getContent() const
