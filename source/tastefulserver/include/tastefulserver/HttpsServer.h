@@ -5,14 +5,15 @@
 
 #include <tastefulserver/tastefulserver_api.h>
 
-#include <tastefulserver/HttpServer.h>
+#include <tastefulserver/TcpServer.h>
+#include <tastefulserver/HttpSocketHandler.h>
 
 namespace tastefulserver {
 
-class TASTEFULSERVER_API HttpsServer : public HttpServer
+class TASTEFULSERVER_API HttpsServer : public TcpServer, public HttpSocketHandler
 {
 public:
-    HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback);
+    HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey);
     ~HttpsServer();
 private:
     QSslCertificate m_certificate;

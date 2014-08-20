@@ -2,7 +2,7 @@
 
 #include <QBuffer>
 
-#include <tastefulserver/HttpsServer.h>
+#include <tastefulserver/HttpsCallbackServer.h>
 
 QSslCertificate getCertificate()
 {
@@ -52,7 +52,7 @@ using namespace tastefulserver;
 int main(int argc, char ** argv)
 {
     QCoreApplication app(argc, argv);
-    HttpsServer server(getCertificate(), getPrivateKey(), [](const HttpRequest & request) {
+    HttpsCallbackServer server(getCertificate(), getPrivateKey(), [](const HttpRequest & request) {
             HttpResponse response(http::OK, request);
 
             QByteArray content;

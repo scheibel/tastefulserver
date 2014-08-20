@@ -115,7 +115,6 @@ void WebSocket::receiveData(const QByteArray & data)
                 sendPong();
                 break;
             case WebSocketFrame::OpCode::Pong:
-                qDebug() << "received pong";
                 break;
             case WebSocketFrame::OpCode::ConnectionClose:
                 sendFrame(WebSocketFrame(WebSocketFrame::OpCode::ConnectionClose));

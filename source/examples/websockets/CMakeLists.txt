@@ -41,6 +41,8 @@ set(headers
 
 set(sources
 	main.cpp
+	Server.cpp
+	Server.h
 )
 
 # Group source files

@@ -2,14 +2,14 @@
 
 #include <QBuffer>
 
-#include <tastefulserver/HttpServer.h>
+#include <tastefulserver/HttpCallbackServer.h>
 
 using namespace tastefulserver;
 
 int main(int argc, char ** argv)
 {
     QCoreApplication app(argc, argv);
-    HttpServer server([](const HttpRequest & request) {
+    HttpCallbackServer server([](const HttpRequest & request) {
             HttpResponse response(http::OK, request);
 
             response.setStatusCode(http::OK);

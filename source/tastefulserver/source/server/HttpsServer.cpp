@@ -1,10 +1,11 @@
 #include <tastefulserver/HttpsServer.h>
+
 #include <tastefulserver/HttpsSocket.h>
 
 namespace tastefulserver {
 
-HttpsServer::HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey, const RequestCallback & callback)
-: HttpServer(callback)
+HttpsServer::HttpsServer(const QSslCertificate & certificate, const QSslKey & privateKey)
+: TcpServer()
 , m_certificate(certificate)
 , m_privateKey(privateKey)
 {
