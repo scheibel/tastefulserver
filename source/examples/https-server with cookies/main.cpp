@@ -57,6 +57,7 @@ int main(int argc, char ** argv)
 
             QByteArray content;
             QBuffer buffer(&content);
+            buffer.open(QIODevice::ReadWrite);
 
             request.writeTo(buffer);
 

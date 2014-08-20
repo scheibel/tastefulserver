@@ -16,6 +16,7 @@ int main(int argc, char ** argv)
 
             QByteArray content;
             QBuffer buffer(&content);
+            buffer.open(QIODevice::ReadWrite);
 
             request.writeTo(buffer);
             content.append("Client IP:" + request.address().toString() + " (Port " + QString::number(request.port()) + ")\r\n");
