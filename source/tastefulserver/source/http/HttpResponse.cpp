@@ -34,6 +34,11 @@ void HttpResponse::initialize()
     setDate(QDateTime::currentDateTime());
 }
 
+void HttpResponse::setContentType(const QString & contentType)
+{
+    m_contentType.setTypeAndSubtype(contentType);
+}
+
 void HttpResponse::setDate(const QDateTime & date)
 {
     setHeader(http::Date, http::dateString(date));

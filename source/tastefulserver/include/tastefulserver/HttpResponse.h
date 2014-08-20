@@ -18,6 +18,7 @@ public:
     void setStatusCode(unsigned statusCode);
     unsigned getStatusCode() const;
 
+    void setContentType(const QString & contentType);
     void setDate(const QDateTime & date);
 
     void setCookie(const Cookie & cookie);
