@@ -28,6 +28,11 @@ HttpResponse::HttpResponse(unsigned statusCode, const HttpRequest & httpRequest)
     }
 }
 
+void HttpResponse::setContentType(const QString & contentType)
+{
+    m_contentType.setTypeAndSubtype(contentType);
+}
+
 void HttpResponse::setDate()
 {
     setDate(QDateTime::currentDateTime());

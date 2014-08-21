@@ -35,7 +35,6 @@ WebSocketFrame::WebSocketFrame(OpCode opCode, const QByteArray & content)
 : WebSocketFrame(opCode, true)
 {
     setContent(content);
-    setRandomMask();
 }
 
 void WebSocketFrame::setHeader(const Header & header)
@@ -121,12 +120,12 @@ QByteArray WebSocketFrame::toByteArray() const
     else if (contentLength < std::numeric_limits<qint16>::max())
     {
         lengthMask.data.len = Length2Bytes;
-        headerLength += 2;
+        headerLength = 4;
     }
     else
     {
         lengthMask.data.len = Length4Bytes;
-        headerLength += 4;
+        headerLength = 10;
     }
 
     if (m_masked)
@@ -170,10 +169,7 @@ QByteArray WebSocketFrame::toByteArray() const
     }
     else
     {
-        for (int i = 0; i < contentLength; ++i)
-        {
-            byteArray[headerLength + i] = m_content[i];
-        }
+        memcpy(&byteArray.data()[headerLength], m_content.data(), m_content.size());
     }
 
     return byteArray;

@@ -11,7 +11,6 @@ namespace tastefulserver {
 
 const QString WebSocket::MagicString = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-
 WebSocket::WebSocket(WebSocketHandler * handler)
 : m_handler(handler)
 , m_inFragmentedMode(false)
@@ -30,7 +29,7 @@ QAbstractSocket * WebSocket::createSocket(qintptr socketDescriptor)
 
 QString WebSocket::hashKey(const QString & key)
 {
-    return QCryptographicHash::hash((key + MagicString).toUtf8(), QCryptographicHash::Sha1).toBase64();
+    return QCryptographicHash::hash((key + MagicString).toLatin1(), QCryptographicHash::Sha1).toBase64();
 }
 
 void WebSocket::performHandshake(const HttpRequest & request)
@@ -40,8 +39,13 @@ void WebSocket::performHandshake(const HttpRequest & request)
     response.setHeader(http::Upgrade, "websocket");
     response.setHeader(http::Connection, http::Upgrade);
     response.setHeader(http::SecWebSocketAccept, hashKey(request.getHeader(http::SecWebSocketKey).getValue()));
+    response.addHeader(request.getHeader(http::SecWebSocketVersion));
 
-    //response.addHeader(request.getHeader(http::SecWebSocket)); // sub protocols
+    QStringList protocols = request.getHeader(http::SecWebSocketProtocol).getValue().split(",", QString::SkipEmptyParts);
+    if (!protocols.empty())
+    {
+        response.setHeader(http::SecWebSocketProtocol, protocols.first().trimmed());
+    }
 
     response.writeTo(*m_socket);
 

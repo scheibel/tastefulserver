@@ -20,7 +20,7 @@ output = function(d) {
 window.onload = function() {
     output("test");
 
-    var connection = new WebSocket('ws://localhost:8080/echo', ['soap', 'xmpp']);
+    var connection = new WebSocket('ws://localhost:8080/echo');
 
     connection.onopen = function () {
         connection.send('Ping');
