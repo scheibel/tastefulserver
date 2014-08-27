@@ -44,6 +44,7 @@ protected:
     static QString hashKey(const QString & key);
 protected slots:
     void badFrame();
+    void connectionClosed();
 };
 
 } // namespace tastefulserver

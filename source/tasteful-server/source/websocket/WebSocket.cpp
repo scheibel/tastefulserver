@@ -50,6 +50,8 @@ void WebSocket::performHandshake(const HttpRequest & request)
     response.writeTo(*m_socket);
 
     m_handler->connectionEstablished(this);
+
+    connect(m_socket, SIGNAL(disconnected()), this, SLOT(connectionClosed()));
 }
 
 void WebSocket::upgrade(HttpSocket * socket, const HttpRequest & request)
@@ -166,5 +168,9 @@ void WebSocket::closeConnection()
     disconnect();
 }
 
+void WebSocket::connectionClosed()
+{
+    m_handler->connectionClosed(this);
+}
 
 } // namespace tastefulserver

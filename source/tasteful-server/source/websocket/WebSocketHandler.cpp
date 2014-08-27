@@ -6,4 +6,8 @@ void WebSocketHandler::connectionEstablished(WebSocket * )
 {
 }
 
+void WebSocketHandler::connectionClosed(WebSocket * )
+{
+}
+
 } // namespace tastefulserver
