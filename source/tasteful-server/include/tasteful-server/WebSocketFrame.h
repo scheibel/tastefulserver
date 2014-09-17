@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <tasteful-server/tasteful-server_api.h>
 
 #include <QByteArray>
