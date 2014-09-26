@@ -1,16 +1,16 @@
 #pragma once
 
-#include <QSharedPointer>
+#include <QHash>
 
 #include <tasteful-server/tasteful-server_api.h>
+#include <tasteful-server/UploadedFile.h>
 
 class QString;
 class QByteArray;
+class QUrl;
 
 namespace tastefulserver {
 
-class QVariantAbstractTree;
-class QVariantTree;
 class MultiPart;
 
 class TASTEFUL_SERVER_API RequestParameters
@@ -20,33 +20,26 @@ public:
 
     void clear();
 
-    QVariantTree & tree();
-    const QVariantTree & tree() const;
-
     bool contains(const QString & key) const;
-    bool containsPath(const QString & path) const;
+    QString get(const QString & key) const;
 
-    QVariantAbstractTree & operator[](const QString & key) const;
-    QVariantAbstractTree & get(const QString & key) const;
-    QVariantAbstractTree & getByPath(const QString & path) const;
+    bool containsFile(const QString & key) const;
+    UploadedFile getFile(const QString & key) const;
 
-    void insert(const QString & key, const QVariant & value);
+    const QHash<QString, QString> & parameters() const;
+    const QHash<QString, UploadedFile> & files() const;
 
     void parseUrl(const QUrl & url);
     void parseUrlEncoded(const QByteArray & urlEncodedPost);
     void parseMultiPart(const MultiPart & multiPart);
-
-    QString toString() const;
 
     static RequestParameters fromUrl(const QUrl & url);
     static RequestParameters fromUrlEncoded(const QByteArray & urlEncoded);
     static RequestParameters fromMultiPart(const MultiPart & multiPart);
 
 protected:
-    void parseList(const QList<QPair<QString, QVariant>> &parameters);
-    QList<QString> extractIndices(const QString & key) const;
-
-    QSharedPointer<QVariantTree> m_params;
+    QHash<QString, QString> m_params;
+    QHash<QString, UploadedFile> m_files;
 };
 
 } // namespace tastefulserver

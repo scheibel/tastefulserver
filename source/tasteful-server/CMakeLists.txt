@@ -47,7 +47,6 @@ set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(sources
 	${source_path}/core/Task.cpp
-	${source_path}/core/QVariantTree.cpp
 	${source_path}/core/ByteStream.cpp
 	${source_path}/core/ThreadPool.cpp
 	${source_path}/core/ThreadPool.h
@@ -109,8 +108,6 @@ set(api_includes
 	${include_path}/HttpVersion.h
 	${include_path}/HttpWebSocketServer.h
 	${include_path}/MultiPart.h
-	${include_path}/QVariantTree.h
-	${include_path}/QVariantTree.hpp
 	${include_path}/RequestParameters.h
 	${include_path}/Task.h
         ${include_path}/tasteful-server_api.h

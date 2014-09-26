@@ -1,24 +1,23 @@
 #include <tasteful-server/RequestParameters.h>
 
 #include <QUrl>
-#include <QRegExp>
 #include <QByteArray>
+#include <QStringList>
 
 #include <tasteful-server/MultiPart.h>
 #include <tasteful-server/UploadedFile.h>
 #include <tasteful-server/ByteStream.h>
-#include <tasteful-server/QVariantTree.h>
 
 namespace tastefulserver {
 
 RequestParameters::RequestParameters()
-: m_params(new QVariantTree())
 {
 }
 
 void RequestParameters::clear()
 {
     m_params.clear();
+    m_files.clear();
 }
 
 RequestParameters RequestParameters::fromUrl(const QUrl & url)
@@ -48,19 +47,12 @@ RequestParameters RequestParameters::fromMultiPart(const MultiPart & multiPart)
     return params;
 }
 
-QString RequestParameters::toString() const
-{
-    return m_params->printString();
-}
-
 void RequestParameters::parseUrl(const QUrl & url)
 {
     if (!url.hasQuery())
     {
         return;
     }
-
-    QList<QPair<QString, QVariant >> parameters;
 
     for (const QString & parameter : url.query().split('&'))
     {
@@ -73,10 +65,8 @@ void RequestParameters::parseUrl(const QUrl & url)
         QString key = parameter.left(splitIndex);
         QString value = parameter.mid(splitIndex + 1);
 
-        parameters << QPair<QString, QVariant>(key, value);
+        m_params[key] = value;
     }
-
-    parseList(parameters);
 }
 
 void RequestParameters::parseUrlEncoded(const QByteArray & urlEncoded)
@@ -88,8 +78,6 @@ void RequestParameters::parseUrlEncoded(const QByteArray & urlEncoded)
 
 void RequestParameters::parseMultiPart(const MultiPart & multiPart)
 {
-    QList<QPair<QString, QVariant >> parameters;
-
     for (const Part & part : multiPart.getParts())
     {
         HttpHeader contentDisposition = part.getHeader(http::ContentDisposition);
@@ -105,114 +93,45 @@ void RequestParameters::parseMultiPart(const MultiPart & multiPart)
                 {
                     uploadedFile.setFilename(element.getParameter("filename"));
                 }
-                parameters << QPair<QString, QVariant>(name, uploadedFile.toQVariant());
+
+                m_files[name] = uploadedFile;
             }
             else
             {
-                parameters << QPair<QString, QVariant>(name, QString(part.getContent()));
+                m_params[name] = QString(part.getContent());
             }
         }
     }
-
-    parseList(parameters);
 }
 
-void RequestParameters::parseList(const QList<QPair<QString, QVariant >> & parameters)
+QString RequestParameters::get(const QString & key) const
 {
-    for (const QPair<QString, QVariant> & pair : parameters)
-    {
-        if (pair.first.isEmpty())
-        {
-            continue;
-        }
-
-        QList<QString> indices = extractIndices(pair.first);
-
-        QVariantTree * currentParams = m_params.data();
-        QString index;
-        for (int i = 0;i < indices.size() - 1;++i)
-        {
-            index = indices[i].isEmpty() ? QString::number(currentParams->size()) : indices[i];
-            currentParams = &currentParams->obtainSubtree(index);
-        }
-
-        index = indices.last().isEmpty() ? QString::number(currentParams->size()) : indices.last();
-        currentParams->insert(index, pair.second);
-    }
-}
-
-QVariantTree & RequestParameters::tree()
-{
-    return *m_params.data();
-}
-
-const QVariantTree & RequestParameters::tree() const
-{
-    return *m_params.data();
-}
-
-QVariantAbstractTree &RequestParameters::operator[](const QString & key) const
-{
-    return get(key);
-}
-
-QVariantAbstractTree &RequestParameters::getByPath(const QString & path) const
-{
-    return m_params->getByPath(path);
-}
-
-QVariantAbstractTree &RequestParameters::get(const QString & key) const
-{
-    return m_params->get(key);
-}
-
-void RequestParameters::insert(const QString & key, const QVariant & value)
-{
-    m_params->insert(key, value);
+    return m_params.value(key, "");
 }
 
 bool RequestParameters::contains(const QString & key) const
 {
-    return m_params->contains(key);
+    return m_params.contains(key);
 }
 
-bool RequestParameters::containsPath(const QString & path) const
+UploadedFile RequestParameters::getFile(const QString & key) const
 {
-    return m_params->containsPath(path);
+    return m_files.value(key);
 }
 
-QList<QString> RequestParameters::extractIndices(const QString & key) const
+bool RequestParameters::containsFile(const QString & key) const
 {
-    ByteStream stream(key.toUtf8());
-    QString name = stream.readUpTo('[');
+    return m_files.contains(key);
+}
 
-    if (name.isEmpty())
-    {
-        return QList<QString>() << key;
-    }
+const QHash<QString, QString> & RequestParameters::parameters() const
+{
+    return m_params;
+}
 
-    QList<QString> indices = QList<QString>() << name;
-
-    while (stream.canReadUpTo('['))
-    {
-        stream.skipBehind('[');
-
-        if (stream.canReadUpTo(']'))
-        {
-            indices << stream.readUpTo(']', true);
-        }
-        else
-        {
-            return QList<QString>() << key;
-        }
-    }
-
-    if (!stream.atEnd())
-    {
-        return QList<QString>() << key;
-    }
-
-    return indices;
+const QHash<QString, UploadedFile> & RequestParameters::files() const
+{
+    return m_files;
 }
 
 } // namespace tastefulserver
