@@ -29,13 +29,14 @@ Features
      * GET and POST parameters
      * Multipart and uploaded files
      * Cookies
+     * Websockets
 
 Requirements
 ---------------------
 
  * [Qt 5.0](http://qt.nokia.com/)
- * [gcc 4.7](http://gcc.gnu.org/)
  * [CMake 2.8.9](http://www.cmake.org/)
+ * C++11 compatible Compiler (gcc >= 4.7, clang >= 3.4, MSVC 2013)
 
 Known Projects Using Tasteful Server
 --------------------------------------------------------
