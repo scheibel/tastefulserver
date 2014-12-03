@@ -1,5 +1,6 @@
 # build directory
 build
+build-debug
 
 # documentation directory
 documentation
@@ -19,3 +20,5 @@ documentation
 
 # Qt Creator files
 *CMakeLists.txt.user
+
+.localconfig
