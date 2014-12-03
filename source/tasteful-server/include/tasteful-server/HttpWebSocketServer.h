@@ -12,7 +12,7 @@ class TASTEFUL_SERVER_API HttpWebSocketServer : public TcpServer, public HttpSoc
 {
 public:
     HttpWebSocketServer();
-    ~HttpWebSocketServer();
+    virtual ~HttpWebSocketServer();
 
 protected:
     virtual AbstractSocket * createSocket() override;

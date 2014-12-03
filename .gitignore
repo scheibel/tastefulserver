@@ -20,5 +20,9 @@ documentation
 
 # Qt Creator files
 *CMakeLists.txt.user
+_configure.bat
+_open-project.bat
+_start-cmake-gui.bat
+
 
 .localconfig
