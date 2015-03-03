@@ -14,7 +14,7 @@ class TASTEFUL_SERVER_API TcpServer : public QTcpServer
     Q_OBJECT
 
 public:
-    TcpServer();
+    TcpServer(int numThreads = 1);
     virtual ~TcpServer();
 
     static void setNumThreads(int numThreads);

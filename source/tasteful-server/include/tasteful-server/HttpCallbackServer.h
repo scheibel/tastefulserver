@@ -15,7 +15,7 @@ class TASTEFUL_SERVER_API HttpCallbackServer : public HttpServer
 public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
 
-    HttpCallbackServer(const RequestCallback & callback);
+    HttpCallbackServer(const RequestCallback & callback, int numThreads = 1);
     ~HttpCallbackServer();
 
 protected:
