@@ -10,7 +10,7 @@ namespace tastefulserver {
 class TASTEFUL_SERVER_API HttpServer : public TcpServer, public HttpSocketHandler
 {
 public:
-    HttpServer();
+    HttpServer(int numThreads = 1);
     ~HttpServer();
 
 protected:
