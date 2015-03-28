@@ -16,7 +16,7 @@ include_directories(
 set(libs
     ${GMOCK_LIBRARIES}
     ${GTEST_LIBRARIES}
-    gloperate
+    tasteful-server
 )
 
 # Sources
