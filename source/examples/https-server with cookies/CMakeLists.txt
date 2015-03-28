@@ -6,11 +6,10 @@ message(STATUS "Example ${target}")
 # External libraries
 #
 
-find_package(Qt5Core 5.0 REQUIRED)
+find_package(Qt5Core    5.0 REQUIRED)
+find_package(Qt5Network 5.0 REQUIRED)
 
-#
 # Includes
-#
 
 include_directories(
 )
@@ -21,44 +20,33 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-#
 # Libraries
-#
 
 set(libs
-	tasteful-server
+    tasteful-server
 )
 
-#
+# Compiler definitions
+
 # Sources
-#
-
-set(header_path "${CMAKE_CURRENT_SOURCE_DIR}")
-set(source_path "${CMAKE_CURRENT_SOURCE_DIR}")
-
-set(headers
-)
 
 set(sources
-	main.cpp
+    main.cpp
 )
 
-# Group source files
-set(header_group "Header Files")
-set(source_group "Source Files")
-source_group_by_path(${header_path} "\\\\.h$|\\\\.hpp$" 
-    ${header_group} ${headers})
-source_group_by_path(${source_path} "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
-    ${source_group} ${sources})
-
-#
 # Build executable
-#
 
 add_executable(${target} ${sources})
 
 target_link_libraries(${target} ${libs})
-qt5_use_modules(${target} Core Network)
+qt5_use_modules(${target} Core Gui Widgets)
+
+if(MSVC)
+    # -> msvc14 : declaration hides class member (problem in qt)
+    set(DEFAULT_COMPILE_FLAGS ${DEFAULT_COMPILE_FLAGS} /wd4458)
+endif()
+
+target_compile_options(${target} PRIVATE ${DEFAULT_COMPILE_FLAGS})
 
 set_target_properties(${target}
     PROPERTIES
@@ -66,17 +54,14 @@ set_target_properties(${target}
     FOLDER                      "${IDE_FOLDER}"
     COMPILE_DEFINITIONS_DEBUG   "${DEFAULT_COMPILE_DEFS_DEBUG}"
     COMPILE_DEFINITIONS_RELEASE "${DEFAULT_COMPILE_DEFS_RELEASE}"
-    COMPILE_FLAGS               "${DEFAULT_COMPILE_FLAGS}"
     LINK_FLAGS_DEBUG            "${DEFAULT_LINKER_FLAGS_DEBUG}"
     LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
 
-#
 # Deployment
-#
 
 install(TARGETS ${target}
-    RUNTIME DESTINATION ${INSTALL_BIN}
-#   LIBRARY DESTINATION ${INSTALL_SHARED}
-#   ARCHIVE DESTINATION ${INSTALL_LIB}
+    RUNTIME DESTINATION ${INSTALL_EXAMPLES}
+    LIBRARY DESTINATION ${INSTALL_SHARED}
+    ARCHIVE DESTINATION ${INSTALL_LIB}
 )

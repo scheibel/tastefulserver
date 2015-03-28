@@ -1,17 +1,14 @@
 
-# Target
 set(target tasteful-server)
 message(STATUS "Lib ${target}")
 
-#
 # External libraries
-#
 
-find_package(Qt5Core 5.0 REQUIRED)
+find_package(Qt5Core    5.0 REQUIRED)
+find_package(Qt5Network 5.0 REQUIRED)
 
-#
+
 # Includes
-#
 
 include_directories(
 )
@@ -21,16 +18,15 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-#
 # Libraries
-#
 
 set(libs
+    Qt5::Core
+    Qt5::Network
 )
 
-#
+
 # Compiler definitions
-#
 
 if (OPTION_BUILD_STATIC)
     add_definitions("-DTASTEFUL_SERVER_STATIC")
@@ -38,9 +34,8 @@ else()
     add_definitions("-DTASTEFUL_SERVER_EXPORTS")
 endif()
 
-#
+
 # Sources
-#
 
 set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
@@ -123,23 +118,26 @@ set(api_includes
 # Group source files
 set(header_group "Header Files (API)")
 set(source_group "Source Files")
-source_group_by_path(${include_path} "\\\\.h$|\\\\.hpp$" 
-    ${header_group} ${api_includes})
-source_group_by_path(${source_path} "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$" 
+source_group_by_path(${include_path} "\\\\.h$|\\\\.hpp$"
+    ${header_group} ${headers})
+source_group_by_path(${source_path} "\\\\.cpp$|\\\\.c$|\\\\.h$|\\\\.hpp$"
     ${source_group} ${sources})
 
-#
-# Build library
-#
 
-if(OPTION_BUILD_STATIC)
-    add_library(${target} ${api_includes} ${sources})
-else()
-    add_library(${target} SHARED ${api_includes} ${sources})
-endif()
+# Build library
+
+add_library(${target} ${api_includes} ${sources})
 
 target_link_libraries(${target} ${libs})
-qt5_use_modules(${target} Core Network)
+
+if(MSVC)
+    # 'argument' : conversion from 'type1' to 'type2', possible loss of data (problem in qt)
+    set(DEFAULT_COMPILE_FLAGS ${DEFAULT_COMPILE_FLAGS} /wd4244)
+    # -> msvc14 : declaration hides class member (problem in qt)
+    set(DEFAULT_COMPILE_FLAGS ${DEFAULT_COMPILE_FLAGS} /wd4458)
+endif()
+
+target_compile_options(${target} PRIVATE ${DEFAULT_COMPILE_FLAGS})
 
 set_target_properties(${target}
     PROPERTIES
@@ -147,15 +145,13 @@ set_target_properties(${target}
     FOLDER                      "${IDE_FOLDER}"
     COMPILE_DEFINITIONS_DEBUG   "${DEFAULT_COMPILE_DEFS_DEBUG}"
     COMPILE_DEFINITIONS_RELEASE "${DEFAULT_COMPILE_DEFS_RELEASE}"
-    COMPILE_FLAGS               "${DEFAULT_COMPILE_FLAGS}"
     LINK_FLAGS_DEBUG            "${DEFAULT_LINKER_FLAGS_DEBUG}"
     LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}"
-    INCLUDE_PATH	            ${include_path})
+    INCLUDE_PATH                "${header_path}")
 
-#
+
 # Deployment
-#
 
 # Library
 install(TARGETS ${target}

@@ -21,7 +21,7 @@ set(DEFAULT_COMPILE_DEFS_RELEASE
     NDEBUG	                  # Release build
 )
 
-set(LINUX_COMPILE_FLAGS "-fvisibility=hidden -pthread -pipe -fPIC -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wno-error=float-equal -Wno-error=switch -Wreturn-type -fno-exceptions -Wno-mismatched-tags -Wno-unsequenced -Wno-sign-conversion -Wno-unused-function -Wno-missing-braces")
+set(LINUX_COMPILE_FLAGS -fvisibility=hidden -pthread -pipe -fPIC -Werror -Wall -pedantic -Wextra -Wfloat-equal -Wcast-qual -Wcast-align -Wno-error=float-equal -Wno-error=switch -Wreturn-type -fno-exceptions -Wno-mismatched-tags -Wno-unsequenced -Wno-sign-conversion -Wno-unused-function -Wno-missing-braces)
 # pthread       -> use pthread library
 # no-rtti       -> disable c++ rtti
 # no-exceptions -> disable exception handling
