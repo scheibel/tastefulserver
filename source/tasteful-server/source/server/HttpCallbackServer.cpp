@@ -2,8 +2,9 @@
 
 namespace tastefulserver {
 
-HttpCallbackServer::HttpCallbackServer(const RequestCallback & callback)
-: m_callback(callback)
+HttpCallbackServer::HttpCallbackServer(const RequestCallback & callback, int numThreads)
+: HttpServer(numThreads)
+, m_callback(callback)
 {
 }
 
