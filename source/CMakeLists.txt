@@ -31,7 +31,7 @@ set_property(GLOBAL PROPERTY AUTOMOC_FOLDER CMakeAutomocTargets)
 
 # Libraries
 set(IDE_FOLDER "")
-add_subdirectory(tasteful-server)
+add_subdirectory(tastefulserver)
 
 # Examples
 set(IDE_FOLDER "Examples")

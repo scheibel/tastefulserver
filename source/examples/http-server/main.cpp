@@ -2,7 +2,7 @@
 
 #include <QBuffer>
 
-#include <tasteful-server/HttpCallbackServer.h>
+#include <tastefulserver/HttpCallbackServer.h>
 
 using namespace tastefulserver;
 

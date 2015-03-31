@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
 
 # PROJECT DESCRIPTION
 
-set(META_PROJECT_NAME        "tasteful-server")
+set(META_PROJECT_NAME        "tastefulserver")
 set(META_VERSION_MAJOR       "0")
 set(META_VERSION_MINOR       "1")
 set(META_VERSION_PATCH       "0")
 set(META_VERSION             "${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META_VERSION_PATCH}")
 set(META_AUTHOR_ORGANIZATION "Tasteful Revolution")
-set(META_AUTHOR_DOMAIN       "https://github.com/scheibel/tasteful-server/")
+set(META_AUTHOR_DOMAIN       "https://github.com/scheibel/tastefulserver/")
 
 
 # OPTIONS

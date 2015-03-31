@@ -1,8 +1,8 @@
 #pragma once
 
-#include <tasteful-server/tasteful-server_api.h>
+#include <tastefulserver/tasteful-server_api.h>
 
-#include <tasteful-server/HttpWebSocketServer.h>
+#include <tastefulserver/HttpWebSocketServer.h>
 
 class TASTEFUL_SERVER_API Server : public tastefulserver::HttpWebSocketServer
 {
