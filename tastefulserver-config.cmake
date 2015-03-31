@@ -1,32 +1,32 @@
 
-# TASTEFUL_SERVER_FOUND
+# TASTEFULSERVER_FOUND
 
-# TASTEFUL_SERVER_INCLUDES
-# TASTEFUL_SERVER_LIBRARIES
+# TASTEFULSERVER_INCLUDES
+# TASTEFULSERVER_LIBRARIES
 
-# TASTEFUL_SERVER_LIBRARY
-# TASTEFUL_SERVER_LIBRARY_RELEASE
-# TASTEFUL_SERVER_LIBRARY_DEBUG
-# TASTEFUL_SERVER_INCLUDE_DIR
+# TASTEFULSERVER_LIBRARY
+# TASTEFULSERVER_LIBRARY_RELEASE
+# TASTEFULSERVER_LIBRARY_DEBUG
+# TASTEFULSERVER_INCLUDE_DIR
 
 include(FindPackageHandleStandardArgs)
 
 if(CMAKE_CURRENT_LIST_FILE)
-    get_filename_component(TASTEFUL_SERVER_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+    get_filename_component(TASTEFULSERVER_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 endif()
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" ENVPROGRAMFILES)
-file(TO_CMAKE_PATH "$ENV{TASTEFUL_SERVER_DIR}" ENVTASTEFUL_SERVER_DIR)
+file(TO_CMAKE_PATH "$ENV{TASTEFULSERVER_DIR}" ENVTASTEFULSERVER_DIR)
 
 set(LIB_PATHS   
-    ${TASTEFUL_SERVER_DIR}/build
-    ${TASTEFUL_SERVER_DIR}/build/Release
-    ${TASTEFUL_SERVER_DIR}/build/Debug
-    ${TASTEFUL_SERVER_DIR}/build-release
-    ${TASTEFUL_SERVER_DIR}/build-debug
-    ${ENVTASTEFUL_SERVER_DIR}/lib
-    ${TASTEFUL_SERVER_DIR}/lib
-    ${ENVPROGRAMFILES}/tasteful-server/lib
+    ${TASTEFULSERVER_DIR}/build
+    ${TASTEFULSERVER_DIR}/build/Release
+    ${TASTEFULSERVER_DIR}/build/Debug
+    ${TASTEFULSERVER_DIR}/build-release
+    ${TASTEFULSERVER_DIR}/build-debug
+    ${ENVTASTEFULSERVER_DIR}/lib
+    ${TASTEFULSERVER_DIR}/lib
+    ${ENVPROGRAMFILES}/tastefulserver/lib
     /usr/lib
     /usr/local/lib
     /sw/lib
@@ -40,20 +40,20 @@ set(LIB_PATHS
 macro (find LIB_NAME HEADER)
     set(HINT_PATHS ${ARGN})
 
-    if (${LIB_NAME} STREQUAL "tasteful-server")
-        set(LIB_NAME_UPPER TASTEFUL_SERVER)
-        set(LIBNAME tasteful-server)
+    if (${LIB_NAME} STREQUAL "tastefulserver")
+        set(LIB_NAME_UPPER TASTEFULSERVER)
+        set(LIBNAME tastefulserver)
     else()
-        string(TOUPPER TASTEFUL_SERVER_${LIB_NAME} LIB_NAME_UPPER)
-        set(LIBNAME tasteful-server-${LIB_NAME})
+        string(TOUPPER TASTEFULSERVER_${LIB_NAME} LIB_NAME_UPPER)
+        set(LIBNAME tastefulserver-${LIB_NAME})
     endif()
 
     find_path(${LIB_NAME_UPPER}_INCLUDE_DIR ${HEADER}
-        ${ENVTASTEFUL_SERVER_DIR}/include
-        ${ENVTASTEFUL_SERVER_DIR}/source/${LIBNAME}/include
-        ${TASTEFUL_SERVER_DIR}/include
-        ${TASTEFUL_SERVER_DIR}/source/${LIBNAME}/include
-        ${ENVPROGRAMFILES}/tasteful-server/include
+        ${ENVTASTEFULSERVER_DIR}/include
+        ${ENVTASTEFULSERVER_DIR}/source/${LIBNAME}/include
+        ${TASTEFULSERVER_DIR}/include
+        ${TASTEFULSERVER_DIR}/source/${LIBNAME}/include
+        ${ENVPROGRAMFILES}/tastefulserver/include
         /usr/include
         /usr/local/include
         /sw/include
@@ -77,8 +77,8 @@ macro (find LIB_NAME HEADER)
         set(${LIB_NAME_UPPER}_LIBRARY ${${LIB_NAME_UPPER}_LIBRARY_DEBUG})
     endif()
 
-    set(TASTEFUL_SERVER_INCLUDES  ${TASTEFUL_SERVER_INCLUDES}  ${${LIB_NAME_UPPER}_INCLUDE_DIR})
-    set(TASTEFUL_SERVER_LIBRARIES ${TASTEFUL_SERVER_LIBRARIES} ${${LIB_NAME_UPPER}_LIBRARY})
+    set(TASTEFULSERVER_INCLUDES  ${TASTEFULSERVER_INCLUDES}  ${${LIB_NAME_UPPER}_INCLUDE_DIR})
+    set(TASTEFULSERVER_LIBRARIES ${TASTEFULSERVER_LIBRARIES} ${${LIB_NAME_UPPER}_LIBRARY})
 
     # DEBUG
     #message("${LIB_NAME_UPPER}_INCLUDE_DIR     = ${${LIB_NAME_UPPER}_INCLUDE_DIR}")
@@ -88,11 +88,11 @@ macro (find LIB_NAME HEADER)
 
 endmacro()
 
-find(tasteful-server   tasteful-server/tasteful-server_api.h             ${LIB_PATHS})
+find(tastefulserver   tastefulserver/tastefulserver_api.h             ${LIB_PATHS})
 
 # DEBUG
-#message("TASTEFUL_SERVER_INCLUDES  = ${TASTEFUL_SERVER_INCLUDES}")
-#message("TASTEFUL_SERVER_LIBRARIES = ${TASTEFUL_SERVER_LIBRARIES}")
+#message("TASTEFULSERVER_INCLUDES  = ${TASTEFULSERVER_INCLUDES}")
+#message("TASTEFULSERVER_LIBRARIES = ${TASTEFULSERVER_LIBRARIES}")
 
-find_package_handle_standard_args(TASTEFUL_SERVER DEFAULT_MSG TASTEFUL_SERVER_LIBRARIES TASTEFUL_SERVER_INCLUDES)
-mark_as_advanced(TASTEFUL_SERVER_FOUND)
+find_package_handle_standard_args(TASTEFULSERVER DEFAULT_MSG TASTEFULSERVER_LIBRARIES TASTEFULSERVER_INCLUDES)
+mark_as_advanced(TASTEFULSERVER_FOUND)
