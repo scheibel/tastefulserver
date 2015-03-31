@@ -4,11 +4,11 @@
 #include <QThread>
 #include <QSet>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API Task : public QObject
+class TASTEFULSERVER_API Task : public QObject
 {
     Q_OBJECT
 
@@ -22,7 +22,7 @@ protected:
     void finish();
 };
 
-class TASTEFUL_SERVER_API TaskThread : public QThread
+class TASTEFULSERVER_API TaskThread : public QThread
 {
     Q_OBJECT
 

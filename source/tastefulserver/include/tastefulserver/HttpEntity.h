@@ -3,7 +3,7 @@
 #include <QByteArray>
 #include <QHash>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpHeader.h>
 
@@ -18,7 +18,7 @@ namespace http {
 const QString Linebreak = "\r\n";
 }
 
-class TASTEFUL_SERVER_API HttpEntity
+class TASTEFULSERVER_API HttpEntity
 {
 public:
     HttpEntity();

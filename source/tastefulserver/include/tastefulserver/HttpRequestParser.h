@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/ByteStream.h>
 #include <tastefulserver/HttpRequest.h>
@@ -10,7 +10,7 @@
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpRequestParser : public QObject
+class TASTEFULSERVER_API HttpRequestParser : public QObject
 {
     Q_OBJECT
 public:

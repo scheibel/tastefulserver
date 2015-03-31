@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpEntity.h>
 #include <tastefulserver/HttpVersion.h>
@@ -10,7 +10,7 @@
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpMessage : public HttpEntity
+class TASTEFULSERVER_API HttpMessage : public HttpEntity
 {
 public:
     HttpMessage();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/AbstractSocket.h>
 #include <tastefulserver/WebSocketFrame.h>
@@ -12,7 +12,7 @@ namespace tastefulserver {
 class WebSocketHandler;
 class HttpSocket;
 
-class TASTEFUL_SERVER_API WebSocket : public AbstractSocket
+class TASTEFULSERVER_API WebSocket : public AbstractSocket
 {
     Q_OBJECT
 public:

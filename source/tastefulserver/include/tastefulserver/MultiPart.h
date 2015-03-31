@@ -4,14 +4,14 @@
 #include <QList>
 #include <QHash>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpHeader.h>
 #include <tastefulserver/ContentType.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API Part
+class TASTEFULSERVER_API Part
 {
 public:
     Part();
@@ -28,7 +28,7 @@ protected:
     QByteArray m_content;
 };
 
-class TASTEFUL_SERVER_API MultiPart
+class TASTEFULSERVER_API MultiPart
 {
 public:
     MultiPart();

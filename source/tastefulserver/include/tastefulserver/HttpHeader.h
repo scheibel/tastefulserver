@@ -4,7 +4,7 @@
 #include <QList>
 #include <QHash>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 
@@ -91,7 +91,7 @@ HeaderName SecWebSocketExtensions = "Sec-WebSocket-Extensions";
 HeaderName Origin = "Origin";
 }
 
-class TASTEFUL_SERVER_API NameValuePair
+class TASTEFULSERVER_API NameValuePair
 {
 public:
     NameValuePair();
@@ -105,7 +105,7 @@ protected:
     QString m_value;
 };
 
-class TASTEFUL_SERVER_API HttpHeaderElementParameter : public NameValuePair
+class TASTEFULSERVER_API HttpHeaderElementParameter : public NameValuePair
 {
 public:
     HttpHeaderElementParameter();
@@ -120,7 +120,7 @@ protected:
     void parse(const QString & param);
 };
 
-class TASTEFUL_SERVER_API HttpHeaderElement : public NameValuePair
+class TASTEFULSERVER_API HttpHeaderElement : public NameValuePair
 {
 public:
     HttpHeaderElement();
@@ -141,7 +141,7 @@ protected:
     void parse(const QString & elementString);
 };
 
-class TASTEFUL_SERVER_API HttpHeaderValue
+class TASTEFULSERVER_API HttpHeaderValue
 {
 public:
     HttpHeaderValue();
@@ -163,7 +163,7 @@ protected:
     mutable QList<HttpHeaderElement> m_elements;
 };
 
-class TASTEFUL_SERVER_API HttpHeader
+class TASTEFULSERVER_API HttpHeader
 {
 public:
     HttpHeader();

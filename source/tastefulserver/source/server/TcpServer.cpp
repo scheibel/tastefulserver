@@ -7,8 +7,9 @@ namespace tastefulserver {
 ThreadPool * TcpServer::s_threadPool = new ThreadPool();
 int TcpServer::s_serverCount = 0;
 
-TcpServer::TcpServer()
+TcpServer::TcpServer(int numThreads)
 {
+    s_threadPool->setNumThreads(numThreads);
     s_serverCount++;
     if (!s_threadPool->isStarted())
     {

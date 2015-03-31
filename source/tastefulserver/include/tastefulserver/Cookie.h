@@ -3,14 +3,14 @@
 #include <QString>
 #include <QHash>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/httpUtil.h>
 
 namespace tastefulserver {
 
 // TODO: Subclass NameValuePair?
-class TASTEFUL_SERVER_API Cookie
+class TASTEFULSERVER_API Cookie
 {
 public:
     static const QString MaxAge;
@@ -50,7 +50,7 @@ private:
     QHash<QString, QString> m_attributes;
 };
 
-class TASTEFUL_SERVER_API Cookies
+class TASTEFULSERVER_API Cookies
 {
 public:
     bool isEmpty() const;

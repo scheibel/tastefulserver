@@ -5,7 +5,7 @@
 #include <QSslCertificate>
 #include <QSslKey>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpsServer.h>
 
@@ -15,7 +15,7 @@ class HttpRequest;
 class HttpResponse;
 class HttpSocket;
 
-class TASTEFUL_SERVER_API HttpsCallbackServer : public HttpsServer
+class TASTEFULSERVER_API HttpsCallbackServer : public HttpsServer
 {
 public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;

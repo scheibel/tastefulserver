@@ -1,16 +1,16 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/TcpServer.h>
 #include <tastefulserver/HttpSocketHandler.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpServer : public TcpServer, public HttpSocketHandler
+class TASTEFULSERVER_API HttpServer : public TcpServer, public HttpSocketHandler
 {
 public:
-    HttpServer();
+    HttpServer(int numThreads = 1);
     ~HttpServer();
 
 protected:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpMessage.h>
 #include <tastefulserver/httpStatusCodes.h>
@@ -8,7 +8,7 @@
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpResponse : public HttpMessage
+class TASTEFULSERVER_API HttpResponse : public HttpMessage
 {
 public:
     HttpResponse(unsigned statusCode);

@@ -3,11 +3,11 @@
 #include <QString>
 #include <QByteArray>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API ByteStream
+class TASTEFULSERVER_API ByteStream
 {
 public:
     ByteStream(const QString & linebreak = "\n");

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 class QString;
 template <typename Key, typename Value>
@@ -8,7 +8,7 @@ class QHash;
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpMethod
+class TASTEFULSERVER_API HttpMethod
 {
 public:
     enum Method

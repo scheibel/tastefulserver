@@ -1,12 +1,12 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/WebSocket.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API WebSocketHandler
+class TASTEFULSERVER_API WebSocketHandler
 {
 public:
     virtual void connectionEstablished(WebSocket * socket);

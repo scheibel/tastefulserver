@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
 
 
@@ -11,18 +12,31 @@ set(META_VERSION             "${META_VERSION_MAJOR}.${META_VERSION_MINOR}.${META
 set(META_AUTHOR_ORGANIZATION "Tasteful Revolution")
 set(META_AUTHOR_DOMAIN       "https://github.com/scheibel/tastefulserver/")
 
+string(TOUPPER ${META_PROJECT_NAME} META_PROJECT_NAME_UPPER)
 
-# OPTIONS
+# Limit supported configuration types
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Limited Configs" FORCE)
 
-option(OPTION_LIMIT_CONFIGS       "Generate limited configs (Release; Debug)" ON)
-option(OPTION_PORTABLE_INSTALL    "Install to a local directory instead of the system" OFF)
-option(OPTION_BUILD_STATIC   "Build static libraries" OFF)
-option(OPTION_BUILD_EXAMPLES "Compile with examples" ON)
+# Set project name and type (C/C++)
+project(${META_PROJECT_NAME} C CXX)
+
+# Configuration options
+
+option(OPTION_PORTABLE_INSTALL "Install to a local directory instead of the system" OFF)
+option(OPTION_BUILD_STATIC     "Build static libraries" OFF)
+option(OPTION_BUILD_TESTS      "Build tests (if gmock and gtest are found)" ON)
+option(OPTION_BUILD_EXAMPLES   "Compile with examples" ON)
 
 
-#
+if(OPTION_BUILD_STATIC)
+   set(BUILD_SHARED_LIBS OFF)
+   message("Note: ${META_PROJECT_NAME_UPPER}_STATIC needs to be defined for static linking.")
+else()
+    set(BUILD_SHARED_LIBS ON)
+endif()
+
+
 # CMake configuration
-#
 
 # Include cmake modules from ./cmake
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -31,15 +45,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-# Set configuration types
-if(OPTION_LIMIT_CONFIGS)
-    set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Limited Configs" FORCE)
-endif()
-set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: ${CMAKE_CONFIGURATION_TYPES}")
-
-# Project
-project(${META_PROJECT_NAME} C CXX)
 
 
 # Generate folders for IDE targets (e.g., VisualStudio solutions)
@@ -51,15 +56,15 @@ include(cmake/Custom.cmake)
 include(cmake/GitRevision.cmake)
 
 
-#
 # Platform and architecture
-#
 
 # Architecture (32/64 bit)
 set(X64 OFF)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(X64 ON)
 endif()
+
+# Setup platform specifics (compile flags, etc., ...)
 
 # This policy was introduced in 3.0.0 and does not allow for COMPILER_DEFINITIONS_<Config>,
 # anymore, but instead requires generator expressions like $<CONFIG:Debug> ... 
@@ -68,13 +73,14 @@ if(POLICY CMP0043)
     cmake_policy(SET CMP0043 OLD)
 endif()
 
-# Setup platform specifics (compile flags, etc., ...)
 if(MSVC)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PlatformWindowsMSVC.cmake)
 elseif(WIN32 AND CMAKE_COMPILER_IS_GNUCXX)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PlatformWindowsGCC.cmake)
 elseif(APPLE)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PlatformMacOS.cmake)
+elseif(UNIX AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PlatformLinuxClang.cmake)
 elseif(UNIX)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/PlatformLinuxGCC.cmake)
 else()
@@ -84,37 +90,50 @@ endif()
 # Installation paths
 set(project ${META_PROJECT_NAME})
 if(WIN32)
-    set(INSTALL_ROOT      ".")                         # C:\Programme\<project>
-    set(INSTALL_EXAMPLES  "bin")                       # C:\Programme\<project>
-    set(INSTALL_DATA      "bin")                       # C:\Programme\<project>
-    set(INSTALL_BIN       "bin")                       # C:\Programme\<project>
-    set(INSTALL_SHARED    ".")                         # C:\Programme\<project>
-    set(INSTALL_LIB       "lib")                       # C:\Programme\<project>\lib
-    set(INSTALL_INCLUDE   "include")                   # C:\Programme\<project>\include
-    set(INSTALL_DOC       "doc")                       # C:\Programme\<project>\doc
-    set(INSTALL_SHORTCUTS ".")                         # Not available under Windows
-    set(INSTALL_ICONS     ".")                         # Not available under Windows
-    set(INSTALL_INIT      ".")                         # Not available under Windows
-else()
-    set(INSTALL_ROOT      "share/${project}")          # /usr/[local]/share/<project>
-    set(INSTALL_EXAMPLES  "share/${project}/examples") # /usr/[local]/share/<project>/examples
-    set(INSTALL_DATA      "share/${project}/examples") # /usr/[local]/share/<project>
-    set(INSTALL_BIN       "bin")                       # /usr/[local]/bin
-    set(INSTALL_SHARED    "lib")                       # /usr/[local]/lib
-    set(INSTALL_LIB       "lib")                       # /usr/[local]/lib
-    set(INSTALL_INCLUDE   "include")                   # /usr/[local]/include
-    set(INSTALL_DOC       "share/doc/${project}")      # /usr/[local]/share/doc/<project>
-    set(INSTALL_SHORTCUTS "share/applications")        # /usr/[local]/share/applications
-    set(INSTALL_ICONS     "share/pixmaps")             # /usr/[local]/share/pixmaps
-    set(INSTALL_INIT      "/etc/init")                 # /etc/init (upstart init scripts)
+
+    # "%PROGRAMFILES%/<project>/"
+    
+    set(INSTALL_ROOT      ".")
+    set(INSTALL_TOOLS     "bin")
+    set(INSTALL_EXAMPLES  "bin")
+    set(INSTALL_DATA      "bin")
+    set(INSTALL_BIN       "bin")
+    set(INSTALL_SHARED    ".")
+    set(INSTALL_LIB       "lib")
+    set(INSTALL_INCLUDE   "include")
+    set(INSTALL_DOC       "doc")
+    set(INSTALL_SHORTCUTS ".") # not available in windows
+    set(INSTALL_ICONS     ".") # not available in windows
+    set(INSTALL_INIT      ".") # not available in windows
+
+else() 
+
+    # "/user/[local]/"
+    
+    set(INSTALL_ROOT      "share/${project}")
+    set(INSTALL_TOOLS     "share/${project}/tools")
+    set(INSTALL_EXAMPLES  "share/${project}/examples")
+    set(INSTALL_DATA      "share/${project}/examples")
+    set(INSTALL_BIN       "bin")
+    set(INSTALL_SHARED    "lib")
+    set(INSTALL_LIB       "lib")
+    set(INSTALL_INCLUDE   "include")
+    set(INSTALL_DOC       "share/doc/${project}")
+    set(INSTALL_SHORTCUTS "share/applications")
+    set(INSTALL_ICONS     "share/pixmaps")
+    set(INSTALL_INIT      "/etc/init") # /etc/init (upstart init scripts)
 
     # Adjust target paths for portable installs
+
+    # "<INSTALL_PREFIX>/"
+
     if(OPTION_PORTABLE_INSTALL)
         # Put binaries in root directory and keep data directory name
-        set(INSTALL_ROOT     ".") # <INSTALL_PREFIX>/
-        set(INSTALL_EXAMPLES ".") # <INSTALL_PREFIX>/
-        set(INSTALL_DATA     ".") # <INSTALL_PREFIX>/
-        set(INSTALL_BIN      ".") # <INSTALL_PREFIX>/
+        set(INSTALL_ROOT     ".")
+        set(INSTALL_EXAMPLES ".")
+        set(INSTALL_TOOLS    ".")
+        set(INSTALL_DATA     ".")
+        set(INSTALL_BIN      ".")
 
         # We have to change the RPATH of binaries to achieve a usable local install.
         # [TODO] For binaries, "$ORIGIN/lib" is right, so that libraries are found in ./lib.
@@ -128,25 +147,27 @@ else()
 endif()
 
 
-#
 # Global deployment
-#
-
-# Project meta files
-install(FILES tasteful-server-config.cmake DESTINATION ${INSTALL_ROOT})
-install(FILES AUTHORS           DESTINATION ${INSTALL_ROOT})
-install(FILES LICENSE           DESTINATION ${INSTALL_ROOT})
 
 # Add a revision file containing the git-head tag for cpack and install
 create_revision_file(${CMAKE_BINARY_DIR}/revision ${INSTALL_ROOT})
 
+# Project meta files
+install(FILES ${CMAKE_BINARY_DIR}/revision DESTINATION ${INSTALL_ROOT} COMPONENT dev)
+if(NOT OPTION_BUILD_STATIC)
+    install(FILES ${CMAKE_BINARY_DIR}/revision DESTINATION ${INSTALL_ROOT} COMPONENT runtime)
+endif()
+install(FILES ${CMAKE_BINARY_DIR}/revision DESTINATION ${INSTALL_ROOT} COMPONENT examples)
+install(FILES tasteful-server-config.cmake DESTINATION ${INSTALL_ROOT} COMPONENT dev)
+install(FILES AUTHORS DESTINATION ${INSTALL_ROOT} COMPONENT dev)
+install(FILES LICENSE DESTINATION ${INSTALL_ROOT} COMPONENT dev)
+
 # Data files
-# install(DIRECTORY ${CMAKE_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA})
+if(OPTION_BUILD_EXAMPLES)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/data DESTINATION ${INSTALL_DATA} COMPONENT examples)
+endif()
 
-
-#
 # Include projects
-#
 
 add_subdirectory(source)
 add_subdirectory(docs)

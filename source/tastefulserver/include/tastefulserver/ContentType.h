@@ -2,13 +2,13 @@
 
 #include <QString>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpHeader.h>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API ContentType : public HttpHeaderElement
+class TASTEFULSERVER_API ContentType : public HttpHeaderElement
 {
 public:
     static const QString Charset;

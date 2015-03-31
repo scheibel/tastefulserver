@@ -1,12 +1,12 @@
 #pragma once
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 class QString;
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpVersion
+class TASTEFULSERVER_API HttpVersion
 {
 public:
     HttpVersion();

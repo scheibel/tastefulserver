@@ -2,14 +2,14 @@
 
 #include <array>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <QByteArray>
 #include <QIODevice>
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API WebSocketFrame
+class TASTEFULSERVER_API WebSocketFrame
 {
 public:
     union Header

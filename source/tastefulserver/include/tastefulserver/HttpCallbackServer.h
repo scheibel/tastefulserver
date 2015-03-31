@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpServer.h>
 #include <tastefulserver/AbstractSocket.h>
@@ -10,12 +10,12 @@
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpCallbackServer : public HttpServer
+class TASTEFULSERVER_API HttpCallbackServer : public HttpServer
 {
 public:
     typedef std::function<HttpResponse(const HttpRequest &)> RequestCallback;
 
-    HttpCallbackServer(const RequestCallback & callback);
+    HttpCallbackServer(const RequestCallback & callback, int numThreads = 1);
     ~HttpCallbackServer();
 
 protected:

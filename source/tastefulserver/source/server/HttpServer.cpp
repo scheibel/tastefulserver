@@ -4,7 +4,8 @@
 
 namespace tastefulserver {
 
-HttpServer::HttpServer()
+HttpServer::HttpServer(int numThreads)
+: TcpServer(numThreads)
 {
 }
 

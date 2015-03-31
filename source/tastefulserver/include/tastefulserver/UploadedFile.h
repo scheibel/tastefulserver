@@ -4,7 +4,7 @@
 #include <QByteArray>
 #include <QMetaType>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/ContentType.h>
 
@@ -12,7 +12,7 @@ class QVariant;
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API UploadedFile
+class TASTEFULSERVER_API UploadedFile
 {
 public:
     UploadedFile();

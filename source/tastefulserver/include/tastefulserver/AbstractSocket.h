@@ -3,13 +3,13 @@
 #include <QObject>
 #include <QAbstractSocket>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 namespace tastefulserver {
 
 class Connection;
 
-class TASTEFUL_SERVER_API AbstractSocket : public QObject
+class TASTEFULSERVER_API AbstractSocket : public QObject
 {
     friend class Connection;
 

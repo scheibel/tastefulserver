@@ -2,7 +2,7 @@
 
 #include <QHash>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 #include <tastefulserver/UploadedFile.h>
 
 class QString;
@@ -13,7 +13,7 @@ namespace tastefulserver {
 
 class MultiPart;
 
-class TASTEFUL_SERVER_API RequestParameters
+class TASTEFULSERVER_API RequestParameters
 {
 public:
     RequestParameters();

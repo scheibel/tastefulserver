@@ -1,37 +1,29 @@
-
-set(target websockets)
-message(STATUS "Example ${target}")
-
-# External libraries
-
-find_package(Qt5Core    5.0 REQUIRED)
-find_package(Qt5Network 5.0 REQUIRED)
+set(target tasteful-server-test)
+message(STATUS "Test ${target}")
 
 # Includes
 
-include_directories(
+include_directories(   
 )
 
 include_directories(
     BEFORE
-    ${CMAKE_SOURCE_DIR}/source/tastefulserver/include
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/source/tasteful-server/include
 )
 
 # Libraries
 
 set(libs
-    tastefulserver
+    ${GMOCK_LIBRARIES}
+    ${GTEST_LIBRARIES}
+    tasteful-server
 )
-
-# Compiler definitions
 
 # Sources
 
 set(sources
     main.cpp
-    Server.cpp
-    Server.h
+    dummy_test.cpp
 )
 
 # Build executable
@@ -39,12 +31,6 @@ set(sources
 add_executable(${target} ${sources})
 
 target_link_libraries(${target} ${libs})
-qt5_use_modules(${target} Core Gui Widgets)
-
-if(MSVC)
-    # -> msvc14 : declaration hides class member (problem in qt)
-    set(DEFAULT_COMPILE_FLAGS ${DEFAULT_COMPILE_FLAGS} /wd4458)
-endif()
 
 target_compile_options(${target} PRIVATE ${DEFAULT_COMPILE_FLAGS})
 
@@ -57,11 +43,3 @@ set_target_properties(${target}
     LINK_FLAGS_DEBUG            "${DEFAULT_LINKER_FLAGS_DEBUG}"
     LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}")
-
-# Deployment
-
-install(TARGETS ${target}
-    RUNTIME DESTINATION ${INSTALL_EXAMPLES}
-    LIBRARY DESTINATION ${INSTALL_SHARED}
-    ARCHIVE DESTINATION ${INSTALL_LIB}
-)

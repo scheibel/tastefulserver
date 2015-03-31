@@ -3,7 +3,7 @@
 #include <QUrl>
 #include <QHostAddress>
 
-#include <tastefulserver/tasteful-server_api.h>
+#include <tastefulserver/tastefulserver_api.h>
 
 #include <tastefulserver/HttpMethod.h>
 #include <tastefulserver/HttpMessage.h>
@@ -11,7 +11,7 @@
 
 namespace tastefulserver {
 
-class TASTEFUL_SERVER_API HttpRequest : public HttpMessage
+class TASTEFULSERVER_API HttpRequest : public HttpMessage
 {
 public:
     HttpRequest();
