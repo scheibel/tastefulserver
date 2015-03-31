@@ -1,4 +1,4 @@
-set(target tasteful-server-test)
+set(target tastefulserver-test)
 message(STATUS "Test ${target}")
 
 # Includes
@@ -8,7 +8,7 @@ include_directories(
 
 include_directories(
     BEFORE
-    ${CMAKE_SOURCE_DIR}/source/tasteful-server/include
+    ${CMAKE_SOURCE_DIR}/source/tastefulserver/include
 )
 
 # Libraries
@@ -16,7 +16,7 @@ include_directories(
 set(libs
     ${GMOCK_LIBRARIES}
     ${GTEST_LIBRARIES}
-    tasteful-server
+    tastefulserver
 )
 
 # Sources
