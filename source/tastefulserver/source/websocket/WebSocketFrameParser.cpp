@@ -9,6 +9,7 @@ namespace tastefulserver {
 WebSocketFrameParser::WebSocketFrameParser()
 : m_state(ParseState::Header)
 , m_interruptedState(ParseState::Header)
+, length(0)
 {
 }
 
