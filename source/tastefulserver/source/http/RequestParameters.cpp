@@ -54,7 +54,7 @@ void RequestParameters::parseUrl(const QUrl & url)
         return;
     }
 
-    for (const QString & parameter : url.query().split('&'))
+    for (const QString & parameter : url.query(QUrl::FullyDecoded).split('&'))
     {
         int splitIndex = parameter.indexOf('=');
         if (splitIndex<=0)
