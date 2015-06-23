@@ -2,7 +2,7 @@
 
 namespace tastefulserver {
 
-void WebSocketHandler::connectionEstablished(WebSocket * )
+void WebSocketHandler::connectionEstablished(const HttpRequest & /*request*/, WebSocket * /*socket*/)
 {
 }
 
