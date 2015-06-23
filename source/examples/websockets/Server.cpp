@@ -97,7 +97,7 @@ void Server::handleBinary(tastefulserver::WebSocket * socket, const QByteArray &
     socket->sendBinary(binary);
 }
 
-void Server::connectionEstablished(tastefulserver::WebSocket * socket)
+void Server::connectionEstablished(const tastefulserver::HttpRequest & /*request*/, tastefulserver::WebSocket * socket)
 {
     QTimer * timer = new QTimer(socket);
     timer->setInterval(1000);

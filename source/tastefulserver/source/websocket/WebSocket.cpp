@@ -49,7 +49,7 @@ void WebSocket::performHandshake(const HttpRequest & request)
 
     response.writeTo(*m_socket);
 
-    m_handler->connectionEstablished(this);
+    m_handler->connectionEstablished(request, this);
 
     connect(m_socket, SIGNAL(disconnected()), this, SLOT(connectionClosed()));
 }
