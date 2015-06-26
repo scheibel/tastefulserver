@@ -24,7 +24,7 @@ protected:
     //virtual void handleText(WebSocket * socket, const QByteArray & text) override;
     //virtual void handleBinary(WebSocket * socket, const QByteArray & binary) override;
     //virtual void connectionEstablished(const HttpRequest & request, WebSocket * socket) override;
-    //virtual void connectionClosed(WebSocket * socket) override;
+    //virtual void connectionClosed(const HttpRequest & request, WebSocket * socket) override;
 };
 
 } // namespace tastefulserver
