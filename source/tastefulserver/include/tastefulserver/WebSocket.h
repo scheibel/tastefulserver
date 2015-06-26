@@ -32,6 +32,7 @@ protected:
     WebSocketFrameParser m_parser;
     WebSocketFrame m_fragmentedMessage;
     bool m_inFragmentedMode;
+    HttpRequest m_request;
 
     QAbstractSocket * createSocket(qintptr socketDescriptor);
 

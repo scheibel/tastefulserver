@@ -6,7 +6,7 @@ void WebSocketHandler::connectionEstablished(const HttpRequest & /*request*/, We
 {
 }
 
-void WebSocketHandler::connectionClosed(WebSocket * )
+void WebSocketHandler::connectionClosed(const HttpRequest & /*request*/, WebSocket * /*socket*/)
 {
 }
 
