@@ -32,6 +32,7 @@ protected:
     WebSocketFrameParser m_parser;
     WebSocketFrame m_fragmentedMessage;
     bool m_inFragmentedMode;
+    HttpRequest m_request;
 
     QAbstractSocket * createSocket(qintptr socketDescriptor);
 
@@ -44,7 +45,7 @@ protected:
     static QString hashKey(const QString & key);
 protected slots:
     void badFrame();
-    void connectionClosed(const HttpRequest & request);
+    void connectionClosed();
 };
 
 } // namespace tastefulserver
