@@ -3,6 +3,9 @@ message(STATUS "Test ${target}")
 
 # Includes
 
+find_package(Qt5Core    5.0 REQUIRED)
+find_package(Qt5Network 5.0 REQUIRED)
+
 include_directories(   
 )
 
@@ -17,6 +20,8 @@ set(libs
     ${GMOCK_LIBRARIES}
     ${GTEST_LIBRARIES}
     tastefulserver
+    Qt5::Core
+    Qt5::Network
 )
 
 # Sources
